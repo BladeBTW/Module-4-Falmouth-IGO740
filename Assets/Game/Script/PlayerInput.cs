@@ -14,7 +14,7 @@ public class PlayerInput : MonoBehaviour
     {
         //Always put input in here
         HorizontalInput = Input.GetAxisRaw("Horizontal");
-        HorizontalInput = Input.GetAxisRaw("Vertical");
+        VerticalInput = Input.GetAxisRaw("Vertical");
     }
 
     //gets called when script is disabled
