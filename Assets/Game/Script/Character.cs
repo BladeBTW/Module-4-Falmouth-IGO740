@@ -34,6 +34,8 @@ public class Character : MonoBehaviour
 
         if (_movementVelocity != Vector3.zero)
             transform.rotation = Quaternion.LookRotation(_movementVelocity);
+    
+        _animator.SetBool("AirBorne",! _cc.isGrounded);
     }
 
     private void FixedUpdate()
