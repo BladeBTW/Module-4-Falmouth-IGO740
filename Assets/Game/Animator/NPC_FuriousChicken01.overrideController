@@ -7,5 +7,11 @@ AnimatorOverrideController:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: NPC_FuriousChicken01
-  m_Controller: {fileID: 0}
-  m_Clips: []
+  m_Controller: {fileID: 9100000, guid: 2571fb22e5f51b94a84dedac176aecfb, type: 2}
+  m_Clips:
+  - m_OriginalClip: {fileID: -203655887218126122, guid: f44458ff59704d04681fc9bf05a79404, type: 3}
+    m_OverrideClip: {fileID: -203655887218126122, guid: 49d1a118e86dc434b8ed92e30bc9de2e, type: 3}
+  - m_OriginalClip: {fileID: -203655887218126122, guid: 22f6ffb33a0fb48438e405edfe378069, type: 3}
+    m_OverrideClip: {fileID: -203655887218126122, guid: a44564916a2da69448e194db0db4d221, type: 3}
+  - m_OriginalClip: {fileID: -203655887218126122, guid: 39d96df4c339e51459e82734d820d31f, type: 3}
+    m_OverrideClip: {fileID: -203655887218126122, guid: a44564916a2da69448e194db0db4d221, type: 3}

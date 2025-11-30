@@ -13,14 +13,29 @@ public class Character : MonoBehaviour
     public float Gravity = -9.8f;
     private Animator _animator;
 
+    //NPC_FeralChicken01
+    public bool IsPlayer = true;
+    private UnityEngine.AI.NavMeshAgent _navMeshAgent;
+    private Transform TargetPlayer;
+
     private void Awake()
     {
         //called when instant of this script is loaded
         _cc = GetComponent<CharacterController>();
-        _playerInput = GetComponent<PlayerInput>();
-        _animator = GetComponent<Animator>();
-    }
 
+        _animator = GetComponent<Animator>();
+
+        if (!IsPlayer)
+        {
+            _navMeshAgent= GetComponent<UnityEngine.AI.NavMeshAgent>();
+            TargetPlayer = GameObject.FindWithTag("Player").transform;
+            _navMeshAgent.speed = MoveSpeed;
+        }
+        else
+        {
+            _playerInput = GetComponent<PlayerInput>();
+        }
+    }
     private void CalculatePlayerMovement()
     {
         _movementVelocity.Set(_playerInput.HorizontalInput,0f,_playerInput.VerticalInput);
@@ -38,18 +53,41 @@ public class Character : MonoBehaviour
         _animator.SetBool("AirBorne",! _cc.isGrounded);
     }
 
+    private void CalculateEnemyMovement()
+    {
+        if(Vector3.Distance(TargetPlayer.position,transform.position) >= _navMeshAgent.stoppingDistance)
+        {
+            _navMeshAgent.SetDestination(TargetPlayer.position);
+            _animator.SetFloat("Speed",0.2f);
+        }
+        else
+        {
+            _navMeshAgent.SetDestination(transform.position);
+            _animator.SetFloat("Speed",0f);
+        }
+    }
+
     private void FixedUpdate()
     {
-        CalculatePlayerMovement();
-        //Move characters down when not on the ground
-        //IsGrounded variable in Character Controller, checks if character touched ground last frame
-        if(_cc.isGrounded == false)
-            _verticalVelocity = Gravity;
+        if(IsPlayer)
+            CalculatePlayerMovement();
         else
-            _verticalVelocity = Gravity * 0.3f;
-        _movementVelocity += _verticalVelocity * Vector3.up * Time.deltaTime;
+            CalculateEnemyMovement();
+        
+        if(IsPlayer)
+        {
+            //Move characters down when not on the ground
+            //IsGrounded variable in Character Controller, checks if character touched ground last frame
+            if(_cc.isGrounded == false)
+                _verticalVelocity = Gravity;
+            else
+                _verticalVelocity = Gravity * 0.3f;
+            _movementVelocity += _verticalVelocity * Vector3.up * Time.deltaTime;
 
-        _cc.Move(_movementVelocity);
+            _cc.Move(_movementVelocity);
+        }
     }
+
+    
 }
 
