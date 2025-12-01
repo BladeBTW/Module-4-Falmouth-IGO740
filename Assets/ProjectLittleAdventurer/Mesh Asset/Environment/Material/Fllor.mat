@@ -29,7 +29,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - Texture2D_883b5e755bd84e93b086f731bee4d70b:
-        m_Texture: {fileID: 2800000, guid: 676383e9ec3f77c4398106f3c6e3283d, type: 3}
+        m_Texture: {fileID: 2800000, guid: 366288fe0a3bcc7439cc61a810d7a08c, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _CloudShaderSubGraph_5aa74b4f19bf4d0a8acac41252b7755e_Texture2Da1cb3714a1ec4b0f81f146aa7908a6cf_1182168003:

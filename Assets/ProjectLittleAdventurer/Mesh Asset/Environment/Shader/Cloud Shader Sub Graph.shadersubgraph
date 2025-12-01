@@ -1,5 +1,5 @@
 {
-    "m_SGVersion": 2,
+    "m_SGVersion": 3,
     "m_Type": "UnityEditor.ShaderGraph.GraphData",
     "m_ObjectId": "74db752e599c452b9185c6e5d4c99968",
     "m_Properties": [
@@ -20,6 +20,12 @@
         }
     ],
     "m_Keywords": [],
+    "m_Dropdowns": [],
+    "m_CategoryData": [
+        {
+            "m_Id": "7f3d5200e4da453885110d374d2b9612"
+        }
+    ],
     "m_Nodes": [
         {
             "m_Id": "44680d03084a45828b7f15133da060e4"
@@ -381,10 +387,11 @@
         "serializedMesh": {
             "m_SerializedMesh": "{\"mesh\":{\"instanceID\":0}}",
             "m_Guid": ""
-        }
+        },
+        "preventRotation": false
     },
     "m_Path": "Sub Graphs",
-    "m_ConcretePrecision": 0,
+    "m_GraphPrecision": 0,
     "m_PreviewMode": 2,
     "m_OutputNode": {
         "m_Id": "44680d03084a45828b7f15133da060e4"
@@ -528,9 +535,13 @@
         "m_GuidSerialized": "5144bbe8-8cd3-4074-a864-09d17131b129"
     },
     "m_Name": "Color (1)",
+    "m_DefaultRefNameVersion": 0,
+    "m_RefNameGeneratedByDisplayName": "",
     "m_DefaultReferenceName": "Vector4_0c73c65f30d44a76845b546d0aa6b1ac",
     "m_OverrideReferenceName": "",
     "m_GeneratePropertyBlock": true,
+    "m_UseCustomSlotLabel": false,
+    "m_CustomSlotLabel": "",
     "m_Precision": 0,
     "overrideHLSLDeclaration": false,
     "hlslDeclarationOverride": 0,
@@ -853,9 +864,13 @@
         "m_GuidSerialized": "690ad70e-84d0-4477-b6b9-3d534fbf9386"
     },
     "m_Name": "Float (1)",
+    "m_DefaultRefNameVersion": 0,
+    "m_RefNameGeneratedByDisplayName": "",
     "m_DefaultReferenceName": "Vector1_2d2184e3f2e34b2998342add9102358a",
     "m_OverrideReferenceName": "",
     "m_GeneratePropertyBlock": true,
+    "m_UseCustomSlotLabel": false,
+    "m_CustomSlotLabel": "",
     "m_Precision": 0,
     "overrideHLSLDeclaration": false,
     "hlslDeclarationOverride": 0,
@@ -975,9 +990,13 @@
         "m_GuidSerialized": "cab7cdc7-127d-4c26-b858-a373f78bc5a7"
     },
     "m_Name": "Time",
+    "m_DefaultRefNameVersion": 0,
+    "m_RefNameGeneratedByDisplayName": "",
     "m_DefaultReferenceName": "Vector1_435d27d553014d918c40688c25682dd8",
     "m_OverrideReferenceName": "",
     "m_GeneratePropertyBlock": true,
+    "m_UseCustomSlotLabel": false,
+    "m_CustomSlotLabel": "",
     "m_Precision": 0,
     "overrideHLSLDeclaration": false,
     "hlslDeclarationOverride": 0,
@@ -1344,6 +1363,30 @@
 
 {
     "m_SGVersion": 0,
+    "m_Type": "UnityEditor.ShaderGraph.CategoryData",
+    "m_ObjectId": "7f3d5200e4da453885110d374d2b9612",
+    "m_Name": "",
+    "m_ChildObjectList": [
+        {
+            "m_Id": "435d27d553014d918c40688c25682dd8"
+        },
+        {
+            "m_Id": "2d2184e3f2e34b2998342add9102358a"
+        },
+        {
+            "m_Id": "0c73c65f30d44a76845b546d0aa6b1ac"
+        },
+        {
+            "m_Id": "9d67135d7c3349028627dba005ff1212"
+        },
+        {
+            "m_Id": "ff965f6e85b74d958f0595d3ca873160"
+        }
+    ]
+}
+
+{
+    "m_SGVersion": 0,
     "m_Type": "UnityEditor.ShaderGraph.NoiseNode",
     "m_ObjectId": "80ffa51d36ab4199a44c3255c3d84a1f",
     "m_Group": {
@@ -1631,9 +1674,13 @@
         "m_GuidSerialized": "ec7144aa-5527-4baf-9c96-01512fcf0fef"
     },
     "m_Name": "Float",
+    "m_DefaultRefNameVersion": 0,
+    "m_RefNameGeneratedByDisplayName": "",
     "m_DefaultReferenceName": "Vector1_9d67135d7c3349028627dba005ff1212",
     "m_OverrideReferenceName": "",
     "m_GeneratePropertyBlock": true,
+    "m_UseCustomSlotLabel": false,
+    "m_CustomSlotLabel": "",
     "m_Precision": 0,
     "overrideHLSLDeclaration": false,
     "hlslDeclarationOverride": 0,
@@ -1860,7 +1907,8 @@
     "m_CustomColors": {
         "m_SerializableColors": []
     },
-    "m_Space": 2
+    "m_Space": 2,
+    "m_PositionSource": 0
 }
 
 {
@@ -2360,9 +2408,13 @@
         "m_GuidSerialized": "821d94ab-a98c-4896-aac8-8e7ec31d7f0c"
     },
     "m_Name": "Main Color",
+    "m_DefaultRefNameVersion": 0,
+    "m_RefNameGeneratedByDisplayName": "",
     "m_DefaultReferenceName": "Color_ff965f6e85b74d958f0595d3ca873160",
     "m_OverrideReferenceName": "",
     "m_GeneratePropertyBlock": true,
+    "m_UseCustomSlotLabel": false,
+    "m_CustomSlotLabel": "",
     "m_Precision": 0,
     "overrideHLSLDeclaration": false,
     "hlslDeclarationOverride": 0,
@@ -2373,6 +2425,7 @@
         "b": 0.0,
         "a": 0.0
     },
+    "isMainColor": false,
     "m_ColorMode": 0
 }
 
