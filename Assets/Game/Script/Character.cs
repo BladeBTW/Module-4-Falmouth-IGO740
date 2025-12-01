@@ -1,6 +1,5 @@
 using System.Collections;
 using System.Collections.Generic;
-using System.Runtime.CompilerServices;
 using UnityEngine;
 
 public class Character : MonoBehaviour
@@ -13,81 +12,55 @@ public class Character : MonoBehaviour
     public float Gravity = -9.8f;
     private Animator _animator;
 
-    //NPC_FeralChicken01
-    public bool IsPlayer = true;
-    private UnityEngine.AI.NavMeshAgent _navMeshAgent;
-    private Transform TargetPlayer;
-
     private void Awake()
     {
-        //called when instant of this script is loaded
         _cc = GetComponent<CharacterController>();
-
         _animator = GetComponent<Animator>();
 
-        if (!IsPlayer)
-        {
-            _navMeshAgent= GetComponent<UnityEngine.AI.NavMeshAgent>();
-            TargetPlayer = GameObject.FindWithTag("Player").transform;
-            _navMeshAgent.speed = MoveSpeed;
-        }
-        else
-        {
-            _playerInput = GetComponent<PlayerInput>();
-        }
+        _playerInput = GetComponent<PlayerInput>();
+        if (_playerInput == null)
+            Debug.LogError("PlayerInput component missing on Player object!", this);
     }
+
     private void CalculatePlayerMovement()
     {
-        _movementVelocity.Set(_playerInput.HorizontalInput,0f,_playerInput.VerticalInput);
-        _movementVelocity.Normalize();
-        _movementVelocity = Quaternion.Euler(0,-45f,0) * _movementVelocity;
-        
+        if (_playerInput == null)
+            return;
 
-        _animator.SetFloat("Speed",_movementVelocity.magnitude);
-        
+        // 1. Input direction
+        _movementVelocity.Set(_playerInput.HorizontalInput, 0f, _playerInput.VerticalInput);
+        _movementVelocity.Normalize();
+
+        // 2. Rotate input 45 degrees (just like your original script)
+        _movementVelocity = Quaternion.Euler(0, -45f, 0) * _movementVelocity;
+
+        // 3. Animator SPEED uses normalized magnitude (0–1)
+        _animator.SetFloat("Speed", _movementVelocity.magnitude);
+
+        // 4. Apply movement speed afterwards for actual world movement
         _movementVelocity *= MoveSpeed * Time.deltaTime;
 
+        // Rotate player toward movement direction
         if (_movementVelocity != Vector3.zero)
             transform.rotation = Quaternion.LookRotation(_movementVelocity);
-    
-        _animator.SetBool("AirBorne",! _cc.isGrounded);
-    }
 
-    private void CalculateEnemyMovement()
-    {
-        if(Vector3.Distance(TargetPlayer.position,transform.position) >= _navMeshAgent.stoppingDistance)
-        {
-            _navMeshAgent.SetDestination(TargetPlayer.position);
-            _animator.SetFloat("Speed",0.2f);
-        }
-        else
-        {
-            _navMeshAgent.SetDestination(transform.position);
-            _animator.SetFloat("Speed",0f);
-        }
+        // Use airborne animation same as original
+        _animator.SetBool("AirBorne", !_cc.isGrounded);
     }
 
     private void FixedUpdate()
     {
-        if(IsPlayer)
-            CalculatePlayerMovement();
+        CalculatePlayerMovement();
+
+        // Gravity (player only)
+        if (_cc.isGrounded == false)
+            _verticalVelocity = Gravity;
         else
-            CalculateEnemyMovement();
-        
-        if(IsPlayer)
-        {
-            //Move characters down when not on the ground
-            //IsGrounded variable in Character Controller, checks if character touched ground last frame
-            if(_cc.isGrounded == false)
-                _verticalVelocity = Gravity;
-            else
-                _verticalVelocity = Gravity * 0.3f;
-            _movementVelocity += _verticalVelocity * Vector3.up * Time.deltaTime;
+            _verticalVelocity = Gravity * 0.3f;
 
-            _cc.Move(_movementVelocity);
-        }
+        _movementVelocity += _verticalVelocity * Vector3.up * Time.deltaTime;
+
+        // CharacterController final move
+        _cc.Move(_movementVelocity);
     }
-
-    
 }
-

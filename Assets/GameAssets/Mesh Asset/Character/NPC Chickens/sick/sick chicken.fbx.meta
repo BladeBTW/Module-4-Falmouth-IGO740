@@ -3,7 +3,12 @@ guid: 3a7f0ed17bc5a954a83fad2a7dff6389
 ModelImporter:
   serializedVersion: 21300
   internalIDToNameTable: []
-  externalObjects: {}
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Material.002
+    second: {fileID: 2100000, guid: c44ecc5f3e5e08a4081e1868b8620a2a, type: 2}
   materials:
     materialImportMode: 2
     materialName: 0
@@ -31,7 +36,36 @@ ModelImporter:
     animationWrapMode: 0
     extraExposedTransformPaths: []
     extraUserProperties: []
-    clipAnimations: []
+    clipAnimations:
+    - serializedVersion: 16
+      name: Armature|Armature|Armature|Armature|mixamo.com|Layer0
+      takeName: Armature|Armature|Armature|Armature|mixamo.com|Layer0
+      internalID: 6759086803382991731
+      firstFrame: 0
+      lastFrame: 0
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask: []
+      maskType: 3
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
     isReadable: 0
   meshes:
     lODScreenPercentages: []
@@ -77,15 +111,9 @@ ModelImporter:
     blendShapeNormalImportMode: 1
     normalSmoothingSource: 0
   referencedClips:
-  - dd8fa568f2c1dce4198b63359f5f85fb
-  - cd9dd0bb9460d484db571c375c5e2af5
-  - 7dc7b28c9f1fe9d47b3274cc93ff98a1
-  - 61b2ef2539e0ab547b15f4459139d14d
-  - ffe3665253db64441873c00852d481ff
-  - 5b3c99fb68d84f74ca644cbdbd4d6021
-  - 43e58210f5f56944f896c61e6172a930
-  - bace483e6a187634d8e361ad352fa1b1
-  importAnimation: 0
+  - b6eac46d532109245bab7ea83dcfdd94
+  - 667ad8df7d828fe48863729f518b140b
+  importAnimation: 1
   humanDescription:
     serializedVersion: 3
     human: []
@@ -98,7 +126,7 @@ ModelImporter:
     legStretch: 0.05
     feetSpacing: 0
     globalScale: 1
-    rootMotionBoneName: mixamorig:Hips
+    rootMotionBoneName: input
     hasTranslationDoF: 0
     hasExtraRoot: 0
     skeletonHasParents: 1

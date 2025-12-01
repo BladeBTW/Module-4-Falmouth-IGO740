@@ -6,12 +6,12 @@ using UnityEngine.AI;
 public class WanderingAI : MonoBehaviour
 {
     [Header("Movement")]
-    public float MoveSpeed = 5f;        // applied to NavMeshAgent
+    public float MoveSpeed = 5f;        // should match player MoveSpeed for similar feel
 
     [Header("Wandering")]
     public float wanderRadius = 10f;
     public float wanderInterval = 3f;   // idle time at destination
-    public float arrivalRadius = 0.5f;  // extra tolerance on top of stoppingDistance
+    public float arrivalRadius = 0.5f;  // tolerance for "arrived"
 
     private NavMeshAgent _agent;
     private Animator _animator;
@@ -38,8 +38,7 @@ public class WanderingAI : MonoBehaviour
         if (_agent == null)
             return;
 
-        // --- 1. Arrival detection ---
-        // Standard pattern: not calculating path AND close enough to target
+        // --- arrival detection ---
         float targetDistance = _agent.stoppingDistance + arrivalRadius;
 
         bool arrived =
@@ -51,7 +50,6 @@ public class WanderingAI : MonoBehaviour
         {
             _idleTimer += Time.deltaTime;
 
-            // Stay put until wanderInterval has passed
             if (_idleTimer >= wanderInterval)
             {
                 PickNewDestination();
@@ -63,16 +61,17 @@ public class WanderingAI : MonoBehaviour
             _idleTimer = 0f;
         }
 
-        // --- 2. Animator: Speed based on NavMeshAgent velocity ---
+        // --- Animator "Speed" that matches the player's scale ---
         if (_animator != null)
         {
             Vector3 vel = _agent.velocity;
-            float horizontalSpeed = new Vector3(vel.x, 0f, vel.z).magnitude;
+            float worldSpeed = new Vector3(vel.x, 0f, vel.z).magnitude;
 
-            // When idle: ~0  → idle (Speed <= 0.1)
-            // When moving: ~MoveSpeed → walk (Speed > 0.1)
-            _animator.SetFloat("Speed", horizontalSpeed);
-            _animator.SetBool("AirBorne", false); // NavMeshAgent stays grounded
+            // normalize to 0–1 range, like player (_movementVelocity.magnitude before multiplying by MoveSpeed)
+            float normalizedSpeed = MoveSpeed > 0.01f ? worldSpeed / MoveSpeed : 0f;
+
+            _animator.SetFloat("Speed", normalizedSpeed);
+            _animator.SetBool("AirBorne", false); // NavMesh agents are grounded
         }
     }
 
@@ -90,8 +89,6 @@ public class WanderingAI : MonoBehaviour
             _agent.isStopped = false;
             _agent.SetDestination(navHit.position);
         }
-        // If sampling fails, we just don't move this frame; Update will try again
-        // on the next idle cycle.
     }
 
     private void OnDrawGizmosSelected()
