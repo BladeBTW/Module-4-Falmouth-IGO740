@@ -148,6 +148,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   healthAmount: 20
   weightAmount: 1
+  pickupSfx: {fileID: 0}
 --- !u!1 &150174097273054684
 GameObject:
   m_ObjectHideFlags: 0
@@ -322,6 +323,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   healthAmount: 20
   weightAmount: 1
+  pickupSfx: {fileID: 0}
 --- !u!1 &414376408144664968
 GameObject:
   m_ObjectHideFlags: 0
@@ -496,6 +498,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   healthAmount: 20
   weightAmount: 1
+  pickupSfx: {fileID: 0}
 --- !u!1 &520067219690600720
 GameObject:
   m_ObjectHideFlags: 0
@@ -639,6 +642,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   healthAmount: 20
   weightAmount: 1
+  pickupSfx: {fileID: 0}
 --- !u!1 &610394558024250942
 GameObject:
   m_ObjectHideFlags: 0
@@ -752,6 +756,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   healthAmount: 20
   weightAmount: 1
+  pickupSfx: {fileID: 0}
 --- !u!114 &5922399860142612027
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -766,6 +771,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   healthAmount: 10
   weightAmount: 2
+  pickupSfx: {fileID: 0}
 --- !u!1 &627193446132241751
 GameObject:
   m_ObjectHideFlags: 0
@@ -878,6 +884,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   healthAmount: 20
   weightAmount: 1
+  pickupSfx: {fileID: 0}
 --- !u!1 &638880886107596678
 GameObject:
   m_ObjectHideFlags: 0
@@ -991,6 +998,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   healthAmount: 20
   weightAmount: 1
+  pickupSfx: {fileID: 0}
 --- !u!114 &4430197102991622956
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1005,6 +1013,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   healthAmount: 10
   weightAmount: 2
+  pickupSfx: {fileID: 0}
 --- !u!1 &655940929552713256
 GameObject:
   m_ObjectHideFlags: 0
@@ -1118,6 +1127,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   healthAmount: 20
   weightAmount: 1
+  pickupSfx: {fileID: 0}
 --- !u!114 &1810077889548690604
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1132,6 +1142,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   healthAmount: 10
   weightAmount: 2
+  pickupSfx: {fileID: 0}
 --- !u!1 &662581706195216737
 GameObject:
   m_ObjectHideFlags: 0
@@ -1336,6 +1347,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   healthAmount: 20
   weightAmount: 1
+  pickupSfx: {fileID: 0}
 --- !u!114 &1285131548297665778
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1350,6 +1362,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   healthAmount: 10
   weightAmount: 2
+  pickupSfx: {fileID: 0}
 --- !u!1 &764086688990573421
 GameObject:
   m_ObjectHideFlags: 0
@@ -1494,6 +1507,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   healthAmount: 20
   weightAmount: 1
+  pickupSfx: {fileID: 0}
 --- !u!114 &6499849588653335066
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1508,6 +1522,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   healthAmount: 10
   weightAmount: 2
+  pickupSfx: {fileID: 0}
 --- !u!1 &823422490742971969
 GameObject:
   m_ObjectHideFlags: 0
@@ -1739,6 +1754,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   healthAmount: 20
   weightAmount: 1
+  pickupSfx: {fileID: 0}
 --- !u!1 &947740281824076944
 GameObject:
   m_ObjectHideFlags: 0
@@ -1955,6 +1971,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   healthAmount: 20
   weightAmount: 1
+  pickupSfx: {fileID: 0}
 --- !u!1 &1327789512745678624
 GameObject:
   m_ObjectHideFlags: 0
@@ -2067,6 +2084,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   healthAmount: 20
   weightAmount: 1
+  pickupSfx: {fileID: 0}
 --- !u!1 &1356868625236432024
 GameObject:
   m_ObjectHideFlags: 0
@@ -2241,6 +2259,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   healthAmount: 20
   weightAmount: 1
+  pickupSfx: {fileID: 0}
 --- !u!1 &1550049479264535605
 GameObject:
   m_ObjectHideFlags: 0
@@ -2499,6 +2518,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   healthAmount: 20
   weightAmount: 1
+  pickupSfx: {fileID: 0}
 --- !u!1 &1677224545743517996
 GameObject:
   m_ObjectHideFlags: 0
@@ -2643,6 +2663,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   healthAmount: 20
   weightAmount: 1
+  pickupSfx: {fileID: 0}
 --- !u!114 &4214851721633038055
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2657,6 +2678,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   healthAmount: 10
   weightAmount: 2
+  pickupSfx: {fileID: 0}
 --- !u!1 &1753871731469726391
 GameObject:
   m_ObjectHideFlags: 0
@@ -2885,6 +2907,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   healthAmount: 20
   weightAmount: 1
+  pickupSfx: {fileID: 0}
 --- !u!114 &5717191789634544938
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2899,6 +2922,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   healthAmount: 10
   weightAmount: 2
+  pickupSfx: {fileID: 0}
 --- !u!1 &1827466281447927896
 GameObject:
   m_ObjectHideFlags: 0
@@ -3011,6 +3035,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   healthAmount: 20
   weightAmount: 1
+  pickupSfx: {fileID: 0}
 --- !u!1 &1827613715151738930
 GameObject:
   m_ObjectHideFlags: 0
@@ -3124,6 +3149,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   healthAmount: 20
   weightAmount: 1
+  pickupSfx: {fileID: 0}
 --- !u!114 &8921452565911885535
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3138,6 +3164,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   healthAmount: 10
   weightAmount: 2
+  pickupSfx: {fileID: 0}
 --- !u!1 &1985022139416579488
 GameObject:
   m_ObjectHideFlags: 0
@@ -3251,6 +3278,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   healthAmount: 20
   weightAmount: 1
+  pickupSfx: {fileID: 0}
 --- !u!114 &3589275417064988956
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3265,6 +3293,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   healthAmount: 10
   weightAmount: 2
+  pickupSfx: {fileID: 0}
 --- !u!1 &1986779625272108612
 GameObject:
   m_ObjectHideFlags: 0
@@ -3378,6 +3407,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   healthAmount: 20
   weightAmount: 1
+  pickupSfx: {fileID: 0}
 --- !u!114 &3231713658631915314
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3392,6 +3422,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   healthAmount: 10
   weightAmount: 2
+  pickupSfx: {fileID: 0}
 --- !u!1 &2002957521975201397
 GameObject:
   m_ObjectHideFlags: 0
@@ -3504,6 +3535,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   healthAmount: 20
   weightAmount: 1
+  pickupSfx: {fileID: 0}
 --- !u!1 &2057557838207918203
 GameObject:
   m_ObjectHideFlags: 0
@@ -3647,6 +3679,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   healthAmount: 20
   weightAmount: 1
+  pickupSfx: {fileID: 0}
 --- !u!1 &2081324781188353986
 GameObject:
   m_ObjectHideFlags: 0
@@ -3759,6 +3792,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   healthAmount: 20
   weightAmount: 1
+  pickupSfx: {fileID: 0}
 --- !u!1 &2154556379347383948
 GameObject:
   m_ObjectHideFlags: 0
@@ -3871,6 +3905,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   healthAmount: 20
   weightAmount: 1
+  pickupSfx: {fileID: 0}
 --- !u!1 &2172629883942223330
 GameObject:
   m_ObjectHideFlags: 0
@@ -4015,6 +4050,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   healthAmount: 20
   weightAmount: 1
+  pickupSfx: {fileID: 0}
 --- !u!114 &8175072555017721686
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4029,6 +4065,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   healthAmount: 10
   weightAmount: 2
+  pickupSfx: {fileID: 0}
 --- !u!1 &2229698172808403847
 GameObject:
   m_ObjectHideFlags: 0
@@ -4142,6 +4179,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   healthAmount: 20
   weightAmount: 1
+  pickupSfx: {fileID: 0}
 --- !u!114 &5284161396056991058
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4156,6 +4194,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   healthAmount: 10
   weightAmount: 2
+  pickupSfx: {fileID: 0}
 --- !u!1 &2401746701036112038
 GameObject:
   m_ObjectHideFlags: 0
@@ -4300,6 +4339,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   healthAmount: 20
   weightAmount: 1
+  pickupSfx: {fileID: 0}
 --- !u!114 &7534531817603803611
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4314,6 +4354,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   healthAmount: 10
   weightAmount: 2
+  pickupSfx: {fileID: 0}
 --- !u!1 &2552047499685824865
 GameObject:
   m_ObjectHideFlags: 0
@@ -4426,6 +4467,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   healthAmount: 20
   weightAmount: 1
+  pickupSfx: {fileID: 0}
 --- !u!1 &2654365064417112196
 GameObject:
   m_ObjectHideFlags: 0
@@ -4538,6 +4580,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   healthAmount: 20
   weightAmount: 1
+  pickupSfx: {fileID: 0}
 --- !u!1 &2697291709883748815
 GameObject:
   m_ObjectHideFlags: 0
@@ -4650,6 +4693,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   healthAmount: 20
   weightAmount: 1
+  pickupSfx: {fileID: 0}
 --- !u!1 &2765300151967147667
 GameObject:
   m_ObjectHideFlags: 0
@@ -4763,6 +4807,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   healthAmount: 20
   weightAmount: 1
+  pickupSfx: {fileID: 0}
 --- !u!114 &5420264853013393388
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4777,6 +4822,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   healthAmount: 10
   weightAmount: 2
+  pickupSfx: {fileID: 0}
 --- !u!1 &2796414393375607003
 GameObject:
   m_ObjectHideFlags: 0
@@ -4890,6 +4936,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   healthAmount: 20
   weightAmount: 1
+  pickupSfx: {fileID: 0}
 --- !u!114 &7258714408595768147
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4904,6 +4951,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   healthAmount: 10
   weightAmount: 2
+  pickupSfx: {fileID: 0}
 --- !u!1 &2866904499247471173
 GameObject:
   m_ObjectHideFlags: 0
@@ -5140,6 +5188,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   healthAmount: 20
   weightAmount: 1
+  pickupSfx: {fileID: 0}
 --- !u!1 &2982082607756132155
 GameObject:
   m_ObjectHideFlags: 0
@@ -5252,6 +5301,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   healthAmount: 20
   weightAmount: 1
+  pickupSfx: {fileID: 0}
 --- !u!1 &2982202453126472131
 GameObject:
   m_ObjectHideFlags: 0
@@ -5441,6 +5491,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   healthAmount: 20
   weightAmount: 1
+  pickupSfx: {fileID: 0}
 --- !u!1 &3027403104071240459
 GameObject:
   m_ObjectHideFlags: 0
@@ -5553,6 +5604,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   healthAmount: 20
   weightAmount: 1
+  pickupSfx: {fileID: 0}
 --- !u!1 &3067716013265898771
 GameObject:
   m_ObjectHideFlags: 0
@@ -5666,6 +5718,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   healthAmount: 20
   weightAmount: 1
+  pickupSfx: {fileID: 0}
 --- !u!114 &578093656422937699
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5680,6 +5733,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   healthAmount: 10
   weightAmount: 2
+  pickupSfx: {fileID: 0}
 --- !u!1 &3075056674334813267
 GameObject:
   m_ObjectHideFlags: 0
@@ -5938,6 +5992,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   healthAmount: 20
   weightAmount: 1
+  pickupSfx: {fileID: 0}
 --- !u!1 &3193204601047860529
 GameObject:
   m_ObjectHideFlags: 0
@@ -6051,6 +6106,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   healthAmount: 20
   weightAmount: 1
+  pickupSfx: {fileID: 0}
 --- !u!114 &1448105917853925390
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6065,6 +6121,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   healthAmount: 10
   weightAmount: 2
+  pickupSfx: {fileID: 0}
 --- !u!1 &3232568279067193465
 GameObject:
   m_ObjectHideFlags: 0
@@ -6178,6 +6235,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   healthAmount: 20
   weightAmount: 1
+  pickupSfx: {fileID: 0}
 --- !u!114 &4706894267057742663
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6192,6 +6250,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   healthAmount: 10
   weightAmount: 2
+  pickupSfx: {fileID: 0}
 --- !u!1 &3251934581118461670
 GameObject:
   m_ObjectHideFlags: 0
@@ -6481,6 +6540,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   healthAmount: 20
   weightAmount: 1
+  pickupSfx: {fileID: 0}
 --- !u!1 &3633240309030766431
 GameObject:
   m_ObjectHideFlags: 0
@@ -6625,6 +6685,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   healthAmount: 20
   weightAmount: 1
+  pickupSfx: {fileID: 0}
 --- !u!114 &7551260744838203844
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6639,6 +6700,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   healthAmount: 10
   weightAmount: 2
+  pickupSfx: {fileID: 0}
 --- !u!1 &3714210103529933400
 GameObject:
   m_ObjectHideFlags: 0
@@ -6782,6 +6844,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   healthAmount: 20
   weightAmount: 1
+  pickupSfx: {fileID: 0}
 --- !u!1 &3821754782440246269
 GameObject:
   m_ObjectHideFlags: 0
@@ -6894,6 +6957,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   healthAmount: 20
   weightAmount: 1
+  pickupSfx: {fileID: 0}
 --- !u!1 &3866742163342818363
 GameObject:
   m_ObjectHideFlags: 0
@@ -7007,6 +7071,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   healthAmount: 20
   weightAmount: 1
+  pickupSfx: {fileID: 0}
 --- !u!114 &6521545112854805544
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7021,6 +7086,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   healthAmount: 10
   weightAmount: 2
+  pickupSfx: {fileID: 0}
 --- !u!1 &3897922697606812229
 GameObject:
   m_ObjectHideFlags: 0
@@ -7133,6 +7199,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   healthAmount: 20
   weightAmount: 1
+  pickupSfx: {fileID: 0}
 --- !u!1 &3929222914865317612
 GameObject:
   m_ObjectHideFlags: 0
@@ -7307,6 +7374,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   healthAmount: 20
   weightAmount: 1
+  pickupSfx: {fileID: 0}
 --- !u!1 &4166521412623077244
 GameObject:
   m_ObjectHideFlags: 0
@@ -7531,6 +7599,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   healthAmount: 20
   weightAmount: 1
+  pickupSfx: {fileID: 0}
 --- !u!1 &4395555471076209929
 GameObject:
   m_ObjectHideFlags: 0
@@ -7644,6 +7713,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   healthAmount: 20
   weightAmount: 1
+  pickupSfx: {fileID: 0}
 --- !u!114 &2069010325344823396
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7658,6 +7728,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   healthAmount: 10
   weightAmount: 2
+  pickupSfx: {fileID: 0}
 --- !u!1 &4448032352762371736
 GameObject:
   m_ObjectHideFlags: 0
@@ -7802,6 +7873,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   healthAmount: 20
   weightAmount: 1
+  pickupSfx: {fileID: 0}
 --- !u!114 &7516513801936080142
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7816,6 +7888,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   healthAmount: 10
   weightAmount: 2
+  pickupSfx: {fileID: 0}
 --- !u!1 &4606370112684985877
 GameObject:
   m_ObjectHideFlags: 0
@@ -7959,6 +8032,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   healthAmount: 20
   weightAmount: 1
+  pickupSfx: {fileID: 0}
 --- !u!1 &4658478072023211142
 GameObject:
   m_ObjectHideFlags: 0
@@ -8102,6 +8176,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   healthAmount: 20
   weightAmount: 1
+  pickupSfx: {fileID: 0}
 --- !u!1 &4906223075784086817
 GameObject:
   m_ObjectHideFlags: 0
@@ -8214,6 +8289,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   healthAmount: 20
   weightAmount: 1
+  pickupSfx: {fileID: 0}
 --- !u!1 &4914420100366886513
 GameObject:
   m_ObjectHideFlags: 0
@@ -8326,6 +8402,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   healthAmount: 20
   weightAmount: 1
+  pickupSfx: {fileID: 0}
 --- !u!1 &5053598449288105892
 GameObject:
   m_ObjectHideFlags: 0
@@ -8438,6 +8515,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   healthAmount: 20
   weightAmount: 1
+  pickupSfx: {fileID: 0}
 --- !u!1 &5055423426963702187
 GameObject:
   m_ObjectHideFlags: 0
@@ -8551,6 +8629,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   healthAmount: 20
   weightAmount: 1
+  pickupSfx: {fileID: 0}
 --- !u!114 &3139520052501303755
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8565,6 +8644,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   healthAmount: 10
   weightAmount: 2
+  pickupSfx: {fileID: 0}
 --- !u!1 &5066645983569177162
 GameObject:
   m_ObjectHideFlags: 0
@@ -8678,6 +8758,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   healthAmount: 20
   weightAmount: 1
+  pickupSfx: {fileID: 0}
 --- !u!114 &6526842722425841217
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8692,6 +8773,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   healthAmount: 10
   weightAmount: 2
+  pickupSfx: {fileID: 0}
 --- !u!1 &5154512775761628811
 GameObject:
   m_ObjectHideFlags: 0
@@ -8805,6 +8887,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   healthAmount: 20
   weightAmount: 1
+  pickupSfx: {fileID: 0}
 --- !u!114 &1748470605330805319
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8819,6 +8902,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   healthAmount: 10
   weightAmount: 2
+  pickupSfx: {fileID: 0}
 --- !u!1 &5195960584255698156
 GameObject:
   m_ObjectHideFlags: 0
@@ -9078,6 +9162,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   healthAmount: 20
   weightAmount: 1
+  pickupSfx: {fileID: 0}
 --- !u!114 &4951046657964031778
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9092,6 +9177,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   healthAmount: 10
   weightAmount: 2
+  pickupSfx: {fileID: 0}
 --- !u!1 &5392297118492849554
 GameObject:
   m_ObjectHideFlags: 0
@@ -9235,6 +9321,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   healthAmount: 20
   weightAmount: 1
+  pickupSfx: {fileID: 0}
 --- !u!1 &5436222647145183439
 GameObject:
   m_ObjectHideFlags: 0
@@ -9578,6 +9665,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   healthAmount: 20
   weightAmount: 1
+  pickupSfx: {fileID: 0}
 --- !u!114 &874779387571033454
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9592,6 +9680,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   healthAmount: 10
   weightAmount: 2
+  pickupSfx: {fileID: 0}
 --- !u!1 &5475171236405635485
 GameObject:
   m_ObjectHideFlags: 0
@@ -9767,6 +9856,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   healthAmount: 20
   weightAmount: 1
+  pickupSfx: {fileID: 0}
 --- !u!114 &6821273199120657256
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9781,6 +9871,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   healthAmount: 10
   weightAmount: 2
+  pickupSfx: {fileID: 0}
 --- !u!1 &5548198629462115777
 GameObject:
   m_ObjectHideFlags: 0
@@ -9894,6 +9985,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   healthAmount: 20
   weightAmount: 1
+  pickupSfx: {fileID: 0}
 --- !u!114 &2619505793037400147
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9908,6 +10000,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   healthAmount: 10
   weightAmount: 2
+  pickupSfx: {fileID: 0}
 --- !u!1 &5549221426980922787
 GameObject:
   m_ObjectHideFlags: 0
@@ -10021,6 +10114,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   healthAmount: 20
   weightAmount: 1
+  pickupSfx: {fileID: 0}
 --- !u!114 &4695768691284741937
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10035,6 +10129,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   healthAmount: 10
   weightAmount: 2
+  pickupSfx: {fileID: 0}
 --- !u!1 &5567301417924292493
 GameObject:
   m_ObjectHideFlags: 0
@@ -10147,6 +10242,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   healthAmount: 20
   weightAmount: 1
+  pickupSfx: {fileID: 0}
 --- !u!1 &5652732175794528863
 GameObject:
   m_ObjectHideFlags: 0
@@ -10259,6 +10355,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   healthAmount: 20
   weightAmount: 1
+  pickupSfx: {fileID: 0}
 --- !u!1 &5978952716528114184
 GameObject:
   m_ObjectHideFlags: 0
@@ -10372,6 +10469,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   healthAmount: 20
   weightAmount: 1
+  pickupSfx: {fileID: 0}
 --- !u!114 &7800011932263136622
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10386,6 +10484,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   healthAmount: 10
   weightAmount: 2
+  pickupSfx: {fileID: 0}
 --- !u!1 &5997937556607984243
 GameObject:
   m_ObjectHideFlags: 0
@@ -10499,6 +10598,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   healthAmount: 20
   weightAmount: 1
+  pickupSfx: {fileID: 0}
 --- !u!114 &6078636584401250348
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10513,6 +10613,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   healthAmount: 10
   weightAmount: 2
+  pickupSfx: {fileID: 0}
 --- !u!1 &6028636485106183811
 GameObject:
   m_ObjectHideFlags: 0
@@ -10626,6 +10727,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   healthAmount: 20
   weightAmount: 1
+  pickupSfx: {fileID: 0}
 --- !u!114 &1119651625072578116
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10640,6 +10742,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   healthAmount: 10
   weightAmount: 2
+  pickupSfx: {fileID: 0}
 --- !u!1 &6102398047223130529
 GameObject:
   m_ObjectHideFlags: 0
@@ -10752,6 +10855,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   healthAmount: 20
   weightAmount: 1
+  pickupSfx: {fileID: 0}
 --- !u!1 &6119970905121256330
 GameObject:
   m_ObjectHideFlags: 0
@@ -10980,6 +11084,9 @@ MonoBehaviour:
   damageAmount: 10
   destroyAfterHit: 0
   oneUseOnly: 0
+  hitVfxPrefab: {fileID: 0}
+  hitSfxOverride: {fileID: 0}
+  hitSfxVolumeOverride: 1
 --- !u!1 &6229918860755391426
 GameObject:
   m_ObjectHideFlags: 0
@@ -11093,6 +11200,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   healthAmount: 20
   weightAmount: 1
+  pickupSfx: {fileID: 0}
 --- !u!114 &375198890522911554
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -11107,6 +11215,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   healthAmount: 10
   weightAmount: 2
+  pickupSfx: {fileID: 0}
 --- !u!1 &6425299730933265728
 GameObject:
   m_ObjectHideFlags: 0
@@ -11220,6 +11329,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   healthAmount: 20
   weightAmount: 1
+  pickupSfx: {fileID: 0}
 --- !u!114 &1476406653968585161
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -11234,6 +11344,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   healthAmount: 10
   weightAmount: 2
+  pickupSfx: {fileID: 0}
 --- !u!1 &6518143409317493303
 GameObject:
   m_ObjectHideFlags: 0
@@ -11416,6 +11527,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   healthAmount: 20
   weightAmount: 1
+  pickupSfx: {fileID: 0}
 --- !u!1 &6821645570805694967
 GameObject:
   m_ObjectHideFlags: 0
@@ -11529,6 +11641,9 @@ MonoBehaviour:
   damageAmount: 10
   destroyAfterHit: 0
   oneUseOnly: 0
+  hitVfxPrefab: {fileID: 0}
+  hitSfxOverride: {fileID: 0}
+  hitSfxVolumeOverride: 1
 --- !u!1 &6821645570816397950
 GameObject:
   m_ObjectHideFlags: 0
@@ -11642,6 +11757,9 @@ MonoBehaviour:
   damageAmount: 10
   destroyAfterHit: 0
   oneUseOnly: 0
+  hitVfxPrefab: {fileID: 0}
+  hitSfxOverride: {fileID: 0}
+  hitSfxVolumeOverride: 1
 --- !u!1 &6821645570858429539
 GameObject:
   m_ObjectHideFlags: 0
@@ -11755,6 +11873,9 @@ MonoBehaviour:
   damageAmount: 10
   destroyAfterHit: 0
   oneUseOnly: 0
+  hitVfxPrefab: {fileID: 0}
+  hitSfxOverride: {fileID: 0}
+  hitSfxVolumeOverride: 1
 --- !u!1 &6821645570879290165
 GameObject:
   m_ObjectHideFlags: 0
@@ -11868,6 +11989,9 @@ MonoBehaviour:
   damageAmount: 10
   destroyAfterHit: 0
   oneUseOnly: 0
+  hitVfxPrefab: {fileID: 0}
+  hitSfxOverride: {fileID: 0}
+  hitSfxVolumeOverride: 1
 --- !u!1 &6821645570971939415
 GameObject:
   m_ObjectHideFlags: 0
@@ -12014,6 +12138,9 @@ MonoBehaviour:
   damageAmount: 10
   destroyAfterHit: 0
   oneUseOnly: 0
+  hitVfxPrefab: {fileID: 0}
+  hitSfxOverride: {fileID: 0}
+  hitSfxVolumeOverride: 1
 --- !u!1 &6821645571085430378
 GameObject:
   m_ObjectHideFlags: 0
@@ -12127,6 +12254,9 @@ MonoBehaviour:
   damageAmount: 10
   destroyAfterHit: 0
   oneUseOnly: 0
+  hitVfxPrefab: {fileID: 0}
+  hitSfxOverride: {fileID: 0}
+  hitSfxVolumeOverride: 1
 --- !u!1 &6821645571097554119
 GameObject:
   m_ObjectHideFlags: 0
@@ -12240,6 +12370,9 @@ MonoBehaviour:
   damageAmount: 10
   destroyAfterHit: 0
   oneUseOnly: 0
+  hitVfxPrefab: {fileID: 0}
+  hitSfxOverride: {fileID: 0}
+  hitSfxVolumeOverride: 1
 --- !u!1 &6821645571125397885
 GameObject:
   m_ObjectHideFlags: 0
@@ -12353,6 +12486,9 @@ MonoBehaviour:
   damageAmount: 10
   destroyAfterHit: 0
   oneUseOnly: 0
+  hitVfxPrefab: {fileID: 0}
+  hitSfxOverride: {fileID: 0}
+  hitSfxVolumeOverride: 1
 --- !u!1 &6821645571296958594
 GameObject:
   m_ObjectHideFlags: 0
@@ -12546,6 +12682,9 @@ MonoBehaviour:
   damageAmount: 10
   destroyAfterHit: 0
   oneUseOnly: 0
+  hitVfxPrefab: {fileID: 0}
+  hitSfxOverride: {fileID: 0}
+  hitSfxVolumeOverride: 1
 --- !u!1 &6821645571573542021
 GameObject:
   m_ObjectHideFlags: 0
@@ -12659,6 +12798,9 @@ MonoBehaviour:
   damageAmount: 10
   destroyAfterHit: 0
   oneUseOnly: 0
+  hitVfxPrefab: {fileID: 0}
+  hitSfxOverride: {fileID: 0}
+  hitSfxVolumeOverride: 1
 --- !u!1 &6821645571629340616
 GameObject:
   m_ObjectHideFlags: 0
@@ -12833,6 +12975,9 @@ MonoBehaviour:
   damageAmount: 10
   destroyAfterHit: 0
   oneUseOnly: 0
+  hitVfxPrefab: {fileID: 0}
+  hitSfxOverride: {fileID: 0}
+  hitSfxVolumeOverride: 1
 --- !u!1 &6821645571780905650
 GameObject:
   m_ObjectHideFlags: 0
@@ -13061,6 +13206,9 @@ MonoBehaviour:
   damageAmount: 10
   destroyAfterHit: 0
   oneUseOnly: 0
+  hitVfxPrefab: {fileID: 0}
+  hitSfxOverride: {fileID: 0}
+  hitSfxVolumeOverride: 1
 --- !u!1 &6821645571866573902
 GameObject:
   m_ObjectHideFlags: 0
@@ -13174,6 +13322,9 @@ MonoBehaviour:
   damageAmount: 10
   destroyAfterHit: 0
   oneUseOnly: 0
+  hitVfxPrefab: {fileID: 0}
+  hitSfxOverride: {fileID: 0}
+  hitSfxVolumeOverride: 1
 --- !u!1 &6821645571870650482
 GameObject:
   m_ObjectHideFlags: 0
@@ -13287,6 +13438,9 @@ MonoBehaviour:
   damageAmount: 10
   destroyAfterHit: 0
   oneUseOnly: 0
+  hitVfxPrefab: {fileID: 0}
+  hitSfxOverride: {fileID: 0}
+  hitSfxVolumeOverride: 1
 --- !u!1 &6821645571979402186
 GameObject:
   m_ObjectHideFlags: 0
@@ -13400,6 +13554,9 @@ MonoBehaviour:
   damageAmount: 10
   destroyAfterHit: 0
   oneUseOnly: 0
+  hitVfxPrefab: {fileID: 0}
+  hitSfxOverride: {fileID: 0}
+  hitSfxVolumeOverride: 1
 --- !u!1 &6821645572010014671
 GameObject:
   m_ObjectHideFlags: 0
@@ -13513,6 +13670,9 @@ MonoBehaviour:
   damageAmount: 10
   destroyAfterHit: 0
   oneUseOnly: 0
+  hitVfxPrefab: {fileID: 0}
+  hitSfxOverride: {fileID: 0}
+  hitSfxVolumeOverride: 1
 --- !u!1 &6821645572014596142
 GameObject:
   m_ObjectHideFlags: 0
@@ -13687,6 +13847,9 @@ MonoBehaviour:
   damageAmount: 10
   destroyAfterHit: 0
   oneUseOnly: 0
+  hitVfxPrefab: {fileID: 0}
+  hitSfxOverride: {fileID: 0}
+  hitSfxVolumeOverride: 1
 --- !u!1 &6821645572224205604
 GameObject:
   m_ObjectHideFlags: 0
@@ -13800,6 +13963,9 @@ MonoBehaviour:
   damageAmount: 10
   destroyAfterHit: 0
   oneUseOnly: 0
+  hitVfxPrefab: {fileID: 0}
+  hitSfxOverride: {fileID: 0}
+  hitSfxVolumeOverride: 1
 --- !u!1 &6821645572299314713
 GameObject:
   m_ObjectHideFlags: 0
@@ -13915,6 +14081,9 @@ MonoBehaviour:
   damageAmount: 10
   destroyAfterHit: 0
   oneUseOnly: 0
+  hitVfxPrefab: {fileID: 0}
+  hitSfxOverride: {fileID: 0}
+  hitSfxVolumeOverride: 1
 --- !u!65 &4218023957198351990
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -13943,6 +14112,9 @@ MonoBehaviour:
   damageAmount: 10
   destroyAfterHit: 0
   oneUseOnly: 0
+  hitVfxPrefab: {fileID: 0}
+  hitSfxOverride: {fileID: 0}
+  hitSfxVolumeOverride: 1
 --- !u!1 &6821645572359644214
 GameObject:
   m_ObjectHideFlags: 0
@@ -14056,6 +14228,9 @@ MonoBehaviour:
   damageAmount: 10
   destroyAfterHit: 0
   oneUseOnly: 0
+  hitVfxPrefab: {fileID: 0}
+  hitSfxOverride: {fileID: 0}
+  hitSfxVolumeOverride: 1
 --- !u!1 &6821645572373894701
 GameObject:
   m_ObjectHideFlags: 0
@@ -14169,6 +14344,9 @@ MonoBehaviour:
   damageAmount: 10
   destroyAfterHit: 0
   oneUseOnly: 0
+  hitVfxPrefab: {fileID: 0}
+  hitSfxOverride: {fileID: 0}
+  hitSfxVolumeOverride: 1
 --- !u!1 &6821645572417374245
 GameObject:
   m_ObjectHideFlags: 0
@@ -14282,6 +14460,9 @@ MonoBehaviour:
   damageAmount: 10
   destroyAfterHit: 0
   oneUseOnly: 0
+  hitVfxPrefab: {fileID: 0}
+  hitSfxOverride: {fileID: 0}
+  hitSfxVolumeOverride: 1
 --- !u!1 &6821645572424915159
 GameObject:
   m_ObjectHideFlags: 0
@@ -14438,6 +14619,9 @@ MonoBehaviour:
   damageAmount: 10
   destroyAfterHit: 0
   oneUseOnly: 0
+  hitVfxPrefab: {fileID: 0}
+  hitSfxOverride: {fileID: 0}
+  hitSfxVolumeOverride: 1
 --- !u!1 &6821645572447260543
 GameObject:
   m_ObjectHideFlags: 0
@@ -14551,6 +14735,9 @@ MonoBehaviour:
   damageAmount: 10
   destroyAfterHit: 0
   oneUseOnly: 0
+  hitVfxPrefab: {fileID: 0}
+  hitSfxOverride: {fileID: 0}
+  hitSfxVolumeOverride: 1
 --- !u!1 &6821645572539618433
 GameObject:
   m_ObjectHideFlags: 0
@@ -14664,6 +14851,9 @@ MonoBehaviour:
   damageAmount: 10
   destroyAfterHit: 0
   oneUseOnly: 0
+  hitVfxPrefab: {fileID: 0}
+  hitSfxOverride: {fileID: 0}
+  hitSfxVolumeOverride: 1
 --- !u!1 &6821645572550375794
 GameObject:
   m_ObjectHideFlags: 0
@@ -14777,6 +14967,9 @@ MonoBehaviour:
   damageAmount: 10
   destroyAfterHit: 0
   oneUseOnly: 0
+  hitVfxPrefab: {fileID: 0}
+  hitSfxOverride: {fileID: 0}
+  hitSfxVolumeOverride: 1
 --- !u!1 &6821645572657860407
 GameObject:
   m_ObjectHideFlags: 0
@@ -14890,6 +15083,9 @@ MonoBehaviour:
   damageAmount: 10
   destroyAfterHit: 0
   oneUseOnly: 0
+  hitVfxPrefab: {fileID: 0}
+  hitSfxOverride: {fileID: 0}
+  hitSfxVolumeOverride: 1
 --- !u!1 &6821645572762523877
 GameObject:
   m_ObjectHideFlags: 0
@@ -15003,6 +15199,9 @@ MonoBehaviour:
   damageAmount: 10
   destroyAfterHit: 0
   oneUseOnly: 0
+  hitVfxPrefab: {fileID: 0}
+  hitSfxOverride: {fileID: 0}
+  hitSfxVolumeOverride: 1
 --- !u!1 &6821645572785404067
 GameObject:
   m_ObjectHideFlags: 0
@@ -15231,6 +15430,9 @@ MonoBehaviour:
   damageAmount: 10
   destroyAfterHit: 0
   oneUseOnly: 0
+  hitVfxPrefab: {fileID: 0}
+  hitSfxOverride: {fileID: 0}
+  hitSfxVolumeOverride: 1
 --- !u!1 &6880419138613618116
 GameObject:
   m_ObjectHideFlags: 0
@@ -15343,6 +15545,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   healthAmount: 20
   weightAmount: 1
+  pickupSfx: {fileID: 0}
 --- !u!1 &6889308820171999773
 GameObject:
   m_ObjectHideFlags: 0
@@ -15455,6 +15658,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   healthAmount: 20
   weightAmount: 1
+  pickupSfx: {fileID: 0}
 --- !u!1 &7011006901094048179
 GameObject:
   m_ObjectHideFlags: 0
@@ -15567,6 +15771,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   healthAmount: 20
   weightAmount: 1
+  pickupSfx: {fileID: 0}
 --- !u!1 &7051063035727219375
 GameObject:
   m_ObjectHideFlags: 0
@@ -15742,6 +15947,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   healthAmount: 20
   weightAmount: 1
+  pickupSfx: {fileID: 0}
 --- !u!114 &8273410929802290838
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -15756,6 +15962,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   healthAmount: 10
   weightAmount: 2
+  pickupSfx: {fileID: 0}
 --- !u!1 &7159802606896399596
 GameObject:
   m_ObjectHideFlags: 0
@@ -15869,6 +16076,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   healthAmount: 20
   weightAmount: 1
+  pickupSfx: {fileID: 0}
 --- !u!114 &5007076029097079964
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -15883,6 +16091,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   healthAmount: 10
   weightAmount: 2
+  pickupSfx: {fileID: 0}
 --- !u!1 &7177432022278844805
 GameObject:
   m_ObjectHideFlags: 0
@@ -16027,6 +16236,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   healthAmount: 20
   weightAmount: 1
+  pickupSfx: {fileID: 0}
 --- !u!114 &7220946601434109338
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -16041,6 +16251,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   healthAmount: 10
   weightAmount: 2
+  pickupSfx: {fileID: 0}
 --- !u!1 &7300304192660096120
 GameObject:
   m_ObjectHideFlags: 0
@@ -16184,6 +16395,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   healthAmount: 20
   weightAmount: 1
+  pickupSfx: {fileID: 0}
 --- !u!1 &7417241684950461238
 GameObject:
   m_ObjectHideFlags: 0
@@ -16297,6 +16509,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   healthAmount: 20
   weightAmount: 1
+  pickupSfx: {fileID: 0}
 --- !u!114 &7564976741902369656
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -16311,6 +16524,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   healthAmount: 10
   weightAmount: 2
+  pickupSfx: {fileID: 0}
 --- !u!1 &7420647667398146640
 GameObject:
   m_ObjectHideFlags: 0
@@ -16423,6 +16637,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   healthAmount: 20
   weightAmount: 1
+  pickupSfx: {fileID: 0}
 --- !u!1 &7519688609824149115
 GameObject:
   m_ObjectHideFlags: 0
@@ -16566,6 +16781,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   healthAmount: 20
   weightAmount: 1
+  pickupSfx: {fileID: 0}
 --- !u!1 &7572222012242948763
 GameObject:
   m_ObjectHideFlags: 0
@@ -16678,6 +16894,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   healthAmount: 20
   weightAmount: 1
+  pickupSfx: {fileID: 0}
 --- !u!1 &7583756203761402504
 GameObject:
   m_ObjectHideFlags: 0
@@ -16906,6 +17123,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   healthAmount: 20
   weightAmount: 1
+  pickupSfx: {fileID: 0}
 --- !u!114 &245159857107985584
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -16920,6 +17138,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   healthAmount: 10
   weightAmount: 2
+  pickupSfx: {fileID: 0}
 --- !u!1 &7648024078696560920
 GameObject:
   m_ObjectHideFlags: 0
@@ -17032,6 +17251,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   healthAmount: 20
   weightAmount: 1
+  pickupSfx: {fileID: 0}
 --- !u!1 &7824178469063415928
 GameObject:
   m_ObjectHideFlags: 0
@@ -17144,6 +17364,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   healthAmount: 20
   weightAmount: 1
+  pickupSfx: {fileID: 0}
 --- !u!1 &7896892523020649255
 GameObject:
   m_ObjectHideFlags: 0
@@ -17319,6 +17540,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   healthAmount: 20
   weightAmount: 1
+  pickupSfx: {fileID: 0}
 --- !u!114 &3842795816472680621
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -17333,6 +17555,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   healthAmount: 10
   weightAmount: 2
+  pickupSfx: {fileID: 0}
 --- !u!1 &7930216870316776211
 GameObject:
   m_ObjectHideFlags: 0
@@ -17446,6 +17669,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   healthAmount: 20
   weightAmount: 1
+  pickupSfx: {fileID: 0}
 --- !u!114 &9098946216992661792
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -17460,6 +17684,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   healthAmount: 10
   weightAmount: 2
+  pickupSfx: {fileID: 0}
 --- !u!1 &7941471027850248489
 GameObject:
   m_ObjectHideFlags: 0
@@ -17572,6 +17797,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   healthAmount: 20
   weightAmount: 1
+  pickupSfx: {fileID: 0}
 --- !u!1 &8063548149627828696
 GameObject:
   m_ObjectHideFlags: 0
@@ -17684,6 +17910,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   healthAmount: 20
   weightAmount: 1
+  pickupSfx: {fileID: 0}
 --- !u!1 &8096132944051790859
 GameObject:
   m_ObjectHideFlags: 0
@@ -17797,6 +18024,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   healthAmount: 20
   weightAmount: 1
+  pickupSfx: {fileID: 0}
 --- !u!114 &4741757234119807809
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -17811,6 +18039,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   healthAmount: 10
   weightAmount: 2
+  pickupSfx: {fileID: 0}
 --- !u!1 &8099639967776110331
 GameObject:
   m_ObjectHideFlags: 0
@@ -17923,6 +18152,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   healthAmount: 20
   weightAmount: 1
+  pickupSfx: {fileID: 0}
 --- !u!1 &8127636739822184595
 GameObject:
   m_ObjectHideFlags: 0
@@ -18174,6 +18404,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   healthAmount: 20
   weightAmount: 1
+  pickupSfx: {fileID: 0}
 --- !u!114 &175606411658315173
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -18188,6 +18419,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   healthAmount: 10
   weightAmount: 2
+  pickupSfx: {fileID: 0}
 --- !u!1 &8207450630809959141
 GameObject:
   m_ObjectHideFlags: 0
@@ -18300,6 +18532,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   healthAmount: 20
   weightAmount: 1
+  pickupSfx: {fileID: 0}
 --- !u!1 &8246981499265195462
 GameObject:
   m_ObjectHideFlags: 0
@@ -18412,6 +18645,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   healthAmount: 20
   weightAmount: 1
+  pickupSfx: {fileID: 0}
 --- !u!1 &8259740750903121543
 GameObject:
   m_ObjectHideFlags: 0
@@ -18525,6 +18759,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   healthAmount: 20
   weightAmount: 1
+  pickupSfx: {fileID: 0}
 --- !u!114 &4446853753643448335
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -18539,6 +18774,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   healthAmount: 10
   weightAmount: 2
+  pickupSfx: {fileID: 0}
 --- !u!1 &8280154657546712354
 GameObject:
   m_ObjectHideFlags: 0
@@ -18713,6 +18949,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   healthAmount: 20
   weightAmount: 1
+  pickupSfx: {fileID: 0}
 --- !u!1 &8425763667267506357
 GameObject:
   m_ObjectHideFlags: 0
@@ -19163,6 +19400,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   healthAmount: 20
   weightAmount: 1
+  pickupSfx: {fileID: 0}
 --- !u!1 &9091328553549621761
 GameObject:
   m_ObjectHideFlags: 0
@@ -19275,6 +19513,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   healthAmount: 20
   weightAmount: 1
+  pickupSfx: {fileID: 0}
 --- !u!1 &9122487461572359173
 GameObject:
   m_ObjectHideFlags: 0
@@ -19388,6 +19627,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   healthAmount: 20
   weightAmount: 1
+  pickupSfx: {fileID: 0}
 --- !u!114 &8525354664717824517
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -19402,6 +19642,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   healthAmount: 10
   weightAmount: 2
+  pickupSfx: {fileID: 0}
 --- !u!1001 &26534066490897474
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -21646,6 +21887,9 @@ MonoBehaviour:
   damageAmount: 1000
   destroyAfterHit: 0
   oneUseOnly: 0
+  hitVfxPrefab: {fileID: 5091917010390914819, guid: 8efb96763f1ba5b40bdcf9a5ccbd2ec0, type: 3}
+  hitSfxOverride: {fileID: 8300000, guid: 446b77d70b5dc0f48a57cbe9e96d61ac, type: 3}
+  hitSfxVolumeOverride: 0.14
 --- !u!4 &655696822031259631 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: fcdd3f0ea77663d41a12800979d55926, type: 3}
@@ -21815,6 +22059,9 @@ MonoBehaviour:
   damageAmount: 1000
   destroyAfterHit: 0
   oneUseOnly: 0
+  hitVfxPrefab: {fileID: 5091917010390914819, guid: 8efb96763f1ba5b40bdcf9a5ccbd2ec0, type: 3}
+  hitSfxOverride: {fileID: 8300000, guid: 446b77d70b5dc0f48a57cbe9e96d61ac, type: 3}
+  hitSfxVolumeOverride: 0.14
 --- !u!4 &616695149313814959 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: b66293a9a3cb49c4c9b6e51b04c71c89, type: 3}
@@ -23354,6 +23601,9 @@ MonoBehaviour:
   damageAmount: 1000
   destroyAfterHit: 0
   oneUseOnly: 0
+  hitVfxPrefab: {fileID: 5091917010390914819, guid: 8efb96763f1ba5b40bdcf9a5ccbd2ec0, type: 3}
+  hitSfxOverride: {fileID: 8300000, guid: 446b77d70b5dc0f48a57cbe9e96d61ac, type: 3}
+  hitSfxVolumeOverride: 0.14
 --- !u!4 &2120818544568939439 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: fcdd3f0ea77663d41a12800979d55926, type: 3}
@@ -24804,6 +25054,9 @@ MonoBehaviour:
   damageAmount: 1000
   destroyAfterHit: 0
   oneUseOnly: 0
+  hitVfxPrefab: {fileID: 5091917010390914819, guid: 8efb96763f1ba5b40bdcf9a5ccbd2ec0, type: 3}
+  hitSfxOverride: {fileID: 8300000, guid: 446b77d70b5dc0f48a57cbe9e96d61ac, type: 3}
+  hitSfxVolumeOverride: 0.14
 --- !u!1001 &2543139862236129990
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -30323,6 +30576,9 @@ MonoBehaviour:
   damageAmount: 1000
   destroyAfterHit: 0
   oneUseOnly: 0
+  hitVfxPrefab: {fileID: 5091917010390914819, guid: 8efb96763f1ba5b40bdcf9a5ccbd2ec0, type: 3}
+  hitSfxOverride: {fileID: 8300000, guid: 446b77d70b5dc0f48a57cbe9e96d61ac, type: 3}
+  hitSfxVolumeOverride: 0.14
 --- !u!4 &5578487189172548017 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: fcdd3f0ea77663d41a12800979d55926, type: 3}
@@ -32899,6 +33155,9 @@ MonoBehaviour:
   damageAmount: 1000
   destroyAfterHit: 0
   oneUseOnly: 0
+  hitVfxPrefab: {fileID: 5091917010390914819, guid: 8efb96763f1ba5b40bdcf9a5ccbd2ec0, type: 3}
+  hitSfxOverride: {fileID: 8300000, guid: 446b77d70b5dc0f48a57cbe9e96d61ac, type: 3}
+  hitSfxVolumeOverride: 0.14
 --- !u!4 &6867993932147475304 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: fcdd3f0ea77663d41a12800979d55926, type: 3}
@@ -33862,6 +34121,9 @@ MonoBehaviour:
   damageAmount: 1000
   destroyAfterHit: 0
   oneUseOnly: 0
+  hitVfxPrefab: {fileID: 5091917010390914819, guid: 8efb96763f1ba5b40bdcf9a5ccbd2ec0, type: 3}
+  hitSfxOverride: {fileID: 8300000, guid: 446b77d70b5dc0f48a57cbe9e96d61ac, type: 3}
+  hitSfxVolumeOverride: 0.14
 --- !u!4 &6369310298834820925 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: fcdd3f0ea77663d41a12800979d55926, type: 3}
@@ -34957,6 +35219,9 @@ MonoBehaviour:
   damageAmount: 1000
   destroyAfterHit: 0
   oneUseOnly: 0
+  hitVfxPrefab: {fileID: 5091917010390914819, guid: 8efb96763f1ba5b40bdcf9a5ccbd2ec0, type: 3}
+  hitSfxOverride: {fileID: 8300000, guid: 446b77d70b5dc0f48a57cbe9e96d61ac, type: 3}
+  hitSfxVolumeOverride: 0.14
 --- !u!1001 &7487760625985506477
 PrefabInstance:
   m_ObjectHideFlags: 0
