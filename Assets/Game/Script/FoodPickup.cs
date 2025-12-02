@@ -1,13 +1,20 @@
 using UnityEngine;
 
+[RequireComponent(typeof(Collider))]
 public class FoodPickup : MonoBehaviour
 {
-    [Header("Food Values")]
-    public int healthAmount = 10;
-    public float weightAmount = 2f;
+    [Header("Food Pickup")]
+    public int healthAmount = 40;      // how much health this food gives
+    public float weightAmountKg = 0.5f;
 
-    [Header("Feedback")]
-    public AudioClip pickupSfx;     // sound to play on pickup
+    [Tooltip("Destroy this pickup after the player collects it.")]
+    public bool destroyOnPickup = true;
+
+    private void Reset()
+    {
+        var col = GetComponent<Collider>();
+        col.isTrigger = true;
+    }
 
     private void OnTriggerEnter(Collider other)
     {
@@ -15,15 +22,13 @@ public class FoodPickup : MonoBehaviour
         if (playerHealth == null)
             return;
 
-        bool applied = playerHealth.TryConsumeFood(healthAmount, weightAmount, transform.position);
+        if (healthAmount > 0)
+            playerHealth.Heal(healthAmount);
 
-        if (applied)
-        {
-            // SFX (per-object)
-            if (pickupSfx != null)
-                AudioSource.PlayClipAtPoint(pickupSfx, transform.position);
+        if (weightAmountKg != 0f)
+            playerHealth.AddWeight(weightAmountKg);
 
+        if (destroyOnPickup)
             Destroy(gameObject);
-        }
     }
 }

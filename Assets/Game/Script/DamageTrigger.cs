@@ -1,64 +1,38 @@
 using UnityEngine;
-using UnityEngine.VFX;
 
+[RequireComponent(typeof(Collider))]
 public class DamageTrigger : MonoBehaviour
 {
-    [Header("Damage Settings")]
-    public int damageAmount = 10;
-    public bool destroyAfterHit = false;   // destroy this object after it damages the player
-    public bool oneUseOnly = false;        // if true: can only ever damage once
-    private bool used = false;
+    [Header("Damage")]
+    public int damageAmount = 25;
 
-    [Header("Hit Feedback")]
-    public VisualEffect hitVfxPrefab;      // optional VFX spawned at player position on hit
+    [Header("Optional SFX")]
+    public AudioClip hitSfx;
+    [Tooltip("Audio volume (0–2). 1 = normal, 2 = double loud, 0.5 = quieter.")]
+    public float hitVolume = 1f;
 
-    [Tooltip("Optional per-object SFX. If left empty, PlayerHealth.defaultDamageSfx is used.")]
-    public AudioClip hitSfxOverride;       // per-object override SFX
+    [Tooltip("Destroy this object after dealing damage once (e.g. spike trap one-shot).")]
+    public bool destroyAfterHit = false;
 
-    [Tooltip("Volume for the override SFX. Can be <1 or >1.")]
-    public float hitSfxVolumeOverride = 1f;
+    private void Reset()
+    {
+        // Ensure collider behaves as a trigger
+        GetComponent<Collider>().isTrigger = true;
+    }
 
     private void OnTriggerEnter(Collider other)
     {
-        if (used && oneUseOnly)
-            return;
-
         PlayerHealth playerHealth = other.GetComponent<PlayerHealth>();
-        if (playerHealth == null)
-            return;
+        if (playerHealth == null) return;
 
-        // Apply damage to player
-        bool damaged = playerHealth.TryTakeDamage(damageAmount);
-        if (!damaged)
-            return; // no HP lost, no feedback
+        // Apply damage
+        playerHealth.TakeDamage(damageAmount);
 
-        used = true;
+        // Play SFX if assigned
+        if (hitSfx != null && hitVolume > 0f)
+            AudioSource.PlayClipAtPoint(hitSfx, transform.position, hitVolume);
 
-        Vector3 hitPosition = other.transform.position;
-
-        // --- VFX ---
-        if (hitVfxPrefab != null)
-        {
-            VisualEffect vfx = Instantiate(hitVfxPrefab, hitPosition, Quaternion.identity);
-            Destroy(vfx.gameObject, 3f); // tweak lifetime if needed
-        }
-
-        // --- SFX ---
-        if (hitSfxOverride != null && hitSfxVolumeOverride != 0f)
-        {
-            // Use per-object override clip & volume
-            AudioSource.PlayClipAtPoint(hitSfxOverride, hitPosition, hitSfxVolumeOverride);
-        }
-        else if (playerHealth.defaultDamageSfx != null && playerHealth.defaultDamageVolume != 0f)
-        {
-            // Fallback to player's default damage SFX & volume
-            AudioSource.PlayClipAtPoint(playerHealth.defaultDamageSfx, hitPosition, playerHealth.defaultDamageVolume);
-        }
-
-        // --- Cleanup ---
         if (destroyAfterHit)
-        {
             Destroy(gameObject);
-        }
     }
 }

@@ -1,193 +1,244 @@
 using UnityEngine;
-using UnityEngine.VFX;   // for VisualEffect Graph
 
 public class PlayerHealth : MonoBehaviour
 {
     [Header("Health")]
-    public int maxHealth = 100;
-    public int currentHealth = 100;
+    public int maxHealth = 2000;
+    public int startingHealth = 1000;
+    public int currentHealth;
 
     [Header("Weight")]
-    public float baseWeight = 0f;      // starting weight
-    public float currentWeight = 0f;   // total current weight (base + gains)
+    public float startingWeightKg = 0f;
+    public float currentWeightKg = 0f;   // worker will read this
 
-    [Header("Water Settings")]
-    public int maxWaterHeals = 5;
-    public float maxWaterWeightGain = 10f;
-    public VisualEffect waterVfxPrefab;
-    public AudioClip waterHealSfx;
-    public float waterHealVolume = 1f;     // can be <1 or >1
+    [Header("Animator")]
+    [Tooltip("Animator on the player (chicken).")]
+    public Animator animator;
 
-    [Header("Food Settings")]
-    public int maxFoodHeals = 5;
-    public float maxFoodWeightGain = 10f;
-    public VisualEffect foodVfxPrefab;
-    public AudioClip foodHealSfx;
-    public float foodHealVolume = 1f;      // can be <1 or >1
+    [Tooltip("Float parameter on the Animator that reflects current health (e.g. 'Health').")]
+    public string healthFloatParam = "Health";
 
-    [Header("Damage Settings")]
-    public AudioClip defaultDamageSfx;
-    public float defaultDamageVolume = 1f; // can be <1 or >1
+    [Tooltip("Bool parameter on the Animator that enters the Hurt state (e.g. 'Hurt').")]
+    public string hurtBoolParam = "Hurt";
+
+    [Tooltip("Trigger name for death state in the Animator (e.g. 'Die').")]
+    public string deathTriggerName = "Die";
+
+    [Header("Hurt Behaviour")]
+    [Tooltip("How long the Hurt state stays active after taking damage (seconds).")]
+    public float hurtDuration = 0.3f;
+
+    [Tooltip("Multiplier applied to MoveSpeed while hurt. 0.1 = 90% slower, 1 = no slow.")]
+    [Range(0f, 1f)]
+    public float hurtSpeedMultiplier = 0.1f;
 
     [Header("Damage Flash")]
-    [Tooltip("Leave empty to automatically include ALL renderers on the player.")]
-    public Renderer[] targetRenderers = new Renderer[0];
+    [Tooltip("If empty, all child renderers will be used.")]
+    public Renderer[] targetRenderers;
     public Color flashColor = Color.red;
     public float flashDuration = 0.15f;
-    public float flashEmissionBoost = 3f;  // how bright the emission flash is
+    public float flashEmissionBoost = 3f;
 
-    // Internal tracking
-    private int _waterHealsUsed = 0;
-    private float _waterWeightGained = 0f;
+    private bool _isDead = false;
+    private bool _hurtActive = false;
 
-    private int _foodHealsUsed = 0;
-    private float _foodWeightGained = 0f;
+    // Movement script (optional, to slow/stop movement)
+    private Character _character;
+    private float _baseMoveSpeed;
+    private bool _hasBaseMoveSpeed = false;
 
+    // Flash internals
     private Renderer[] _renderers;
     private Material[] _materials;
     private Color[] _originalBaseColors;
     private Color[] _originalEmissionColors;
     private bool _hasMaterials = false;
 
-    // Max weight for UI if needed
-    public float MaxWeight => baseWeight + maxWaterWeightGain + maxFoodWeightGain;
-
     private void Awake()
     {
-        currentHealth = Mathf.Clamp(currentHealth, 0, maxHealth);
-        currentWeight = baseWeight;
+        currentHealth = Mathf.Clamp(startingHealth, 0, maxHealth);
+        currentWeightKg = startingWeightKg;
 
-        // Auto-detect all renderers if none assigned
-        if (targetRenderers == null || targetRenderers.Length == 0)
-            _renderers = GetComponentsInChildren<Renderer>();
+        _character = GetComponent<Character>();
+        if (_character != null)
+        {
+            _baseMoveSpeed = _character.MoveSpeed;
+            _hasBaseMoveSpeed = true;
+        }
+
+        SetupRenderersForFlash();
+
+        UpdateAnimatorHealth();
+    }
+
+    // ------------ Public API ------------
+
+    public void TakeDamage(int amount)
+    {
+        if (_isDead) return;
+        if (amount <= 0) return;
+
+        currentHealth = Mathf.Max(0, currentHealth - amount);
+        UpdateAnimatorHealth();
+
+        // Flash on damage
+        FlashDamageColor();
+
+        if (currentHealth <= 0)
+        {
+            Die();
+        }
         else
+        {
+            TriggerHurt();
+        }
+    }
+
+    public void Heal(int amount)
+    {
+        if (_isDead) return;
+        if (amount <= 0) return;
+
+        currentHealth = Mathf.Clamp(currentHealth + amount, 0, maxHealth);
+        UpdateAnimatorHealth();
+    }
+
+    public void AddWeight(float amountKg)
+    {
+        currentWeightKg += amountKg;
+    }
+
+    // ------------ Hurt logic ------------
+
+    private void TriggerHurt()
+    {
+        _hurtActive = true;
+
+        if (animator != null && !string.IsNullOrEmpty(hurtBoolParam))
+        {
+            animator.SetBool(hurtBoolParam, true);
+        }
+
+        ApplyHurtMovementSlow();
+
+        CancelInvoke(nameof(EndHurt));
+        Invoke(nameof(EndHurt), hurtDuration);
+    }
+
+    private void EndHurt()
+    {
+        _hurtActive = false;
+
+        if (animator != null && !string.IsNullOrEmpty(hurtBoolParam))
+        {
+            animator.SetBool(hurtBoolParam, false);
+        }
+
+        if (!_isDead)
+        {
+            RestoreNormalMovementSpeed();
+        }
+    }
+
+    private void ApplyHurtMovementSlow()
+    {
+        if (_character == null || !_hasBaseMoveSpeed)
+            return;
+
+        float clamped = Mathf.Clamp01(hurtSpeedMultiplier);
+        _character.MoveSpeed = _baseMoveSpeed * clamped;
+    }
+
+    private void RestoreNormalMovementSpeed()
+    {
+        if (_character == null || !_hasBaseMoveSpeed)
+            return;
+
+        _character.MoveSpeed = _baseMoveSpeed;
+    }
+
+    // ------------ Death logic ------------
+
+    private void Die()
+    {
+        if (_isDead) return;
+        _isDead = true;
+
+        // Stop any hurt state
+        CancelInvoke(nameof(EndHurt));
+        _hurtActive = false;
+
+        // Stop movement
+        if (_character != null)
+        {
+            _character.MoveSpeed = 0f;
+        }
+
+        // Play death animation
+        if (animator != null && !string.IsNullOrEmpty(deathTriggerName))
+        {
+            animator.SetTrigger(deathTriggerName);
+        }
+
+        // Show simple death image
+        if (SimpleGameOverUI.Instance != null)
+        {
+            SimpleGameOverUI.Instance.ShowEnd(SimpleEndType.Death);
+        }
+        else
+        {
+            Time.timeScale = 0f;
+        }
+    }
+
+    // ------------ Animator helpers ------------
+
+    private void UpdateAnimatorHealth()
+    {
+        if (animator != null && !string.IsNullOrEmpty(healthFloatParam))
+        {
+            // Using raw health value; if you want 0–1, change to (float)currentHealth / maxHealth
+            animator.SetFloat(healthFloatParam, currentHealth);
+        }
+    }
+
+    // ------------ Flash setup & logic ------------
+
+    private void SetupRenderersForFlash()
+    {
+        if (targetRenderers != null && targetRenderers.Length > 0)
+        {
             _renderers = targetRenderers;
-
-        if (_renderers != null && _renderers.Length > 0)
+        }
+        else
         {
-            int len = _renderers.Length;
-            _materials = new Material[len];
-            _originalBaseColors = new Color[len];
-            _originalEmissionColors = new Color[len];
-
-            for (int i = 0; i < len; i++)
-            {
-                if (_renderers[i] == null) continue;
-
-                // unique runtime material instance
-                Material mat = _renderers[i].material;
-                if (mat != null)
-                {
-                    _materials[i] = mat;
-                    _originalBaseColors[i] = GetBaseColor(mat);
-                    _originalEmissionColors[i] = GetEmissionColor(mat);
-                    _hasMaterials = true;
-                }
-            }
+            _renderers = GetComponentsInChildren<Renderer>();
         }
 
-        if (!_hasMaterials)
+        if (_renderers == null || _renderers.Length == 0)
+            return;
+
+        int len = _renderers.Length;
+        _materials = new Material[len];
+        _originalBaseColors = new Color[len];
+        _originalEmissionColors = new Color[len];
+
+        for (int i = 0; i < len; i++)
         {
-            Debug.LogWarning("PlayerHealth: No materials found for damage flash. " +
-                             "Check that your player has Mesh/SkinnedMeshRenderers.", this);
+            var r = _renderers[i];
+            if (r == null) continue;
+
+            // material (not sharedMaterial) so we don't affect prefabs
+            Material mat = r.material;
+            if (mat == null) continue;
+
+            _materials[i] = mat;
+            _originalBaseColors[i] = GetBaseColor(mat);
+            _originalEmissionColors[i] = GetEmissionColor(mat);
+            _hasMaterials = true;
         }
     }
 
-    // ─────────── WATER ───────────
-    public bool TryConsumeWater(int healthAmount, float weightAmount, Vector3 vfxPosition)
-    {
-        if (_waterHealsUsed >= maxWaterHeals)
-            return false;
-
-        int healthRoom = maxHealth - currentHealth;
-        int healthToApply = Mathf.Clamp(healthAmount, 0, healthRoom);
-
-        float waterWeightRoom = maxWaterWeightGain - _waterWeightGained;
-        float weightToApply = Mathf.Clamp(weightAmount, 0f, waterWeightRoom);
-
-        // Nothing to gain
-        if (healthToApply <= 0 && weightToApply <= 0f)
-            return false;
-
-        if (healthToApply > 0) currentHealth += healthToApply;
-        if (weightToApply > 0f)
-        {
-            currentWeight += weightToApply;
-            _waterWeightGained += weightToApply;
-        }
-
-        _waterHealsUsed++;
-
-        if (waterVfxPrefab != null)
-        {
-            var vfx = Instantiate(waterVfxPrefab, vfxPosition, Quaternion.identity);
-            Destroy(vfx.gameObject, 3f);
-        }
-
-        if (waterHealSfx != null && waterHealVolume != 0f)
-        {
-            AudioSource.PlayClipAtPoint(waterHealSfx, vfxPosition, waterHealVolume);
-        }
-
-        return true;
-    }
-
-    // ─────────── FOOD ───────────
-    public bool TryConsumeFood(int healthAmount, float weightAmount, Vector3 vfxPosition)
-    {
-        if (_foodHealsUsed >= maxFoodHeals)
-            return false;
-
-        int healthRoom = maxHealth - currentHealth;
-        int healthToApply = Mathf.Clamp(healthAmount, 0, healthRoom);
-
-        float foodWeightRoom = maxFoodWeightGain - _foodWeightGained;
-        float weightToApply = Mathf.Clamp(weightAmount, 0f, foodWeightRoom);
-
-        if (healthToApply <= 0 && weightToApply <= 0f)
-            return false;
-
-        if (healthToApply > 0) currentHealth += healthToApply;
-        if (weightToApply > 0f)
-        {
-            currentWeight += weightToApply;
-            _foodWeightGained += weightToApply;
-        }
-
-        _foodHealsUsed++;
-
-        if (foodVfxPrefab != null)
-        {
-            var vfx = Instantiate(foodVfxPrefab, vfxPosition, Quaternion.identity);
-            Destroy(vfx.gameObject, 3f);
-        }
-
-        if (foodHealSfx != null && foodHealVolume != 0f)
-        {
-            AudioSource.PlayClipAtPoint(foodHealSfx, vfxPosition, foodHealVolume);
-        }
-
-        return true;
-    }
-
-    // ─────────── DAMAGE ───────────
-    public bool TryTakeDamage(int amount)
-    {
-        if (amount <= 0) return false;
-
-        int old = currentHealth;
-        currentHealth = Mathf.Max(currentHealth - amount, 0);
-
-        if (currentHealth < old)
-        {
-            FlashDamageColor();
-            return true;
-        }
-
-        return false;
-    }
-
-    // ─────────── FLASH ───────────
     private void FlashDamageColor()
     {
         if (!_hasMaterials || _materials == null)
@@ -200,10 +251,8 @@ public class PlayerHealth : MonoBehaviour
             Material mat = _materials[i];
             if (mat == null) continue;
 
-            // Base color flash
             SetBaseColor(mat, flashColor);
 
-            // Emission flash (big, obvious glow)
             Color boosted = flashColor * flashEmissionBoost;
             SetEmissionColor(mat, boosted);
         }
@@ -227,7 +276,7 @@ public class PlayerHealth : MonoBehaviour
         }
     }
 
-    // ─────────── Shader helpers ───────────
+    // ------------ Shader helpers ------------
 
     private static Color GetBaseColor(Material m)
     {
@@ -267,13 +316,11 @@ public class PlayerHealth : MonoBehaviour
     {
         if (m == null) return;
 
-        // Standard / URP Lit
         if (m.HasProperty("_EmissionColor"))
         {
             m.SetColor("_EmissionColor", c);
             m.EnableKeyword("_EMISSION");
         }
-        // HDRP or custom
         else if (m.HasProperty("_EmissiveColor"))
         {
             m.SetColor("_EmissiveColor", c);
