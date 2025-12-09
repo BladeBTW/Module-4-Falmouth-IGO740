@@ -68,7 +68,7 @@ public class PlayerHealth : MonoBehaviour
     public float deathGameOverDelay = 2f;
 
     private bool _isDead = false;
-    private bool _hurtActive = false;
+    // private bool _hurtActive = false;
 
     // Movement script (to slow/stop movement)
     private Character _character;
@@ -147,7 +147,7 @@ public class PlayerHealth : MonoBehaviour
 
     private void TriggerHurt()
     {
-        _hurtActive = true;
+        // _hurtActive = true;
         Debug.Log("[PlayerHealth] TriggerHurt()");
 
         if (animator != null && !string.IsNullOrEmpty(hurtBoolParam))
@@ -168,7 +168,7 @@ public class PlayerHealth : MonoBehaviour
 
     private void EndHurt()
     {
-        _hurtActive = false;
+        // _hurtActive = false;
         Debug.Log("[PlayerHealth] EndHurt()");
 
         if (animator != null && !string.IsNullOrEmpty(hurtBoolParam))
@@ -246,7 +246,7 @@ public class PlayerHealth : MonoBehaviour
 
         // Stop any hurt state
         CancelInvoke(nameof(EndHurt));
-        _hurtActive = false;
+        // _hurtActive = false;
 
         // Stop movement
         if (_character != null)

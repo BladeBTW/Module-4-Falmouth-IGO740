@@ -4,10 +4,12 @@ public class DeathCounter : MonoBehaviour
 {
     public static DeathCounter Instance { get; private set; }
 
+    [Tooltip("Total number of deaths during this scene/session.")]
     public int TotalDeaths { get; private set; } = 0;
 
     private void Awake()
     {
+        // Simple singleton, no persistence across scenes
         if (Instance != null && Instance != this)
         {
             Destroy(gameObject);
@@ -15,12 +17,10 @@ public class DeathCounter : MonoBehaviour
         }
 
         Instance = this;
-        DontDestroyOnLoad(gameObject);
     }
 
     public void RegisterDeath()
     {
         TotalDeaths++;
-        // Debug.Log($"[DeathCounter] TotalDeaths = {TotalDeaths}");
     }
 }

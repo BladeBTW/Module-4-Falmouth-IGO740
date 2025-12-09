@@ -8,28 +8,35 @@ public class CutsceneManager : MonoBehaviour
     public static CutsceneManager Instance { get; private set; }
 
     [Header("Video System")]
+    [Tooltip("Canvas that contains the RawImage + VideoPlayer.")]
     public GameObject videoCanvas;
     public VideoPlayer videoPlayer;
 
     [Header("Render Texture")]
+    [Tooltip("RenderTexture used by the VideoPlayer & RawImage.")]
     public RenderTexture videoRenderTexture;
 
-    [Header("Success Clips")]
-    public VideoClip clipGather;
-    public VideoClip clipLuckyChicken;
+    [Header("Success Clips (end of game)")]
+    public VideoClip clipGather;        // 4Gather
+    public VideoClip clipLuckyChicken;  // 5LuckyChicken
 
-    [Header("Re-Hatch Clips")]
-    public VideoClip clipHatch;
-    public VideoClip clipFemale;
-    public VideoClip clipMale;
+    [Header("Re-Hatch Clips (intro / rehatch)")]
+    public VideoClip clipHatch;   // 1Hatch
+    public VideoClip clipFemale;  // 2Female
+    public VideoClip clipMale;    // 3Male
 
-    [Header("UI")]
-    [Tooltip("The main in-game HUD canvas (or root Game object) to hide while videos are playing.")]
-    public GameObject gameHudCanvas;          // <-- this should be Game Canvas/ Game
-    public GameObject gameOverPanel;
+    [Header("UI References")]
+    [Tooltip("Root of the in-game HUD (health/weight). Can be empty in Main Menu.")]
+    public GameObject gameHudCanvas;
+
+    [Tooltip("Game Over panel specifically for MALE chick path in this scene.")]
+    public GameObject gameOverPanel; // e.g. GAME OVER HATCH in menu or game
+
+    [Tooltip("Panel with 'Game is finished' buttons (Restart / Main Menu), shown after success.")]
     public GameObject endGamePlayAgainPanel;
 
     [Header("Scenes")]
+    [Tooltip("Gameplay scene to load after female path from re-hatch.")]
     public string gameplaySceneName = "";
 
     private bool _sequenceRunning = false;
@@ -44,20 +51,22 @@ public class CutsceneManager : MonoBehaviour
 
         Instance = this;
 
-        // Ensure the video canvas is hidden at start
+        // Start with video UI hidden
         if (videoCanvas != null)
             videoCanvas.SetActive(false);
 
-        // Ensure the normal HUD is visible at start
+        // HUD should start visible if present
         if (gameHudCanvas != null)
-            gameHudCanvas.SetActive(true);    // <--- IMPORTANT
+            gameHudCanvas.SetActive(true);
 
-        // Finished panel starts hidden
+        if (gameOverPanel != null)
+            gameOverPanel.SetActive(false);
+
         if (endGamePlayAgainPanel != null)
             endGamePlayAgainPanel.SetActive(false);
     }
 
-    // ───────────────── SUCCESS SEQUENCE ─────────────────
+    // ───────────────── SUCCESS SEQUENCE (4 + 5) ─────────────────
 
     public void PlaySuccessSequence()
     {
@@ -80,7 +89,7 @@ public class CutsceneManager : MonoBehaviour
         float previousTimeScale = Time.timeScale;
         Time.timeScale = 0f;
 
-        // Hide HUD during video
+        // Hide HUD while video plays
         if (gameHudCanvas != null)
             gameHudCanvas.SetActive(false);
 
@@ -92,6 +101,7 @@ public class CutsceneManager : MonoBehaviour
 
         ClearVideoRenderTexture();
 
+        // Mute all non-video audio sources
         AudioSource[] allAudio = FindObjectsOfType<AudioSource>();
         bool[] previousMute = new bool[allAudio.Length];
 
@@ -107,25 +117,28 @@ public class CutsceneManager : MonoBehaviour
                 allAudio[i].mute = true;
         }
 
+        // 4Gather -> 5LuckyChicken
         yield return PlayClipSequential(clipGather);
         yield return PlayClipSequential(clipLuckyChicken);
 
+        // Restore audio mutes
         for (int i = 0; i < allAudio.Length; i++)
         {
             if (allAudio[i] != null)
                 allAudio[i].mute = previousMute[i];
         }
 
+        // Keep game paused until buttons are clicked
         Time.timeScale = 0f;
 
-        // Show "GAME IS FINISHED" buttons over video
+        // Show "GAME IS FINISHED" buttons over the video
         if (endGamePlayAgainPanel != null)
             endGamePlayAgainPanel.SetActive(true);
 
         _sequenceRunning = false;
     }
 
-    // ───────────────── RE-HATCH SEQUENCE ─────────────────
+    // ───────────────── RE-HATCH SEQUENCE (1 → 2/3) ─────────────────
 
     public void PlayRehatchSequence()
     {
@@ -148,6 +161,7 @@ public class CutsceneManager : MonoBehaviour
         float previousTimeScale = Time.timeScale;
         Time.timeScale = 0f;
 
+        // Hide HUD & any existing panels
         if (gameHudCanvas != null)
             gameHudCanvas.SetActive(false);
 
@@ -162,6 +176,7 @@ public class CutsceneManager : MonoBehaviour
 
         ClearVideoRenderTexture();
 
+        // Mute all non-video audio sources
         AudioSource[] allAudio = FindObjectsOfType<AudioSource>();
         bool[] previousMute = new bool[allAudio.Length];
 
@@ -177,10 +192,10 @@ public class CutsceneManager : MonoBehaviour
                 allAudio[i].mute = true;
         }
 
-        // 1) 1Hatch
+        // 1) 1Hatch intro
         yield return PlayClipSequential(clipHatch);
 
-        // 2) 50/50 Male / Female
+        // 2) Randomly choose Male/Female
         bool isMale = Random.value < 0.5f;
 
         if (isMale)
@@ -188,32 +203,51 @@ public class CutsceneManager : MonoBehaviour
             // 3Male: unlucky
             yield return PlayClipSequential(clipMale);
 
+            // Count as death if DeathCounter exists
             if (DeathCounter.Instance != null)
                 DeathCounter.Instance.RegisterDeath();
 
+            // Restore audio
             for (int i = 0; i < allAudio.Length; i++)
-                if (allAudio[i] != null) allAudio[i].mute = previousMute[i];
+            {
+                if (allAudio[i] != null)
+                    allAudio[i].mute = previousMute[i];
+            }
+
+            // Show MALE death screen (GAME OVER HATCH) for this scene
+            Time.timeScale = 0f; // optional, you can keep game paused while this menu is up
 
             if (gameOverPanel != null)
                 gameOverPanel.SetActive(true);
         }
         else
         {
-            // 2Female: lucky – go to game scene
+            // 2Female: lucky – go to gameplay scene
             yield return PlayClipSequential(clipFemale);
 
+            // Restore audio
             for (int i = 0; i < allAudio.Length; i++)
-                if (allAudio[i] != null) allAudio[i].mute = previousMute[i];
+            {
+                if (allAudio[i] != null)
+                    allAudio[i].mute = previousMute[i];
+            }
 
+            // Hide video and clear last frame before loading new scene
             if (videoCanvas != null)
                 videoCanvas.SetActive(false);
+
+            ClearVideoRenderTexture();
 
             Time.timeScale = 1f;
 
             if (!string.IsNullOrEmpty(gameplaySceneName))
+            {
                 SceneManager.LoadScene(gameplaySceneName);
+            }
             else
+            {
                 SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+            }
         }
 
         _sequenceRunning = false;
@@ -230,9 +264,11 @@ public class CutsceneManager : MonoBehaviour
         videoPlayer.isLooping = false;
         videoPlayer.Play();
 
+        // Wait for it to actually start
         while (!videoPlayer.isPlaying)
             yield return null;
 
+        // Wait until it finishes
         while (videoPlayer.isPlaying)
             yield return null;
     }

@@ -71,9 +71,41 @@ public class GameUIManager : MonoBehaviour
         Time.timeScale = 0f;
 
         if (pausePanel != null)
+        {
+            Debug.Log($"[GameUIManager] Activating pausePanel: {pausePanel.name}");
             pausePanel.SetActive(true);
+
+            // Make sure its parent canvas is active
+            Canvas parentCanvas = pausePanel.GetComponentInParent<Canvas>();
+            if (parentCanvas != null)
+            {
+                if (!parentCanvas.gameObject.activeSelf)
+                {
+                    Debug.Log($"[GameUIManager] Enabling parent canvas for pause: {parentCanvas.name}");
+                    parentCanvas.gameObject.SetActive(true);
+                }
+            }
+            else
+            {
+                Debug.LogWarning("[GameUIManager] pausePanel has NO parent Canvas. " +
+                                 "You may have assigned a prefab instead of a scene object.");
+            }
+        }
         else
+        {
             Debug.LogWarning("[GameUIManager] pausePanel is not assigned.");
+        }
+
+        // Safety net: turn on all canvases so nothing is hidden
+        Canvas[] allCanvases = FindObjectsOfType<Canvas>(true);
+        foreach (var c in allCanvases)
+        {
+            if (!c.gameObject.activeSelf)
+            {
+                Debug.Log($"[GameUIManager] Forcing Canvas ON (pause): {c.name}");
+                c.gameObject.SetActive(true);
+            }
+        }
     }
 
     public void ResumeGame()
@@ -83,8 +115,11 @@ public class GameUIManager : MonoBehaviour
         _isPaused = false;
         Time.timeScale = 1f;
 
-        if (pausePanel != null)
+        if (pausePanel != null && pausePanel.activeSelf)
+        {
+            Debug.Log("[GameUIManager] Hiding pausePanel.");
             pausePanel.SetActive(false);
+        }
     }
 
     // ───── GAME OVER / FINISHED ─────
@@ -97,7 +132,7 @@ public class GameUIManager : MonoBehaviour
 
         if (pausePanel != null && pausePanel.activeSelf)
         {
-            Debug.Log("[GameUIManager] Hiding pausePanel.");
+            Debug.Log("[GameUIManager] Hiding pausePanel (on Game Over).");
             pausePanel.SetActive(false);
         }
 
@@ -105,23 +140,24 @@ public class GameUIManager : MonoBehaviour
         {
             Debug.Log($"[GameUIManager] Activating gameOverPanel: {gameOverPanel.name}");
             gameOverPanel.SetActive(true);
-
-            // Make sure its parent canvas is active
-            Canvas parentCanvas = gameOverPanel.GetComponentInParent<Canvas>();
-            if (parentCanvas != null && !parentCanvas.gameObject.activeSelf)
-            {
-                Debug.Log($"[GameUIManager] Enabling parent canvas: {parentCanvas.name}");
-                parentCanvas.gameObject.SetActive(true);
-            }
         }
         else
         {
             Debug.LogError("[GameUIManager] gameOverPanel is NOT assigned!");
         }
 
-        // Note: we do NOT change Time.timeScale here to avoid freezing the game.
-        // If you want to freeze, you can uncomment:
-        // Time.timeScale = 0f;
+        // Safety net: turn on ALL canvases so nothing is hidden
+        Canvas[] allCanvases = FindObjectsOfType<Canvas>(true);
+        foreach (var c in allCanvases)
+        {
+            if (!c.gameObject.activeSelf)
+            {
+                Debug.Log($"[GameUIManager] Forcing Canvas ON (game over): {c.name}");
+                c.gameObject.SetActive(true);
+            }
+        }
+
+        // We do NOT change Time.timeScale here, to avoid freezing the game.
     }
 
     public void ShowGameFinished()
@@ -132,7 +168,7 @@ public class GameUIManager : MonoBehaviour
 
         if (pausePanel != null && pausePanel.activeSelf)
         {
-            Debug.Log("[GameUIManager] Hiding pausePanel.");
+            Debug.Log("[GameUIManager] Hiding pausePanel (on finished).");
             pausePanel.SetActive(false);
         }
 
@@ -140,13 +176,6 @@ public class GameUIManager : MonoBehaviour
         {
             Debug.Log($"[GameUIManager] Activating gameFinishedPanel: {gameFinishedPanel.name}");
             gameFinishedPanel.SetActive(true);
-
-            Canvas parentCanvas = gameFinishedPanel.GetComponentInParent<Canvas>();
-            if (parentCanvas != null && !parentCanvas.gameObject.activeSelf)
-            {
-                Debug.Log($"[GameUIManager] Enabling parent canvas: {parentCanvas.name}");
-                parentCanvas.gameObject.SetActive(true);
-            }
         }
         else if (gameOverPanel != null)
         {
@@ -154,8 +183,7 @@ public class GameUIManager : MonoBehaviour
             gameOverPanel.SetActive(true);
         }
 
-        // Again, CutsceneManager handles pausing during videos;
-        // we don't necessarily change Time.timeScale here.
+        // CutsceneManager handles pausing during videos; no Time.timeScale change here.
     }
 
     // ───── BUTTON HANDLERS ─────
@@ -220,6 +248,13 @@ public class GameUIManager : MonoBehaviour
     public void OnButtonRehatch()
     {
         Debug.Log("[GameUIManager] OnButtonRehatch()");
+
+        // Hide the normal GAME OVER UI before starting the hatch cutscene
+        if (gameOverPanel != null && gameOverPanel.activeSelf)
+        {
+            Debug.Log("[GameUIManager] Hiding gameOverPanel before re-hatch.");
+            gameOverPanel.SetActive(false);
+        }
 
         Time.timeScale = 1f;
         _gameEnded = false;
