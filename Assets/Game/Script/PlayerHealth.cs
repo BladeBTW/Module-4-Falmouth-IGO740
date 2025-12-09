@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 public class PlayerHealth : MonoBehaviour
@@ -8,8 +9,11 @@ public class PlayerHealth : MonoBehaviour
     public int currentHealth;
 
     [Header("Weight")]
+    [Tooltip("Starting weight of the chicken in kg.")]
     public float startingWeightKg = 0f;
-    public float currentWeightKg = 0f;   // worker will read this
+
+    [Tooltip("Current weight of the chicken in kg (read by worker).")]
+    public float currentWeightKg = 0f;
 
     [Header("Animator")]
     [Tooltip("Animator on the player (chicken).")]
@@ -32,17 +36,41 @@ public class PlayerHealth : MonoBehaviour
     [Range(0f, 1f)]
     public float hurtSpeedMultiplier = 0.1f;
 
+    [Header("Hurt VFX / SFX")]
+    [Tooltip("Prefab to spawn when the player gets hurt (ParticleSystem or VFX Graph prefab).")]
+    public GameObject hurtVfxPrefab;
+
+    [Tooltip("How long to keep the hurt VFX alive (seconds). Set 0 or negative to never auto-destroy.")]
+    public float hurtVfxLifetime = 3f;
+
+    [Tooltip("Sound to play when the player gets hurt.")]
+    public AudioClip hurtSfx;
+
+    [Tooltip("1 = normal, 2 = loud, 5 = very loud, 10 = extreme.")]
+    [Range(0f, 10f)]
+    public float hurtSfxVolume = 1f;
+
     [Header("Damage Flash")]
     [Tooltip("If empty, all child renderers will be used.")]
     public Renderer[] targetRenderers;
+
+    [Tooltip("Color to flash when damaged.")]
     public Color flashColor = Color.red;
+
+    [Tooltip("How long the flash lasts.")]
     public float flashDuration = 0.15f;
+
+    [Tooltip("How strong to boost emission when flashing.")]
     public float flashEmissionBoost = 3f;
+
+    [Header("Death")]
+    [Tooltip("Delay (in seconds, real time) before showing Game Over after death animation starts.")]
+    public float deathGameOverDelay = 2f;
 
     private bool _isDead = false;
     private bool _hurtActive = false;
 
-    // Movement script (optional, to slow/stop movement)
+    // Movement script (to slow/stop movement)
     private Character _character;
     private float _baseMoveSpeed;
     private bool _hasBaseMoveSpeed = false;
@@ -67,11 +95,12 @@ public class PlayerHealth : MonoBehaviour
         }
 
         SetupRenderersForFlash();
-
         UpdateAnimatorHealth();
+
+        Debug.Log($"[PlayerHealth] Awake. StartingHealth={currentHealth}, MaxHealth={maxHealth}, Weight={currentWeightKg}kg");
     }
 
-    // ------------ Public API ------------
+    // ───────── PUBLIC API ─────────
 
     public void TakeDamage(int amount)
     {
@@ -81,11 +110,14 @@ public class PlayerHealth : MonoBehaviour
         currentHealth = Mathf.Max(0, currentHealth - amount);
         UpdateAnimatorHealth();
 
-        // Flash on damage
+        Debug.Log($"[PlayerHealth] Took damage: {amount}, new health = {currentHealth}");
+
+        // Visual flash
         FlashDamageColor();
 
         if (currentHealth <= 0)
         {
+            Debug.Log("[PlayerHealth] Health reached 0, calling Die().");
             Die();
         }
         else
@@ -101,25 +133,34 @@ public class PlayerHealth : MonoBehaviour
 
         currentHealth = Mathf.Clamp(currentHealth + amount, 0, maxHealth);
         UpdateAnimatorHealth();
+
+        Debug.Log($"[PlayerHealth] Healed by {amount}, new health = {currentHealth}");
     }
 
     public void AddWeight(float amountKg)
     {
         currentWeightKg += amountKg;
+        Debug.Log($"[PlayerHealth] Weight increased by {amountKg}kg, now = {currentWeightKg}kg");
     }
 
-    // ------------ Hurt logic ------------
+    // ───────── HURT LOGIC ─────────
 
     private void TriggerHurt()
     {
         _hurtActive = true;
+        Debug.Log("[PlayerHealth] TriggerHurt()");
 
         if (animator != null && !string.IsNullOrEmpty(hurtBoolParam))
         {
             animator.SetBool(hurtBoolParam, true);
         }
+        else
+        {
+            Debug.LogWarning("[PlayerHealth] No animator or hurtBoolParam not set.");
+        }
 
         ApplyHurtMovementSlow();
+        PlayHurtEffects();
 
         CancelInvoke(nameof(EndHurt));
         Invoke(nameof(EndHurt), hurtDuration);
@@ -128,6 +169,7 @@ public class PlayerHealth : MonoBehaviour
     private void EndHurt()
     {
         _hurtActive = false;
+        Debug.Log("[PlayerHealth] EndHurt()");
 
         if (animator != null && !string.IsNullOrEmpty(hurtBoolParam))
         {
@@ -147,6 +189,7 @@ public class PlayerHealth : MonoBehaviour
 
         float clamped = Mathf.Clamp01(hurtSpeedMultiplier);
         _character.MoveSpeed = _baseMoveSpeed * clamped;
+        Debug.Log($"[PlayerHealth] Movement slowed for hurt. New MoveSpeed={_character.MoveSpeed}");
     }
 
     private void RestoreNormalMovementSpeed()
@@ -155,14 +198,51 @@ public class PlayerHealth : MonoBehaviour
             return;
 
         _character.MoveSpeed = _baseMoveSpeed;
+        Debug.Log($"[PlayerHealth] Movement restored. MoveSpeed={_character.MoveSpeed}");
     }
 
-    // ------------ Death logic ------------
+    private void PlayHurtEffects()
+    {
+        // VFX at player position
+        if (hurtVfxPrefab != null)
+        {
+            GameObject vfx = Instantiate(hurtVfxPrefab, transform.position, Quaternion.identity);
+            if (hurtVfxLifetime > 0f)
+            {
+                Destroy(vfx, hurtVfxLifetime);
+            }
+        }
+
+        // SFX at player position
+        if (hurtSfx != null && hurtSfxVolume > 0f)
+        {
+            AudioSource.PlayClipAtPoint(hurtSfx, transform.position, hurtSfxVolume);
+        }
+    }
+
+    // ───────── DEATH LOGIC ─────────
 
     private void Die()
     {
-        if (_isDead) return;
+        if (_isDead)
+        {
+            Debug.Log("[PlayerHealth] Die() called but already dead.");
+            return;
+        }
+
         _isDead = true;
+        Debug.Log("[PlayerHealth] Die() started.");
+
+        // Count this as a death for the playthrough
+        if (DeathCounter.Instance != null)
+        {
+            DeathCounter.Instance.RegisterDeath();
+            Debug.Log($"[PlayerHealth] DeathCounter incremented. Total = {DeathCounter.Instance.TotalDeaths}");
+        }
+        else
+        {
+            Debug.LogWarning("[PlayerHealth] No DeathCounter in scene.");
+        }
 
         // Stop any hurt state
         CancelInvoke(nameof(EndHurt));
@@ -172,37 +252,62 @@ public class PlayerHealth : MonoBehaviour
         if (_character != null)
         {
             _character.MoveSpeed = 0f;
+            Debug.Log("[PlayerHealth] Character movement stopped.");
         }
 
-        // Play death animation
+        // Trigger death animation
         if (animator != null && !string.IsNullOrEmpty(deathTriggerName))
         {
+            Debug.Log($"[PlayerHealth] Triggering death animation '{deathTriggerName}'.");
             animator.SetTrigger(deathTriggerName);
-        }
-
-        // Show simple death image
-        if (SimpleGameOverUI.Instance != null)
-        {
-            SimpleGameOverUI.Instance.ShowEnd(SimpleEndType.Death);
         }
         else
         {
-            Time.timeScale = 0f;
+            Debug.LogWarning("[PlayerHealth] No animator or deathTriggerName not set.");
+        }
+
+        // Start sequence to show Game Over after a delay
+        Debug.Log("[PlayerHealth] Starting DeathGameOverSequence coroutine.");
+        StartCoroutine(DeathGameOverSequence());
+    }
+
+    private IEnumerator DeathGameOverSequence()
+    {
+        float delay = Mathf.Max(0f, deathGameOverDelay);
+        Debug.Log($"[PlayerHealth] DeathGameOverSequence started. Waiting {delay} seconds (unscaled).");
+
+        float t = 0f;
+        while (t < delay)
+        {
+            t += Time.unscaledDeltaTime;
+            yield return null;
+        }
+
+        Debug.Log("[PlayerHealth] Death delay elapsed, trying to show Game Over.");
+
+        if (GameUIManager.Instance != null)
+        {
+            Debug.Log("[PlayerHealth] GameUIManager.Instance found, calling ShowGameOver().");
+            GameUIManager.Instance.ShowGameOver();
+        }
+        else
+        {
+            Debug.LogError("[PlayerHealth] No GameUIManager.Instance found! Cannot show Game Over.");
+            // No freeze fallback here; just log the error.
         }
     }
 
-    // ------------ Animator helpers ------------
+    // ───────── ANIMATOR HELPERS ─────────
 
     private void UpdateAnimatorHealth()
     {
         if (animator != null && !string.IsNullOrEmpty(healthFloatParam))
         {
-            // Using raw health value; if you want 0–1, change to (float)currentHealth / maxHealth
             animator.SetFloat(healthFloatParam, currentHealth);
         }
     }
 
-    // ------------ Flash setup & logic ------------
+    // ───────── FLASH SETUP & LOGIC ─────────
 
     private void SetupRenderersForFlash()
     {
@@ -228,7 +333,7 @@ public class PlayerHealth : MonoBehaviour
             var r = _renderers[i];
             if (r == null) continue;
 
-            // material (not sharedMaterial) so we don't affect prefabs
+            // Use instance material (not sharedMaterial) so we don't affect prefabs
             Material mat = r.material;
             if (mat == null) continue;
 
@@ -237,12 +342,17 @@ public class PlayerHealth : MonoBehaviour
             _originalEmissionColors[i] = GetEmissionColor(mat);
             _hasMaterials = true;
         }
+
+        Debug.Log($"[PlayerHealth] SetupRenderersForFlash. Materials found: {_materials.Length}, hasMaterials={_hasMaterials}");
     }
 
     private void FlashDamageColor()
     {
         if (!_hasMaterials || _materials == null)
+        {
+            Debug.LogWarning("[PlayerHealth] FlashDamageColor called but no materials cached.");
             return;
+        }
 
         CancelInvoke(nameof(ResetDamageColor));
 
@@ -276,7 +386,7 @@ public class PlayerHealth : MonoBehaviour
         }
     }
 
-    // ------------ Shader helpers ------------
+    // ───────── SHADER HELPERS ─────────
 
     private static Color GetBaseColor(Material m)
     {

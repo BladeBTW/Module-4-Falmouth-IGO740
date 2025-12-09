@@ -4,17 +4,23 @@ using UnityEngine;
 public class WaterPickup : MonoBehaviour
 {
     [Header("Water Pickup")]
-    public int healthAmount = 20;      // how much health this water gives
-    public float weightAmountKg = 1f;  // how much weight this water adds
+    public int healthAmount = 20;
+    public float weightAmountKg = 1f;
 
-    [Tooltip("Destroy this pickup after the player collects it.")]
+    [Header("VFX / SFX")]
+    [Tooltip("Prefab with ParticleSystem or VisualEffect on it.")]
+    public GameObject collectVfxPrefab;
+
+    public AudioClip collectSfx;
+    [Tooltip("1 = normal, 2 = loud, 5 = very loud, 10 = extreme")]
+    [Range(0f, 10f)]
+    public float collectSfxVolume = 3f;
+
     public bool destroyOnPickup = true;
 
     private void Reset()
     {
-        // Make sure the collider acts as a trigger
-        var col = GetComponent<Collider>();
-        col.isTrigger = true;
+        GetComponent<Collider>().isTrigger = true;
     }
 
     private void OnTriggerEnter(Collider other)
@@ -23,12 +29,34 @@ public class WaterPickup : MonoBehaviour
         if (playerHealth == null)
             return;
 
-        // Heal and add weight using the simplified PlayerHealth API
+        // Apply gameplay effects
         if (healthAmount > 0)
             playerHealth.Heal(healthAmount);
 
         if (weightAmountKg != 0f)
             playerHealth.AddWeight(weightAmountKg);
+
+        // --- VFX at THIS pickup's position (like before) ---
+        if (collectVfxPrefab != null)
+        {
+            GameObject vfx = Instantiate(
+                collectVfxPrefab,
+                transform.position,
+                Quaternion.identity
+            );
+
+            Destroy(vfx, 5f); // adjust lifetime if needed
+        }
+
+        // --- SFX ---
+        if (collectSfx != null && collectSfxVolume > 0f)
+        {
+            AudioSource.PlayClipAtPoint(
+                collectSfx,
+                transform.position,
+                collectSfxVolume
+            );
+        }
 
         if (destroyOnPickup)
             Destroy(gameObject);

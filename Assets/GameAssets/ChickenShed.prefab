@@ -146,8 +146,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ab48b9f73da621e43af1d4d781550424, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  healthAmount: 20
-  weightAmountKg: 1
+  healthAmount: 10
+  weightAmountKg: 0.05
+  collectVfxPrefab: {fileID: 5091917010390914830, guid: d1fe802ee7b6fc24497016910b9375d6, type: 3}
+  collectSfx: {fileID: 8300000, guid: ed52034a2c2439241805129e2da4d69c, type: 3}
+  collectSfxVolume: 10
   destroyOnPickup: 1
 --- !u!1 &97419260669058238
 GameObject:
@@ -436,8 +439,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ab48b9f73da621e43af1d4d781550424, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  healthAmount: 20
-  weightAmountKg: 1
+  healthAmount: 10
+  weightAmountKg: 0.05
+  collectVfxPrefab: {fileID: 5091917010390914830, guid: d1fe802ee7b6fc24497016910b9375d6, type: 3}
+  collectSfx: {fileID: 8300000, guid: ed52034a2c2439241805129e2da4d69c, type: 3}
+  collectSfxVolume: 10
   destroyOnPickup: 1
 --- !u!1 &414376408144664968
 GameObject:
@@ -611,8 +617,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ab48b9f73da621e43af1d4d781550424, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  healthAmount: 20
-  weightAmountKg: 1
+  healthAmount: 10
+  weightAmountKg: 0.05
+  collectVfxPrefab: {fileID: 5091917010390914830, guid: d1fe802ee7b6fc24497016910b9375d6, type: 3}
+  collectSfx: {fileID: 8300000, guid: ed52034a2c2439241805129e2da4d69c, type: 3}
+  collectSfxVolume: 10
   destroyOnPickup: 1
 --- !u!1 &520067219690600720
 GameObject:
@@ -755,8 +764,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ab48b9f73da621e43af1d4d781550424, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  healthAmount: 20
-  weightAmountKg: 1
+  healthAmount: 10
+  weightAmountKg: 0.05
+  collectVfxPrefab: {fileID: 5091917010390914830, guid: d1fe802ee7b6fc24497016910b9375d6, type: 3}
+  collectSfx: {fileID: 8300000, guid: ed52034a2c2439241805129e2da4d69c, type: 3}
+  collectSfxVolume: 10
   destroyOnPickup: 1
 --- !u!1 &610394558024250942
 GameObject:
@@ -869,8 +881,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ab48b9f73da621e43af1d4d781550424, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  healthAmount: 20
-  weightAmountKg: 1
+  healthAmount: 10
+  weightAmountKg: 0.05
+  collectVfxPrefab: {fileID: 5091917010390914830, guid: 46b81de729581ad41aacc1f98373dc95, type: 3}
+  collectSfx: {fileID: 8300000, guid: 217c9f4e4ace78f4384d1c66692400f5, type: 3}
+  collectSfxVolume: 0.05
   destroyOnPickup: 1
 --- !u!114 &5922399860142612027
 MonoBehaviour:
@@ -886,6 +901,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   healthAmount: 10
   weightAmountKg: 0.5
+  collectVfxPrefab: {fileID: 0}
+  collectSfx: {fileID: 0}
+  collectSfxVolume: 1
   destroyOnPickup: 1
 --- !u!1 &627193446132241751
 GameObject:
@@ -997,8 +1015,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ab48b9f73da621e43af1d4d781550424, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  healthAmount: 20
-  weightAmountKg: 1
+  healthAmount: 10
+  weightAmountKg: 0.05
+  collectVfxPrefab: {fileID: 5091917010390914830, guid: d1fe802ee7b6fc24497016910b9375d6, type: 3}
+  collectSfx: {fileID: 8300000, guid: ed52034a2c2439241805129e2da4d69c, type: 3}
+  collectSfxVolume: 10
   destroyOnPickup: 1
 --- !u!1 &638880886107596678
 GameObject:
@@ -1111,8 +1132,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ab48b9f73da621e43af1d4d781550424, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  healthAmount: 20
-  weightAmountKg: 1
+  healthAmount: 10
+  weightAmountKg: 0.05
+  collectVfxPrefab: {fileID: 5091917010390914830, guid: 46b81de729581ad41aacc1f98373dc95, type: 3}
+  collectSfx: {fileID: 8300000, guid: 217c9f4e4ace78f4384d1c66692400f5, type: 3}
+  collectSfxVolume: 0.05
   destroyOnPickup: 1
 --- !u!114 &4430197102991622956
 MonoBehaviour:
@@ -1128,6 +1152,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   healthAmount: 10
   weightAmountKg: 0.5
+  collectVfxPrefab: {fileID: 0}
+  collectSfx: {fileID: 0}
+  collectSfxVolume: 1
   destroyOnPickup: 1
 --- !u!1 &655940929552713256
 GameObject:
@@ -1240,8 +1267,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ab48b9f73da621e43af1d4d781550424, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  healthAmount: 20
-  weightAmountKg: 1
+  healthAmount: 10
+  weightAmountKg: 0.05
+  collectVfxPrefab: {fileID: 5091917010390914830, guid: 46b81de729581ad41aacc1f98373dc95, type: 3}
+  collectSfx: {fileID: 8300000, guid: 217c9f4e4ace78f4384d1c66692400f5, type: 3}
+  collectSfxVolume: 0.05
   destroyOnPickup: 1
 --- !u!114 &1810077889548690604
 MonoBehaviour:
@@ -1257,6 +1287,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   healthAmount: 10
   weightAmountKg: 0.5
+  collectVfxPrefab: {fileID: 0}
+  collectSfx: {fileID: 0}
+  collectSfxVolume: 1
   destroyOnPickup: 1
 --- !u!1 &662581706195216737
 GameObject:
@@ -1460,8 +1493,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ab48b9f73da621e43af1d4d781550424, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  healthAmount: 20
-  weightAmountKg: 1
+  healthAmount: 10
+  weightAmountKg: 0.05
+  collectVfxPrefab: {fileID: 5091917010390914830, guid: 46b81de729581ad41aacc1f98373dc95, type: 3}
+  collectSfx: {fileID: 8300000, guid: 217c9f4e4ace78f4384d1c66692400f5, type: 3}
+  collectSfxVolume: 0.05
   destroyOnPickup: 1
 --- !u!114 &1285131548297665778
 MonoBehaviour:
@@ -1477,6 +1513,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   healthAmount: 10
   weightAmountKg: 0.5
+  collectVfxPrefab: {fileID: 0}
+  collectSfx: {fileID: 0}
+  collectSfxVolume: 1
   destroyOnPickup: 1
 --- !u!1 &764086688990573421
 GameObject:
@@ -1620,8 +1659,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ab48b9f73da621e43af1d4d781550424, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  healthAmount: 20
-  weightAmountKg: 1
+  healthAmount: 10
+  weightAmountKg: 0.05
+  collectVfxPrefab: {fileID: 5091917010390914830, guid: 46b81de729581ad41aacc1f98373dc95, type: 3}
+  collectSfx: {fileID: 8300000, guid: 217c9f4e4ace78f4384d1c66692400f5, type: 3}
+  collectSfxVolume: 0.05
   destroyOnPickup: 1
 --- !u!114 &6499849588653335066
 MonoBehaviour:
@@ -1637,6 +1679,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   healthAmount: 10
   weightAmountKg: 0.5
+  collectVfxPrefab: {fileID: 0}
+  collectSfx: {fileID: 0}
+  collectSfxVolume: 1
   destroyOnPickup: 1
 --- !u!1 &823422490742971969
 GameObject:
@@ -1867,8 +1912,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ab48b9f73da621e43af1d4d781550424, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  healthAmount: 20
-  weightAmountKg: 1
+  healthAmount: 10
+  weightAmountKg: 0.05
+  collectVfxPrefab: {fileID: 5091917010390914830, guid: d1fe802ee7b6fc24497016910b9375d6, type: 3}
+  collectSfx: {fileID: 8300000, guid: ed52034a2c2439241805129e2da4d69c, type: 3}
+  collectSfxVolume: 10
   destroyOnPickup: 1
 --- !u!1 &947740281824076944
 GameObject:
@@ -2199,8 +2247,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ab48b9f73da621e43af1d4d781550424, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  healthAmount: 20
-  weightAmountKg: 1
+  healthAmount: 10
+  weightAmountKg: 0.05
+  collectVfxPrefab: {fileID: 5091917010390914830, guid: d1fe802ee7b6fc24497016910b9375d6, type: 3}
+  collectSfx: {fileID: 8300000, guid: ed52034a2c2439241805129e2da4d69c, type: 3}
+  collectSfxVolume: 10
   destroyOnPickup: 1
 --- !u!1 &1327789512745678624
 GameObject:
@@ -2312,8 +2363,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ab48b9f73da621e43af1d4d781550424, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  healthAmount: 20
-  weightAmountKg: 1
+  healthAmount: 10
+  weightAmountKg: 0.05
+  collectVfxPrefab: {fileID: 5091917010390914830, guid: d1fe802ee7b6fc24497016910b9375d6, type: 3}
+  collectSfx: {fileID: 8300000, guid: ed52034a2c2439241805129e2da4d69c, type: 3}
+  collectSfxVolume: 10
   destroyOnPickup: 1
 --- !u!1 &1356868625236432024
 GameObject:
@@ -2487,8 +2541,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ab48b9f73da621e43af1d4d781550424, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  healthAmount: 20
-  weightAmountKg: 1
+  healthAmount: 10
+  weightAmountKg: 0.05
+  collectVfxPrefab: {fileID: 5091917010390914830, guid: d1fe802ee7b6fc24497016910b9375d6, type: 3}
+  collectSfx: {fileID: 8300000, guid: ed52034a2c2439241805129e2da4d69c, type: 3}
+  collectSfxVolume: 10
   destroyOnPickup: 1
 --- !u!1 &1550049479264535605
 GameObject:
@@ -2631,8 +2688,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ab48b9f73da621e43af1d4d781550424, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  healthAmount: 20
-  weightAmountKg: 1
+  healthAmount: 10
+  weightAmountKg: 0.05
+  collectVfxPrefab: {fileID: 5091917010390914830, guid: d1fe802ee7b6fc24497016910b9375d6, type: 3}
+  collectSfx: {fileID: 8300000, guid: ed52034a2c2439241805129e2da4d69c, type: 3}
+  collectSfxVolume: 10
   destroyOnPickup: 1
 --- !u!1 &1677224545743517996
 GameObject:
@@ -2776,8 +2836,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ab48b9f73da621e43af1d4d781550424, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  healthAmount: 20
-  weightAmountKg: 1
+  healthAmount: 10
+  weightAmountKg: 0.05
+  collectVfxPrefab: {fileID: 5091917010390914830, guid: 46b81de729581ad41aacc1f98373dc95, type: 3}
+  collectSfx: {fileID: 8300000, guid: 217c9f4e4ace78f4384d1c66692400f5, type: 3}
+  collectSfxVolume: 0.05
   destroyOnPickup: 1
 --- !u!114 &4214851721633038055
 MonoBehaviour:
@@ -2793,6 +2856,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   healthAmount: 10
   weightAmountKg: 0.5
+  collectVfxPrefab: {fileID: 0}
+  collectSfx: {fileID: 0}
+  collectSfxVolume: 1
   destroyOnPickup: 1
 --- !u!1 &1774572465035388142
 GameObject:
@@ -2905,8 +2971,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ab48b9f73da621e43af1d4d781550424, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  healthAmount: 20
-  weightAmountKg: 1
+  healthAmount: 10
+  weightAmountKg: 0.05
+  collectVfxPrefab: {fileID: 5091917010390914830, guid: 46b81de729581ad41aacc1f98373dc95, type: 3}
+  collectSfx: {fileID: 8300000, guid: 217c9f4e4ace78f4384d1c66692400f5, type: 3}
+  collectSfxVolume: 0.05
   destroyOnPickup: 1
 --- !u!114 &5717191789634544938
 MonoBehaviour:
@@ -2922,6 +2991,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   healthAmount: 10
   weightAmountKg: 0.5
+  collectVfxPrefab: {fileID: 0}
+  collectSfx: {fileID: 0}
+  collectSfxVolume: 1
   destroyOnPickup: 1
 --- !u!1 &1827466281447927896
 GameObject:
@@ -3033,8 +3105,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ab48b9f73da621e43af1d4d781550424, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  healthAmount: 20
-  weightAmountKg: 1
+  healthAmount: 10
+  weightAmountKg: 0.05
+  collectVfxPrefab: {fileID: 5091917010390914830, guid: d1fe802ee7b6fc24497016910b9375d6, type: 3}
+  collectSfx: {fileID: 8300000, guid: ed52034a2c2439241805129e2da4d69c, type: 3}
+  collectSfxVolume: 10
   destroyOnPickup: 1
 --- !u!1 &1827613715151738930
 GameObject:
@@ -3147,8 +3222,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ab48b9f73da621e43af1d4d781550424, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  healthAmount: 20
-  weightAmountKg: 1
+  healthAmount: 10
+  weightAmountKg: 0.05
+  collectVfxPrefab: {fileID: 5091917010390914830, guid: 46b81de729581ad41aacc1f98373dc95, type: 3}
+  collectSfx: {fileID: 8300000, guid: 217c9f4e4ace78f4384d1c66692400f5, type: 3}
+  collectSfxVolume: 0.05
   destroyOnPickup: 1
 --- !u!114 &8921452565911885535
 MonoBehaviour:
@@ -3164,6 +3242,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   healthAmount: 10
   weightAmountKg: 0.5
+  collectVfxPrefab: {fileID: 0}
+  collectSfx: {fileID: 0}
+  collectSfxVolume: 1
   destroyOnPickup: 1
 --- !u!1 &1949058714030479646
 GameObject:
@@ -3391,8 +3472,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ab48b9f73da621e43af1d4d781550424, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  healthAmount: 20
-  weightAmountKg: 1
+  healthAmount: 10
+  weightAmountKg: 0.05
+  collectVfxPrefab: {fileID: 5091917010390914830, guid: 46b81de729581ad41aacc1f98373dc95, type: 3}
+  collectSfx: {fileID: 8300000, guid: 217c9f4e4ace78f4384d1c66692400f5, type: 3}
+  collectSfxVolume: 0.05
   destroyOnPickup: 1
 --- !u!114 &3589275417064988956
 MonoBehaviour:
@@ -3408,6 +3492,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   healthAmount: 10
   weightAmountKg: 0.5
+  collectVfxPrefab: {fileID: 0}
+  collectSfx: {fileID: 0}
+  collectSfxVolume: 1
   destroyOnPickup: 1
 --- !u!1 &1986779625272108612
 GameObject:
@@ -3520,8 +3607,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ab48b9f73da621e43af1d4d781550424, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  healthAmount: 20
-  weightAmountKg: 1
+  healthAmount: 10
+  weightAmountKg: 0.05
+  collectVfxPrefab: {fileID: 5091917010390914830, guid: 46b81de729581ad41aacc1f98373dc95, type: 3}
+  collectSfx: {fileID: 8300000, guid: 217c9f4e4ace78f4384d1c66692400f5, type: 3}
+  collectSfxVolume: 0.05
   destroyOnPickup: 1
 --- !u!114 &3231713658631915314
 MonoBehaviour:
@@ -3537,6 +3627,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   healthAmount: 10
   weightAmountKg: 0.5
+  collectVfxPrefab: {fileID: 0}
+  collectSfx: {fileID: 0}
+  collectSfxVolume: 1
   destroyOnPickup: 1
 --- !u!1 &2002957521975201397
 GameObject:
@@ -3648,8 +3741,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ab48b9f73da621e43af1d4d781550424, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  healthAmount: 20
-  weightAmountKg: 1
+  healthAmount: 10
+  weightAmountKg: 0.05
+  collectVfxPrefab: {fileID: 5091917010390914830, guid: d1fe802ee7b6fc24497016910b9375d6, type: 3}
+  collectSfx: {fileID: 8300000, guid: ed52034a2c2439241805129e2da4d69c, type: 3}
+  collectSfxVolume: 10
   destroyOnPickup: 1
 --- !u!1 &2024820440600649794
 GameObject:
@@ -3907,8 +4003,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ab48b9f73da621e43af1d4d781550424, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  healthAmount: 20
-  weightAmountKg: 1
+  healthAmount: 10
+  weightAmountKg: 0.05
+  collectVfxPrefab: {fileID: 5091917010390914830, guid: d1fe802ee7b6fc24497016910b9375d6, type: 3}
+  collectSfx: {fileID: 8300000, guid: ed52034a2c2439241805129e2da4d69c, type: 3}
+  collectSfxVolume: 10
   destroyOnPickup: 1
 --- !u!1 &2081324781188353986
 GameObject:
@@ -4020,8 +4119,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ab48b9f73da621e43af1d4d781550424, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  healthAmount: 20
-  weightAmountKg: 1
+  healthAmount: 10
+  weightAmountKg: 0.05
+  collectVfxPrefab: {fileID: 5091917010390914830, guid: d1fe802ee7b6fc24497016910b9375d6, type: 3}
+  collectSfx: {fileID: 8300000, guid: ed52034a2c2439241805129e2da4d69c, type: 3}
+  collectSfxVolume: 10
   destroyOnPickup: 1
 --- !u!1 &2154556379347383948
 GameObject:
@@ -4133,8 +4235,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ab48b9f73da621e43af1d4d781550424, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  healthAmount: 20
-  weightAmountKg: 1
+  healthAmount: 10
+  weightAmountKg: 0.05
+  collectVfxPrefab: {fileID: 5091917010390914830, guid: d1fe802ee7b6fc24497016910b9375d6, type: 3}
+  collectSfx: {fileID: 8300000, guid: ed52034a2c2439241805129e2da4d69c, type: 3}
+  collectSfxVolume: 10
   destroyOnPickup: 1
 --- !u!1 &2172629883942223330
 GameObject:
@@ -4393,8 +4498,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ab48b9f73da621e43af1d4d781550424, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  healthAmount: 20
-  weightAmountKg: 1
+  healthAmount: 10
+  weightAmountKg: 0.05
+  collectVfxPrefab: {fileID: 5091917010390914830, guid: 46b81de729581ad41aacc1f98373dc95, type: 3}
+  collectSfx: {fileID: 8300000, guid: 217c9f4e4ace78f4384d1c66692400f5, type: 3}
+  collectSfxVolume: 0.05
   destroyOnPickup: 1
 --- !u!114 &8175072555017721686
 MonoBehaviour:
@@ -4410,6 +4518,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   healthAmount: 10
   weightAmountKg: 0.5
+  collectVfxPrefab: {fileID: 0}
+  collectSfx: {fileID: 0}
+  collectSfxVolume: 1
   destroyOnPickup: 1
 --- !u!1 &2229698172808403847
 GameObject:
@@ -4522,8 +4633,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ab48b9f73da621e43af1d4d781550424, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  healthAmount: 20
-  weightAmountKg: 1
+  healthAmount: 10
+  weightAmountKg: 0.05
+  collectVfxPrefab: {fileID: 5091917010390914830, guid: 46b81de729581ad41aacc1f98373dc95, type: 3}
+  collectSfx: {fileID: 8300000, guid: 217c9f4e4ace78f4384d1c66692400f5, type: 3}
+  collectSfxVolume: 0.05
   destroyOnPickup: 1
 --- !u!114 &5284161396056991058
 MonoBehaviour:
@@ -4539,6 +4653,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   healthAmount: 10
   weightAmountKg: 0.5
+  collectVfxPrefab: {fileID: 0}
+  collectSfx: {fileID: 0}
+  collectSfxVolume: 1
   destroyOnPickup: 1
 --- !u!1 &2365234104098208586
 GameObject:
@@ -4797,8 +4914,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ab48b9f73da621e43af1d4d781550424, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  healthAmount: 20
-  weightAmountKg: 1
+  healthAmount: 10
+  weightAmountKg: 0.05
+  collectVfxPrefab: {fileID: 5091917010390914830, guid: 46b81de729581ad41aacc1f98373dc95, type: 3}
+  collectSfx: {fileID: 8300000, guid: 217c9f4e4ace78f4384d1c66692400f5, type: 3}
+  collectSfxVolume: 0.05
   destroyOnPickup: 1
 --- !u!114 &7534531817603803611
 MonoBehaviour:
@@ -4814,6 +4934,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   healthAmount: 10
   weightAmountKg: 0.5
+  collectVfxPrefab: {fileID: 0}
+  collectSfx: {fileID: 0}
+  collectSfxVolume: 1
   destroyOnPickup: 1
 --- !u!1 &2552047499685824865
 GameObject:
@@ -4925,8 +5048,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ab48b9f73da621e43af1d4d781550424, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  healthAmount: 20
-  weightAmountKg: 1
+  healthAmount: 10
+  weightAmountKg: 0.05
+  collectVfxPrefab: {fileID: 5091917010390914830, guid: d1fe802ee7b6fc24497016910b9375d6, type: 3}
+  collectSfx: {fileID: 8300000, guid: ed52034a2c2439241805129e2da4d69c, type: 3}
+  collectSfxVolume: 10
   destroyOnPickup: 1
 --- !u!1 &2654365064417112196
 GameObject:
@@ -5038,8 +5164,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ab48b9f73da621e43af1d4d781550424, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  healthAmount: 20
-  weightAmountKg: 1
+  healthAmount: 10
+  weightAmountKg: 0.05
+  collectVfxPrefab: {fileID: 5091917010390914830, guid: d1fe802ee7b6fc24497016910b9375d6, type: 3}
+  collectSfx: {fileID: 8300000, guid: ed52034a2c2439241805129e2da4d69c, type: 3}
+  collectSfxVolume: 10
   destroyOnPickup: 1
 --- !u!1 &2697291709883748815
 GameObject:
@@ -5151,8 +5280,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ab48b9f73da621e43af1d4d781550424, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  healthAmount: 20
-  weightAmountKg: 1
+  healthAmount: 10
+  weightAmountKg: 0.05
+  collectVfxPrefab: {fileID: 5091917010390914830, guid: d1fe802ee7b6fc24497016910b9375d6, type: 3}
+  collectSfx: {fileID: 8300000, guid: ed52034a2c2439241805129e2da4d69c, type: 3}
+  collectSfxVolume: 10
   destroyOnPickup: 1
 --- !u!1 &2765300151967147667
 GameObject:
@@ -5265,8 +5397,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ab48b9f73da621e43af1d4d781550424, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  healthAmount: 20
-  weightAmountKg: 1
+  healthAmount: 10
+  weightAmountKg: 0.05
+  collectVfxPrefab: {fileID: 5091917010390914830, guid: 46b81de729581ad41aacc1f98373dc95, type: 3}
+  collectSfx: {fileID: 8300000, guid: 217c9f4e4ace78f4384d1c66692400f5, type: 3}
+  collectSfxVolume: 0.05
   destroyOnPickup: 1
 --- !u!114 &5420264853013393388
 MonoBehaviour:
@@ -5282,6 +5417,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   healthAmount: 10
   weightAmountKg: 0.5
+  collectVfxPrefab: {fileID: 0}
+  collectSfx: {fileID: 0}
+  collectSfxVolume: 1
   destroyOnPickup: 1
 --- !u!1 &2796414393375607003
 GameObject:
@@ -5394,8 +5532,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ab48b9f73da621e43af1d4d781550424, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  healthAmount: 20
-  weightAmountKg: 1
+  healthAmount: 10
+  weightAmountKg: 0.05
+  collectVfxPrefab: {fileID: 5091917010390914830, guid: 46b81de729581ad41aacc1f98373dc95, type: 3}
+  collectSfx: {fileID: 8300000, guid: 217c9f4e4ace78f4384d1c66692400f5, type: 3}
+  collectSfxVolume: 0.05
   destroyOnPickup: 1
 --- !u!114 &7258714408595768147
 MonoBehaviour:
@@ -5411,6 +5552,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   healthAmount: 10
   weightAmountKg: 0.5
+  collectVfxPrefab: {fileID: 0}
+  collectSfx: {fileID: 0}
+  collectSfxVolume: 1
   destroyOnPickup: 1
 --- !u!1 &2866904499247471173
 GameObject:
@@ -5646,8 +5790,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ab48b9f73da621e43af1d4d781550424, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  healthAmount: 20
-  weightAmountKg: 1
+  healthAmount: 10
+  weightAmountKg: 0.05
+  collectVfxPrefab: {fileID: 5091917010390914830, guid: d1fe802ee7b6fc24497016910b9375d6, type: 3}
+  collectSfx: {fileID: 8300000, guid: ed52034a2c2439241805129e2da4d69c, type: 3}
+  collectSfxVolume: 10
   destroyOnPickup: 1
 --- !u!1 &2982082607756132155
 GameObject:
@@ -5759,8 +5906,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ab48b9f73da621e43af1d4d781550424, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  healthAmount: 20
-  weightAmountKg: 1
+  healthAmount: 10
+  weightAmountKg: 0.05
+  collectVfxPrefab: {fileID: 5091917010390914830, guid: d1fe802ee7b6fc24497016910b9375d6, type: 3}
+  collectSfx: {fileID: 8300000, guid: ed52034a2c2439241805129e2da4d69c, type: 3}
+  collectSfxVolume: 10
   destroyOnPickup: 1
 --- !u!1 &2982202453126472131
 GameObject:
@@ -5949,8 +6099,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ab48b9f73da621e43af1d4d781550424, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  healthAmount: 20
-  weightAmountKg: 1
+  healthAmount: 10
+  weightAmountKg: 0.05
+  collectVfxPrefab: {fileID: 5091917010390914830, guid: d1fe802ee7b6fc24497016910b9375d6, type: 3}
+  collectSfx: {fileID: 8300000, guid: ed52034a2c2439241805129e2da4d69c, type: 3}
+  collectSfxVolume: 10
   destroyOnPickup: 1
 --- !u!1 &3027403104071240459
 GameObject:
@@ -6062,8 +6215,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ab48b9f73da621e43af1d4d781550424, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  healthAmount: 20
-  weightAmountKg: 1
+  healthAmount: 10
+  weightAmountKg: 0.05
+  collectVfxPrefab: {fileID: 5091917010390914830, guid: d1fe802ee7b6fc24497016910b9375d6, type: 3}
+  collectSfx: {fileID: 8300000, guid: ed52034a2c2439241805129e2da4d69c, type: 3}
+  collectSfxVolume: 10
   destroyOnPickup: 1
 --- !u!1 &3067716013265898771
 GameObject:
@@ -6176,8 +6332,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ab48b9f73da621e43af1d4d781550424, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  healthAmount: 20
-  weightAmountKg: 1
+  healthAmount: 10
+  weightAmountKg: 0.05
+  collectVfxPrefab: {fileID: 5091917010390914830, guid: 46b81de729581ad41aacc1f98373dc95, type: 3}
+  collectSfx: {fileID: 8300000, guid: 217c9f4e4ace78f4384d1c66692400f5, type: 3}
+  collectSfxVolume: 0.05
   destroyOnPickup: 1
 --- !u!114 &578093656422937699
 MonoBehaviour:
@@ -6193,6 +6352,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   healthAmount: 10
   weightAmountKg: 0.5
+  collectVfxPrefab: {fileID: 0}
+  collectSfx: {fileID: 0}
+  collectSfxVolume: 1
   destroyOnPickup: 1
 --- !u!1 &3075056674334813267
 GameObject:
@@ -6335,8 +6497,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ab48b9f73da621e43af1d4d781550424, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  healthAmount: 20
-  weightAmountKg: 1
+  healthAmount: 10
+  weightAmountKg: 0.05
+  collectVfxPrefab: {fileID: 5091917010390914830, guid: d1fe802ee7b6fc24497016910b9375d6, type: 3}
+  collectSfx: {fileID: 8300000, guid: ed52034a2c2439241805129e2da4d69c, type: 3}
+  collectSfxVolume: 10
   destroyOnPickup: 1
 --- !u!1 &3193204601047860529
 GameObject:
@@ -6449,8 +6614,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ab48b9f73da621e43af1d4d781550424, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  healthAmount: 20
-  weightAmountKg: 1
+  healthAmount: 10
+  weightAmountKg: 0.05
+  collectVfxPrefab: {fileID: 5091917010390914830, guid: 46b81de729581ad41aacc1f98373dc95, type: 3}
+  collectSfx: {fileID: 8300000, guid: 217c9f4e4ace78f4384d1c66692400f5, type: 3}
+  collectSfxVolume: 0.05
   destroyOnPickup: 1
 --- !u!114 &1448105917853925390
 MonoBehaviour:
@@ -6466,6 +6634,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   healthAmount: 10
   weightAmountKg: 0.5
+  collectVfxPrefab: {fileID: 0}
+  collectSfx: {fileID: 0}
+  collectSfxVolume: 1
   destroyOnPickup: 1
 --- !u!1 &3232568279067193465
 GameObject:
@@ -6578,8 +6749,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ab48b9f73da621e43af1d4d781550424, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  healthAmount: 20
-  weightAmountKg: 1
+  healthAmount: 10
+  weightAmountKg: 0.05
+  collectVfxPrefab: {fileID: 5091917010390914830, guid: 46b81de729581ad41aacc1f98373dc95, type: 3}
+  collectSfx: {fileID: 8300000, guid: 217c9f4e4ace78f4384d1c66692400f5, type: 3}
+  collectSfxVolume: 0.05
   destroyOnPickup: 1
 --- !u!114 &4706894267057742663
 MonoBehaviour:
@@ -6595,6 +6769,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   healthAmount: 10
   weightAmountKg: 0.5
+  collectVfxPrefab: {fileID: 0}
+  collectSfx: {fileID: 0}
+  collectSfxVolume: 1
   destroyOnPickup: 1
 --- !u!1 &3251934581118461670
 GameObject:
@@ -6998,8 +7175,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ab48b9f73da621e43af1d4d781550424, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  healthAmount: 20
-  weightAmountKg: 1
+  healthAmount: 10
+  weightAmountKg: 0.05
+  collectVfxPrefab: {fileID: 5091917010390914830, guid: d1fe802ee7b6fc24497016910b9375d6, type: 3}
+  collectSfx: {fileID: 8300000, guid: ed52034a2c2439241805129e2da4d69c, type: 3}
+  collectSfxVolume: 10
   destroyOnPickup: 1
 --- !u!1 &3633240309030766431
 GameObject:
@@ -7143,8 +7323,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ab48b9f73da621e43af1d4d781550424, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  healthAmount: 20
-  weightAmountKg: 1
+  healthAmount: 10
+  weightAmountKg: 0.05
+  collectVfxPrefab: {fileID: 5091917010390914830, guid: 46b81de729581ad41aacc1f98373dc95, type: 3}
+  collectSfx: {fileID: 8300000, guid: 217c9f4e4ace78f4384d1c66692400f5, type: 3}
+  collectSfxVolume: 0.05
   destroyOnPickup: 1
 --- !u!114 &7551260744838203844
 MonoBehaviour:
@@ -7160,6 +7343,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   healthAmount: 10
   weightAmountKg: 0.5
+  collectVfxPrefab: {fileID: 0}
+  collectSfx: {fileID: 0}
+  collectSfxVolume: 1
   destroyOnPickup: 1
 --- !u!1 &3714210103529933400
 GameObject:
@@ -7302,8 +7488,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ab48b9f73da621e43af1d4d781550424, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  healthAmount: 20
-  weightAmountKg: 1
+  healthAmount: 10
+  weightAmountKg: 0.05
+  collectVfxPrefab: {fileID: 5091917010390914830, guid: d1fe802ee7b6fc24497016910b9375d6, type: 3}
+  collectSfx: {fileID: 8300000, guid: ed52034a2c2439241805129e2da4d69c, type: 3}
+  collectSfxVolume: 10
   destroyOnPickup: 1
 --- !u!1 &3821754782440246269
 GameObject:
@@ -7415,8 +7604,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ab48b9f73da621e43af1d4d781550424, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  healthAmount: 20
-  weightAmountKg: 1
+  healthAmount: 10
+  weightAmountKg: 0.05
+  collectVfxPrefab: {fileID: 5091917010390914830, guid: d1fe802ee7b6fc24497016910b9375d6, type: 3}
+  collectSfx: {fileID: 8300000, guid: ed52034a2c2439241805129e2da4d69c, type: 3}
+  collectSfxVolume: 10
   destroyOnPickup: 1
 --- !u!1 &3866742163342818363
 GameObject:
@@ -7529,8 +7721,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ab48b9f73da621e43af1d4d781550424, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  healthAmount: 20
-  weightAmountKg: 1
+  healthAmount: 10
+  weightAmountKg: 0.05
+  collectVfxPrefab: {fileID: 5091917010390914830, guid: 46b81de729581ad41aacc1f98373dc95, type: 3}
+  collectSfx: {fileID: 8300000, guid: 217c9f4e4ace78f4384d1c66692400f5, type: 3}
+  collectSfxVolume: 0.05
   destroyOnPickup: 1
 --- !u!114 &6521545112854805544
 MonoBehaviour:
@@ -7546,6 +7741,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   healthAmount: 10
   weightAmountKg: 0.5
+  collectVfxPrefab: {fileID: 0}
+  collectSfx: {fileID: 0}
+  collectSfxVolume: 1
   destroyOnPickup: 1
 --- !u!1 &3897922697606812229
 GameObject:
@@ -7657,8 +7855,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ab48b9f73da621e43af1d4d781550424, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  healthAmount: 20
-  weightAmountKg: 1
+  healthAmount: 10
+  weightAmountKg: 0.05
+  collectVfxPrefab: {fileID: 5091917010390914830, guid: d1fe802ee7b6fc24497016910b9375d6, type: 3}
+  collectSfx: {fileID: 8300000, guid: ed52034a2c2439241805129e2da4d69c, type: 3}
+  collectSfxVolume: 10
   destroyOnPickup: 1
 --- !u!1 &3929222914865317612
 GameObject:
@@ -7832,8 +8033,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ab48b9f73da621e43af1d4d781550424, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  healthAmount: 20
-  weightAmountKg: 1
+  healthAmount: 10
+  weightAmountKg: 0.05
+  collectVfxPrefab: {fileID: 5091917010390914830, guid: d1fe802ee7b6fc24497016910b9375d6, type: 3}
+  collectSfx: {fileID: 8300000, guid: ed52034a2c2439241805129e2da4d69c, type: 3}
+  collectSfxVolume: 10
   destroyOnPickup: 1
 --- !u!1 &4166521412623077244
 GameObject:
@@ -8057,8 +8261,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ab48b9f73da621e43af1d4d781550424, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  healthAmount: 20
-  weightAmountKg: 1
+  healthAmount: 10
+  weightAmountKg: 0.05
+  collectVfxPrefab: {fileID: 5091917010390914830, guid: d1fe802ee7b6fc24497016910b9375d6, type: 3}
+  collectSfx: {fileID: 8300000, guid: ed52034a2c2439241805129e2da4d69c, type: 3}
+  collectSfxVolume: 10
   destroyOnPickup: 1
 --- !u!1 &4342185870612259094
 GameObject:
@@ -8286,8 +8493,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ab48b9f73da621e43af1d4d781550424, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  healthAmount: 20
-  weightAmountKg: 1
+  healthAmount: 10
+  weightAmountKg: 0.05
+  collectVfxPrefab: {fileID: 5091917010390914830, guid: 46b81de729581ad41aacc1f98373dc95, type: 3}
+  collectSfx: {fileID: 8300000, guid: 217c9f4e4ace78f4384d1c66692400f5, type: 3}
+  collectSfxVolume: 0.05
   destroyOnPickup: 1
 --- !u!114 &2069010325344823396
 MonoBehaviour:
@@ -8303,6 +8513,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   healthAmount: 10
   weightAmountKg: 0.5
+  collectVfxPrefab: {fileID: 0}
+  collectSfx: {fileID: 0}
+  collectSfxVolume: 1
   destroyOnPickup: 1
 --- !u!1 &4448032352762371736
 GameObject:
@@ -8446,8 +8659,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ab48b9f73da621e43af1d4d781550424, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  healthAmount: 20
-  weightAmountKg: 1
+  healthAmount: 10
+  weightAmountKg: 0.05
+  collectVfxPrefab: {fileID: 5091917010390914830, guid: 46b81de729581ad41aacc1f98373dc95, type: 3}
+  collectSfx: {fileID: 8300000, guid: 217c9f4e4ace78f4384d1c66692400f5, type: 3}
+  collectSfxVolume: 0.05
   destroyOnPickup: 1
 --- !u!114 &7516513801936080142
 MonoBehaviour:
@@ -8463,6 +8679,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   healthAmount: 10
   weightAmountKg: 0.5
+  collectVfxPrefab: {fileID: 0}
+  collectSfx: {fileID: 0}
+  collectSfxVolume: 1
   destroyOnPickup: 1
 --- !u!1 &4606370112684985877
 GameObject:
@@ -8605,8 +8824,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ab48b9f73da621e43af1d4d781550424, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  healthAmount: 20
-  weightAmountKg: 1
+  healthAmount: 10
+  weightAmountKg: 0.05
+  collectVfxPrefab: {fileID: 5091917010390914830, guid: d1fe802ee7b6fc24497016910b9375d6, type: 3}
+  collectSfx: {fileID: 8300000, guid: ed52034a2c2439241805129e2da4d69c, type: 3}
+  collectSfxVolume: 10
   destroyOnPickup: 1
 --- !u!1 &4658478072023211142
 GameObject:
@@ -8749,8 +8971,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ab48b9f73da621e43af1d4d781550424, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  healthAmount: 20
-  weightAmountKg: 1
+  healthAmount: 10
+  weightAmountKg: 0.05
+  collectVfxPrefab: {fileID: 5091917010390914830, guid: d1fe802ee7b6fc24497016910b9375d6, type: 3}
+  collectSfx: {fileID: 8300000, guid: ed52034a2c2439241805129e2da4d69c, type: 3}
+  collectSfxVolume: 10
   destroyOnPickup: 1
 --- !u!1 &4906223075784086817
 GameObject:
@@ -8862,8 +9087,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ab48b9f73da621e43af1d4d781550424, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  healthAmount: 20
-  weightAmountKg: 1
+  healthAmount: 10
+  weightAmountKg: 0.05
+  collectVfxPrefab: {fileID: 5091917010390914830, guid: d1fe802ee7b6fc24497016910b9375d6, type: 3}
+  collectSfx: {fileID: 8300000, guid: ed52034a2c2439241805129e2da4d69c, type: 3}
+  collectSfxVolume: 10
   destroyOnPickup: 1
 --- !u!1 &4914420100366886513
 GameObject:
@@ -8975,8 +9203,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ab48b9f73da621e43af1d4d781550424, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  healthAmount: 20
-  weightAmountKg: 1
+  healthAmount: 10
+  weightAmountKg: 0.05
+  collectVfxPrefab: {fileID: 5091917010390914830, guid: d1fe802ee7b6fc24497016910b9375d6, type: 3}
+  collectSfx: {fileID: 8300000, guid: ed52034a2c2439241805129e2da4d69c, type: 3}
+  collectSfxVolume: 10
   destroyOnPickup: 1
 --- !u!1 &5053598449288105892
 GameObject:
@@ -9088,8 +9319,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ab48b9f73da621e43af1d4d781550424, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  healthAmount: 20
-  weightAmountKg: 1
+  healthAmount: 10
+  weightAmountKg: 0.05
+  collectVfxPrefab: {fileID: 5091917010390914830, guid: d1fe802ee7b6fc24497016910b9375d6, type: 3}
+  collectSfx: {fileID: 8300000, guid: ed52034a2c2439241805129e2da4d69c, type: 3}
+  collectSfxVolume: 10
   destroyOnPickup: 1
 --- !u!1 &5055423426963702187
 GameObject:
@@ -9202,8 +9436,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ab48b9f73da621e43af1d4d781550424, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  healthAmount: 20
-  weightAmountKg: 1
+  healthAmount: 10
+  weightAmountKg: 0.05
+  collectVfxPrefab: {fileID: 5091917010390914830, guid: 46b81de729581ad41aacc1f98373dc95, type: 3}
+  collectSfx: {fileID: 8300000, guid: 217c9f4e4ace78f4384d1c66692400f5, type: 3}
+  collectSfxVolume: 0.05
   destroyOnPickup: 1
 --- !u!114 &3139520052501303755
 MonoBehaviour:
@@ -9219,6 +9456,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   healthAmount: 10
   weightAmountKg: 0.5
+  collectVfxPrefab: {fileID: 0}
+  collectSfx: {fileID: 0}
+  collectSfxVolume: 1
   destroyOnPickup: 1
 --- !u!1 &5066645983569177162
 GameObject:
@@ -9331,8 +9571,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ab48b9f73da621e43af1d4d781550424, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  healthAmount: 20
-  weightAmountKg: 1
+  healthAmount: 10
+  weightAmountKg: 0.05
+  collectVfxPrefab: {fileID: 5091917010390914830, guid: 46b81de729581ad41aacc1f98373dc95, type: 3}
+  collectSfx: {fileID: 8300000, guid: 217c9f4e4ace78f4384d1c66692400f5, type: 3}
+  collectSfxVolume: 0.05
   destroyOnPickup: 1
 --- !u!114 &6526842722425841217
 MonoBehaviour:
@@ -9348,6 +9591,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   healthAmount: 10
   weightAmountKg: 0.5
+  collectVfxPrefab: {fileID: 0}
+  collectSfx: {fileID: 0}
+  collectSfxVolume: 1
   destroyOnPickup: 1
 --- !u!1 &5154512775761628811
 GameObject:
@@ -9460,8 +9706,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ab48b9f73da621e43af1d4d781550424, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  healthAmount: 20
-  weightAmountKg: 1
+  healthAmount: 10
+  weightAmountKg: 0.05
+  collectVfxPrefab: {fileID: 5091917010390914830, guid: 46b81de729581ad41aacc1f98373dc95, type: 3}
+  collectSfx: {fileID: 8300000, guid: 217c9f4e4ace78f4384d1c66692400f5, type: 3}
+  collectSfxVolume: 0.05
   destroyOnPickup: 1
 --- !u!114 &1748470605330805319
 MonoBehaviour:
@@ -9477,6 +9726,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   healthAmount: 10
   weightAmountKg: 0.5
+  collectVfxPrefab: {fileID: 0}
+  collectSfx: {fileID: 0}
+  collectSfxVolume: 1
   destroyOnPickup: 1
 --- !u!1 &5195960584255698156
 GameObject:
@@ -9735,8 +9987,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ab48b9f73da621e43af1d4d781550424, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  healthAmount: 20
-  weightAmountKg: 1
+  healthAmount: 10
+  weightAmountKg: 0.05
+  collectVfxPrefab: {fileID: 5091917010390914830, guid: 46b81de729581ad41aacc1f98373dc95, type: 3}
+  collectSfx: {fileID: 8300000, guid: 217c9f4e4ace78f4384d1c66692400f5, type: 3}
+  collectSfxVolume: 0.05
   destroyOnPickup: 1
 --- !u!114 &4951046657964031778
 MonoBehaviour:
@@ -9752,6 +10007,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   healthAmount: 10
   weightAmountKg: 0.5
+  collectVfxPrefab: {fileID: 0}
+  collectSfx: {fileID: 0}
+  collectSfxVolume: 1
   destroyOnPickup: 1
 --- !u!1 &5392297118492849554
 GameObject:
@@ -9894,8 +10152,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ab48b9f73da621e43af1d4d781550424, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  healthAmount: 20
-  weightAmountKg: 1
+  healthAmount: 10
+  weightAmountKg: 0.05
+  collectVfxPrefab: {fileID: 5091917010390914830, guid: d1fe802ee7b6fc24497016910b9375d6, type: 3}
+  collectSfx: {fileID: 8300000, guid: ed52034a2c2439241805129e2da4d69c, type: 3}
+  collectSfxVolume: 10
   destroyOnPickup: 1
 --- !u!1 &5459232986769494113
 GameObject:
@@ -10008,8 +10269,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ab48b9f73da621e43af1d4d781550424, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  healthAmount: 20
-  weightAmountKg: 1
+  healthAmount: 10
+  weightAmountKg: 0.05
+  collectVfxPrefab: {fileID: 5091917010390914830, guid: 46b81de729581ad41aacc1f98373dc95, type: 3}
+  collectSfx: {fileID: 8300000, guid: 217c9f4e4ace78f4384d1c66692400f5, type: 3}
+  collectSfxVolume: 0.05
   destroyOnPickup: 1
 --- !u!114 &874779387571033454
 MonoBehaviour:
@@ -10025,6 +10289,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   healthAmount: 10
   weightAmountKg: 0.5
+  collectVfxPrefab: {fileID: 0}
+  collectSfx: {fileID: 0}
+  collectSfxVolume: 1
   destroyOnPickup: 1
 --- !u!1 &5461704561545907449
 GameObject:
@@ -10314,8 +10581,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ab48b9f73da621e43af1d4d781550424, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  healthAmount: 20
-  weightAmountKg: 1
+  healthAmount: 10
+  weightAmountKg: 0.05
+  collectVfxPrefab: {fileID: 5091917010390914830, guid: 46b81de729581ad41aacc1f98373dc95, type: 3}
+  collectSfx: {fileID: 8300000, guid: 217c9f4e4ace78f4384d1c66692400f5, type: 3}
+  collectSfxVolume: 0.05
   destroyOnPickup: 1
 --- !u!114 &6821273199120657256
 MonoBehaviour:
@@ -10331,6 +10601,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   healthAmount: 10
   weightAmountKg: 0.5
+  collectVfxPrefab: {fileID: 0}
+  collectSfx: {fileID: 0}
+  collectSfxVolume: 1
   destroyOnPickup: 1
 --- !u!1 &5548198629462115777
 GameObject:
@@ -10443,8 +10716,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ab48b9f73da621e43af1d4d781550424, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  healthAmount: 20
-  weightAmountKg: 1
+  healthAmount: 10
+  weightAmountKg: 0.05
+  collectVfxPrefab: {fileID: 5091917010390914830, guid: 46b81de729581ad41aacc1f98373dc95, type: 3}
+  collectSfx: {fileID: 8300000, guid: 217c9f4e4ace78f4384d1c66692400f5, type: 3}
+  collectSfxVolume: 0.05
   destroyOnPickup: 1
 --- !u!114 &2619505793037400147
 MonoBehaviour:
@@ -10460,6 +10736,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   healthAmount: 10
   weightAmountKg: 0.5
+  collectVfxPrefab: {fileID: 0}
+  collectSfx: {fileID: 0}
+  collectSfxVolume: 1
   destroyOnPickup: 1
 --- !u!1 &5549221426980922787
 GameObject:
@@ -10572,8 +10851,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ab48b9f73da621e43af1d4d781550424, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  healthAmount: 20
-  weightAmountKg: 1
+  healthAmount: 10
+  weightAmountKg: 0.05
+  collectVfxPrefab: {fileID: 5091917010390914830, guid: 46b81de729581ad41aacc1f98373dc95, type: 3}
+  collectSfx: {fileID: 8300000, guid: 217c9f4e4ace78f4384d1c66692400f5, type: 3}
+  collectSfxVolume: 0.05
   destroyOnPickup: 1
 --- !u!114 &4695768691284741937
 MonoBehaviour:
@@ -10589,6 +10871,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   healthAmount: 10
   weightAmountKg: 0.5
+  collectVfxPrefab: {fileID: 0}
+  collectSfx: {fileID: 0}
+  collectSfxVolume: 1
   destroyOnPickup: 1
 --- !u!1 &5567301417924292493
 GameObject:
@@ -10700,8 +10985,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ab48b9f73da621e43af1d4d781550424, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  healthAmount: 20
-  weightAmountKg: 1
+  healthAmount: 10
+  weightAmountKg: 0.05
+  collectVfxPrefab: {fileID: 5091917010390914830, guid: d1fe802ee7b6fc24497016910b9375d6, type: 3}
+  collectSfx: {fileID: 8300000, guid: ed52034a2c2439241805129e2da4d69c, type: 3}
+  collectSfxVolume: 10
   destroyOnPickup: 1
 --- !u!1 &5652732175794528863
 GameObject:
@@ -10813,8 +11101,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ab48b9f73da621e43af1d4d781550424, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  healthAmount: 20
-  weightAmountKg: 1
+  healthAmount: 10
+  weightAmountKg: 0.05
+  collectVfxPrefab: {fileID: 5091917010390914830, guid: d1fe802ee7b6fc24497016910b9375d6, type: 3}
+  collectSfx: {fileID: 8300000, guid: ed52034a2c2439241805129e2da4d69c, type: 3}
+  collectSfxVolume: 10
   destroyOnPickup: 1
 --- !u!1 &5978952716528114184
 GameObject:
@@ -10927,8 +11218,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ab48b9f73da621e43af1d4d781550424, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  healthAmount: 20
-  weightAmountKg: 1
+  healthAmount: 10
+  weightAmountKg: 0.05
+  collectVfxPrefab: {fileID: 5091917010390914830, guid: 46b81de729581ad41aacc1f98373dc95, type: 3}
+  collectSfx: {fileID: 8300000, guid: 217c9f4e4ace78f4384d1c66692400f5, type: 3}
+  collectSfxVolume: 0.05
   destroyOnPickup: 1
 --- !u!114 &7800011932263136622
 MonoBehaviour:
@@ -10944,6 +11238,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   healthAmount: 10
   weightAmountKg: 0.5
+  collectVfxPrefab: {fileID: 0}
+  collectSfx: {fileID: 0}
+  collectSfxVolume: 1
   destroyOnPickup: 1
 --- !u!1 &5997937556607984243
 GameObject:
@@ -11056,8 +11353,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ab48b9f73da621e43af1d4d781550424, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  healthAmount: 20
-  weightAmountKg: 1
+  healthAmount: 10
+  weightAmountKg: 0.05
+  collectVfxPrefab: {fileID: 5091917010390914830, guid: 46b81de729581ad41aacc1f98373dc95, type: 3}
+  collectSfx: {fileID: 8300000, guid: 217c9f4e4ace78f4384d1c66692400f5, type: 3}
+  collectSfxVolume: 0.05
   destroyOnPickup: 1
 --- !u!114 &6078636584401250348
 MonoBehaviour:
@@ -11073,6 +11373,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   healthAmount: 10
   weightAmountKg: 0.5
+  collectVfxPrefab: {fileID: 0}
+  collectSfx: {fileID: 0}
+  collectSfxVolume: 1
   destroyOnPickup: 1
 --- !u!1 &6028636485106183811
 GameObject:
@@ -11185,8 +11488,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ab48b9f73da621e43af1d4d781550424, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  healthAmount: 20
-  weightAmountKg: 1
+  healthAmount: 10
+  weightAmountKg: 0.05
+  collectVfxPrefab: {fileID: 5091917010390914830, guid: 46b81de729581ad41aacc1f98373dc95, type: 3}
+  collectSfx: {fileID: 8300000, guid: 217c9f4e4ace78f4384d1c66692400f5, type: 3}
+  collectSfxVolume: 0.05
   destroyOnPickup: 1
 --- !u!114 &1119651625072578116
 MonoBehaviour:
@@ -11202,6 +11508,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   healthAmount: 10
   weightAmountKg: 0.5
+  collectVfxPrefab: {fileID: 0}
+  collectSfx: {fileID: 0}
+  collectSfxVolume: 1
   destroyOnPickup: 1
 --- !u!1 &6102398047223130529
 GameObject:
@@ -11313,8 +11622,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ab48b9f73da621e43af1d4d781550424, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  healthAmount: 20
-  weightAmountKg: 1
+  healthAmount: 10
+  weightAmountKg: 0.05
+  collectVfxPrefab: {fileID: 5091917010390914830, guid: d1fe802ee7b6fc24497016910b9375d6, type: 3}
+  collectSfx: {fileID: 8300000, guid: ed52034a2c2439241805129e2da4d69c, type: 3}
+  collectSfxVolume: 10
   destroyOnPickup: 1
 --- !u!1 &6163651521769829712
 GameObject:
@@ -11345,7 +11657,7 @@ Transform:
   m_GameObject: {fileID: 6163651521769829712}
   m_LocalRotation: {x: -0.0461424, y: -0.7055998, z: -0.7055996, w: 0.0461424}
   m_LocalPosition: {x: 22.93, y: -0.17, z: 40.83}
-  m_LocalScale: {x: 141.98999, y: 141.98999, z: 141.98999}
+  m_LocalScale: {x: 100, y: 100, z: 100}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 6821645572014596129}
@@ -11426,8 +11738,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c6536b07155f3b741a660223d13a2a1f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  damageAmount: 10
-  hitSfx: {fileID: 0}
+  damageAmount: 5
+  hitSfx: {fileID: 8300000, guid: e991dde3b297b4944b449d7114aaf9e5, type: 3}
   hitVolume: 1
   destroyAfterHit: 0
 --- !u!1 &6229918860755391426
@@ -11541,8 +11853,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ab48b9f73da621e43af1d4d781550424, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  healthAmount: 20
-  weightAmountKg: 1
+  healthAmount: 10
+  weightAmountKg: 0.05
+  collectVfxPrefab: {fileID: 5091917010390914830, guid: 46b81de729581ad41aacc1f98373dc95, type: 3}
+  collectSfx: {fileID: 8300000, guid: 217c9f4e4ace78f4384d1c66692400f5, type: 3}
+  collectSfxVolume: 0.05
   destroyOnPickup: 1
 --- !u!114 &375198890522911554
 MonoBehaviour:
@@ -11558,6 +11873,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   healthAmount: 10
   weightAmountKg: 0.5
+  collectVfxPrefab: {fileID: 0}
+  collectSfx: {fileID: 0}
+  collectSfxVolume: 1
   destroyOnPickup: 1
 --- !u!1 &6425299730933265728
 GameObject:
@@ -11670,8 +11988,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ab48b9f73da621e43af1d4d781550424, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  healthAmount: 20
-  weightAmountKg: 1
+  healthAmount: 10
+  weightAmountKg: 0.05
+  collectVfxPrefab: {fileID: 5091917010390914830, guid: 46b81de729581ad41aacc1f98373dc95, type: 3}
+  collectSfx: {fileID: 8300000, guid: 217c9f4e4ace78f4384d1c66692400f5, type: 3}
+  collectSfxVolume: 0.05
   destroyOnPickup: 1
 --- !u!114 &1476406653968585161
 MonoBehaviour:
@@ -11687,6 +12008,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   healthAmount: 10
   weightAmountKg: 0.5
+  collectVfxPrefab: {fileID: 0}
+  collectSfx: {fileID: 0}
+  collectSfxVolume: 1
   destroyOnPickup: 1
 --- !u!1 &6518143409317493303
 GameObject:
@@ -11987,8 +12311,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ab48b9f73da621e43af1d4d781550424, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  healthAmount: 20
-  weightAmountKg: 1
+  healthAmount: 10
+  weightAmountKg: 0.05
+  collectVfxPrefab: {fileID: 5091917010390914830, guid: d1fe802ee7b6fc24497016910b9375d6, type: 3}
+  collectSfx: {fileID: 8300000, guid: ed52034a2c2439241805129e2da4d69c, type: 3}
+  collectSfxVolume: 10
   destroyOnPickup: 1
 --- !u!1 &6821645570805694967
 GameObject:
@@ -12100,8 +12427,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c6536b07155f3b741a660223d13a2a1f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  damageAmount: 10
-  hitSfx: {fileID: 0}
+  damageAmount: 5
+  hitSfx: {fileID: 8300000, guid: e991dde3b297b4944b449d7114aaf9e5, type: 3}
   hitVolume: 1
   destroyAfterHit: 0
 --- !u!1 &6821645570816397950
@@ -12214,8 +12541,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c6536b07155f3b741a660223d13a2a1f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  damageAmount: 10
-  hitSfx: {fileID: 0}
+  damageAmount: 5
+  hitSfx: {fileID: 8300000, guid: e991dde3b297b4944b449d7114aaf9e5, type: 3}
   hitVolume: 1
   destroyAfterHit: 0
 --- !u!1 &6821645570858429539
@@ -12328,8 +12655,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c6536b07155f3b741a660223d13a2a1f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  damageAmount: 10
-  hitSfx: {fileID: 0}
+  damageAmount: 5
+  hitSfx: {fileID: 8300000, guid: e991dde3b297b4944b449d7114aaf9e5, type: 3}
   hitVolume: 1
   destroyAfterHit: 0
 --- !u!1 &6821645570879290165
@@ -12442,8 +12769,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c6536b07155f3b741a660223d13a2a1f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  damageAmount: 10
-  hitSfx: {fileID: 0}
+  damageAmount: 5
+  hitSfx: {fileID: 8300000, guid: e991dde3b297b4944b449d7114aaf9e5, type: 3}
   hitVolume: 1
   destroyAfterHit: 0
 --- !u!1 &6821645570971939415
@@ -12589,8 +12916,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c6536b07155f3b741a660223d13a2a1f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  damageAmount: 10
-  hitSfx: {fileID: 0}
+  damageAmount: 5
+  hitSfx: {fileID: 8300000, guid: e991dde3b297b4944b449d7114aaf9e5, type: 3}
   hitVolume: 1
   destroyAfterHit: 0
 --- !u!1 &6821645571085430378
@@ -12703,8 +13030,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c6536b07155f3b741a660223d13a2a1f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  damageAmount: 10
-  hitSfx: {fileID: 0}
+  damageAmount: 5
+  hitSfx: {fileID: 8300000, guid: e991dde3b297b4944b449d7114aaf9e5, type: 3}
   hitVolume: 1
   destroyAfterHit: 0
 --- !u!1 &6821645571097554119
@@ -12817,8 +13144,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c6536b07155f3b741a660223d13a2a1f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  damageAmount: 10
-  hitSfx: {fileID: 0}
+  damageAmount: 5
+  hitSfx: {fileID: 8300000, guid: e991dde3b297b4944b449d7114aaf9e5, type: 3}
   hitVolume: 1
   destroyAfterHit: 0
 --- !u!1 &6821645571125397885
@@ -12931,8 +13258,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c6536b07155f3b741a660223d13a2a1f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  damageAmount: 10
-  hitSfx: {fileID: 0}
+  damageAmount: 5
+  hitSfx: {fileID: 8300000, guid: e991dde3b297b4944b449d7114aaf9e5, type: 3}
   hitVolume: 1
   destroyAfterHit: 0
 --- !u!1 &6821645571296958594
@@ -13044,7 +13371,7 @@ Transform:
   m_GameObject: {fileID: 6821645571397666296}
   m_LocalRotation: {x: -0.7071068, y: -0, z: -0, w: 0.7071068}
   m_LocalPosition: {x: 6.7046585, y: -0.03550315, z: 24.266317}
-  m_LocalScale: {x: 141.29, y: 141.29, z: 141.29}
+  m_LocalScale: {x: 100, y: 100, z: 100}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 6821645572014596129}
@@ -13125,8 +13452,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c6536b07155f3b741a660223d13a2a1f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  damageAmount: 10
-  hitSfx: {fileID: 0}
+  damageAmount: 5
+  hitSfx: {fileID: 8300000, guid: e991dde3b297b4944b449d7114aaf9e5, type: 3}
   hitVolume: 1
   destroyAfterHit: 0
 --- !u!1 &6821645571573542021
@@ -13158,7 +13485,7 @@ Transform:
   m_GameObject: {fileID: 6821645571573542021}
   m_LocalRotation: {x: 0.38128114, y: 0.59550387, z: 0.5955038, w: -0.381281}
   m_LocalPosition: {x: 19.704659, y: -0.13870287, z: -10.133682}
-  m_LocalScale: {x: 48, y: 48, z: 48}
+  m_LocalScale: {x: 100, y: 100, z: 100}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 6821645572014596129}
@@ -13239,8 +13566,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c6536b07155f3b741a660223d13a2a1f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  damageAmount: 10
-  hitSfx: {fileID: 0}
+  damageAmount: 5
+  hitSfx: {fileID: 8300000, guid: e991dde3b297b4944b449d7114aaf9e5, type: 3}
   hitVolume: 1
   destroyAfterHit: 0
 --- !u!1 &6821645571629340616
@@ -13414,8 +13741,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c6536b07155f3b741a660223d13a2a1f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  damageAmount: 10
-  hitSfx: {fileID: 0}
+  damageAmount: 5
+  hitSfx: {fileID: 8300000, guid: e991dde3b297b4944b449d7114aaf9e5, type: 3}
   hitVolume: 1
   destroyAfterHit: 0
 --- !u!1 &6821645571780905650
@@ -13643,8 +13970,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c6536b07155f3b741a660223d13a2a1f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  damageAmount: 10
-  hitSfx: {fileID: 0}
+  damageAmount: 5
+  hitSfx: {fileID: 8300000, guid: e991dde3b297b4944b449d7114aaf9e5, type: 3}
   hitVolume: 1
   destroyAfterHit: 0
 --- !u!1 &6821645571866573902
@@ -13757,8 +14084,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c6536b07155f3b741a660223d13a2a1f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  damageAmount: 10
-  hitSfx: {fileID: 0}
+  damageAmount: 5
+  hitSfx: {fileID: 8300000, guid: e991dde3b297b4944b449d7114aaf9e5, type: 3}
   hitVolume: 1
   destroyAfterHit: 0
 --- !u!1 &6821645571870650482
@@ -13790,7 +14117,7 @@ Transform:
   m_GameObject: {fileID: 6821645571870650482}
   m_LocalRotation: {x: -0.0461424, y: -0.7055998, z: -0.7055996, w: 0.0461424}
   m_LocalPosition: {x: 24.804657, y: -0.17, z: 24.266317}
-  m_LocalScale: {x: 141.98999, y: 141.98999, z: 141.98999}
+  m_LocalScale: {x: 100, y: 100, z: 100}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 6821645572014596129}
@@ -13871,8 +14198,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c6536b07155f3b741a660223d13a2a1f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  damageAmount: 10
-  hitSfx: {fileID: 0}
+  damageAmount: 5
+  hitSfx: {fileID: 8300000, guid: e991dde3b297b4944b449d7114aaf9e5, type: 3}
   hitVolume: 1
   destroyAfterHit: 0
 --- !u!1 &6821645571979402186
@@ -13985,8 +14312,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c6536b07155f3b741a660223d13a2a1f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  damageAmount: 10
-  hitSfx: {fileID: 0}
+  damageAmount: 5
+  hitSfx: {fileID: 8300000, guid: e991dde3b297b4944b449d7114aaf9e5, type: 3}
   hitVolume: 1
   destroyAfterHit: 0
 --- !u!1 &6821645572010014671
@@ -14099,8 +14426,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c6536b07155f3b741a660223d13a2a1f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  damageAmount: 10
-  hitSfx: {fileID: 0}
+  damageAmount: 5
+  hitSfx: {fileID: 8300000, guid: e991dde3b297b4944b449d7114aaf9e5, type: 3}
   hitVolume: 1
   destroyAfterHit: 0
 --- !u!1 &6821645572014596142
@@ -14193,7 +14520,7 @@ Transform:
   m_GameObject: {fileID: 6821645572147260407}
   m_LocalRotation: {x: -0.49903768, y: -0.717837, z: -0.40818384, w: 0.26278764}
   m_LocalPosition: {x: 30.029999, y: -0.09145561, z: -3}
-  m_LocalScale: {x: 100.000015, y: 100, z: 100}
+  m_LocalScale: {x: 100, y: 100, z: 100}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 6821645572014596129}
@@ -14274,8 +14601,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c6536b07155f3b741a660223d13a2a1f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  damageAmount: 10
-  hitSfx: {fileID: 0}
+  damageAmount: 5
+  hitSfx: {fileID: 8300000, guid: e991dde3b297b4944b449d7114aaf9e5, type: 3}
   hitVolume: 1
   destroyAfterHit: 0
 --- !u!1 &6821645572224205604
@@ -14388,8 +14715,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c6536b07155f3b741a660223d13a2a1f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  damageAmount: 10
-  hitSfx: {fileID: 0}
+  damageAmount: 5
+  hitSfx: {fileID: 8300000, guid: e991dde3b297b4944b449d7114aaf9e5, type: 3}
   hitVolume: 1
   destroyAfterHit: 0
 --- !u!1 &6821645572299314713
@@ -14423,7 +14750,7 @@ Transform:
   m_GameObject: {fileID: 6821645572299314713}
   m_LocalRotation: {x: -0.6892992, y: -0.15769152, z: -0.15769152, w: 0.6892992}
   m_LocalPosition: {x: 19.948, y: -0.13, z: 8.5121}
-  m_LocalScale: {x: 94.86793, y: 94.86793, z: 94.86793}
+  m_LocalScale: {x: 100, y: 100, z: 100}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 6821645572014596129}
@@ -14504,8 +14831,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c6536b07155f3b741a660223d13a2a1f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  damageAmount: 10
-  hitSfx: {fileID: 0}
+  damageAmount: 5
+  hitSfx: {fileID: 8300000, guid: e991dde3b297b4944b449d7114aaf9e5, type: 3}
   hitVolume: 1
   destroyAfterHit: 0
 --- !u!65 &4218023957198351990
@@ -14647,8 +14974,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c6536b07155f3b741a660223d13a2a1f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  damageAmount: 10
-  hitSfx: {fileID: 0}
+  damageAmount: 5
+  hitSfx: {fileID: 8300000, guid: e991dde3b297b4944b449d7114aaf9e5, type: 3}
   hitVolume: 1
   destroyAfterHit: 0
 --- !u!1 &6821645572373894701
@@ -14761,8 +15088,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c6536b07155f3b741a660223d13a2a1f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  damageAmount: 10
-  hitSfx: {fileID: 0}
+  damageAmount: 5
+  hitSfx: {fileID: 8300000, guid: e991dde3b297b4944b449d7114aaf9e5, type: 3}
   hitVolume: 1
   destroyAfterHit: 0
 --- !u!1 &6821645572417374245
@@ -14794,7 +15121,7 @@ Transform:
   m_GameObject: {fileID: 6821645572417374245}
   m_LocalRotation: {x: -0.6941287, y: -0.13485363, z: -0.13485351, w: 0.6941286}
   m_LocalPosition: {x: 7.3294315, y: 0.020299792, z: 13.7254505}
-  m_LocalScale: {x: 100, y: 99.999985, z: 100}
+  m_LocalScale: {x: 100, y: 100, z: 100}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 6821645572014596129}
@@ -14875,8 +15202,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c6536b07155f3b741a660223d13a2a1f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  damageAmount: 10
-  hitSfx: {fileID: 0}
+  damageAmount: 5
+  hitSfx: {fileID: 8300000, guid: e991dde3b297b4944b449d7114aaf9e5, type: 3}
   hitVolume: 1
   destroyAfterHit: 0
 --- !u!1 &6821645572424915159
@@ -14959,7 +15286,7 @@ Transform:
   m_GameObject: {fileID: 6821645572425638510}
   m_LocalRotation: {x: -0.6842985, y: 0.17814486, z: 0.17814486, w: 0.6842985}
   m_LocalPosition: {x: 16.64, y: 0.01, z: 14.99}
-  m_LocalScale: {x: 100.00003, y: 100, z: 100}
+  m_LocalScale: {x: 100, y: 100, z: 100}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 6821645572014596129}
@@ -15040,8 +15367,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c6536b07155f3b741a660223d13a2a1f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  damageAmount: 10
-  hitSfx: {fileID: 0}
+  damageAmount: 5
+  hitSfx: {fileID: 8300000, guid: e991dde3b297b4944b449d7114aaf9e5, type: 3}
   hitVolume: 1
   destroyAfterHit: 0
 --- !u!1 &6821645572447260543
@@ -15154,8 +15481,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c6536b07155f3b741a660223d13a2a1f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  damageAmount: 10
-  hitSfx: {fileID: 0}
+  damageAmount: 5
+  hitSfx: {fileID: 8300000, guid: e991dde3b297b4944b449d7114aaf9e5, type: 3}
   hitVolume: 1
   destroyAfterHit: 0
 --- !u!1 &6821645572539618433
@@ -15268,8 +15595,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c6536b07155f3b741a660223d13a2a1f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  damageAmount: 10
-  hitSfx: {fileID: 0}
+  damageAmount: 5
+  hitSfx: {fileID: 8300000, guid: e991dde3b297b4944b449d7114aaf9e5, type: 3}
   hitVolume: 1
   destroyAfterHit: 0
 --- !u!1 &6821645572550375794
@@ -15301,7 +15628,7 @@ Transform:
   m_GameObject: {fileID: 6821645572550375794}
   m_LocalRotation: {x: -0.62808704, y: -0.32481802, z: -0.324818, w: 0.628087}
   m_LocalPosition: {x: 28.529999, y: 0.028, z: 23.596315}
-  m_LocalScale: {x: 171.51004, y: 171.51003, z: 171.51}
+  m_LocalScale: {x: 100, y: 100, z: 100}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 6821645572014596129}
@@ -15382,8 +15709,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c6536b07155f3b741a660223d13a2a1f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  damageAmount: 10
-  hitSfx: {fileID: 0}
+  damageAmount: 5
+  hitSfx: {fileID: 8300000, guid: e991dde3b297b4944b449d7114aaf9e5, type: 3}
   hitVolume: 1
   destroyAfterHit: 0
 --- !u!1 &6821645572657860407
@@ -15415,7 +15742,7 @@ Transform:
   m_GameObject: {fileID: 6821645572657860407}
   m_LocalRotation: {x: -0.46861774, y: -0.5295257, z: -0.5295257, w: 0.46861774}
   m_LocalPosition: {x: 11.98, y: -0.04, z: -7.73}
-  m_LocalScale: {x: 233.45001, y: 233.45001, z: 233.45001}
+  m_LocalScale: {x: 100, y: 100, z: 100}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 6821645572014596129}
@@ -15496,8 +15823,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c6536b07155f3b741a660223d13a2a1f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  damageAmount: 10
-  hitSfx: {fileID: 0}
+  damageAmount: 5
+  hitSfx: {fileID: 8300000, guid: e991dde3b297b4944b449d7114aaf9e5, type: 3}
   hitVolume: 1
   destroyAfterHit: 0
 --- !u!1 &6821645572762523877
@@ -15610,8 +15937,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c6536b07155f3b741a660223d13a2a1f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  damageAmount: 10
-  hitSfx: {fileID: 0}
+  damageAmount: 5
+  hitSfx: {fileID: 8300000, guid: e991dde3b297b4944b449d7114aaf9e5, type: 3}
   hitVolume: 1
   destroyAfterHit: 0
 --- !u!1 &6821645572785404067
@@ -15839,8 +16166,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c6536b07155f3b741a660223d13a2a1f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  damageAmount: 10
-  hitSfx: {fileID: 0}
+  damageAmount: 5
+  hitSfx: {fileID: 8300000, guid: e991dde3b297b4944b449d7114aaf9e5, type: 3}
   hitVolume: 1
   destroyAfterHit: 0
 --- !u!1 &6880419138613618116
@@ -15953,8 +16280,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ab48b9f73da621e43af1d4d781550424, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  healthAmount: 20
-  weightAmountKg: 1
+  healthAmount: 10
+  weightAmountKg: 0.05
+  collectVfxPrefab: {fileID: 5091917010390914830, guid: d1fe802ee7b6fc24497016910b9375d6, type: 3}
+  collectSfx: {fileID: 8300000, guid: ed52034a2c2439241805129e2da4d69c, type: 3}
+  collectSfxVolume: 10
   destroyOnPickup: 1
 --- !u!1 &6889308820171999773
 GameObject:
@@ -16066,8 +16396,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ab48b9f73da621e43af1d4d781550424, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  healthAmount: 20
-  weightAmountKg: 1
+  healthAmount: 10
+  weightAmountKg: 0.05
+  collectVfxPrefab: {fileID: 5091917010390914830, guid: d1fe802ee7b6fc24497016910b9375d6, type: 3}
+  collectSfx: {fileID: 8300000, guid: ed52034a2c2439241805129e2da4d69c, type: 3}
+  collectSfxVolume: 10
   destroyOnPickup: 1
 --- !u!1 &7001044396074225212
 GameObject:
@@ -16294,8 +16627,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ab48b9f73da621e43af1d4d781550424, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  healthAmount: 20
-  weightAmountKg: 1
+  healthAmount: 10
+  weightAmountKg: 0.05
+  collectVfxPrefab: {fileID: 5091917010390914830, guid: d1fe802ee7b6fc24497016910b9375d6, type: 3}
+  collectSfx: {fileID: 8300000, guid: ed52034a2c2439241805129e2da4d69c, type: 3}
+  collectSfxVolume: 10
   destroyOnPickup: 1
 --- !u!1 &7051063035727219375
 GameObject:
@@ -16470,8 +16806,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ab48b9f73da621e43af1d4d781550424, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  healthAmount: 20
-  weightAmountKg: 1
+  healthAmount: 10
+  weightAmountKg: 0.05
+  collectVfxPrefab: {fileID: 5091917010390914830, guid: 46b81de729581ad41aacc1f98373dc95, type: 3}
+  collectSfx: {fileID: 8300000, guid: 217c9f4e4ace78f4384d1c66692400f5, type: 3}
+  collectSfxVolume: 0.05
   destroyOnPickup: 1
 --- !u!114 &8273410929802290838
 MonoBehaviour:
@@ -16487,6 +16826,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   healthAmount: 10
   weightAmountKg: 0.5
+  collectVfxPrefab: {fileID: 0}
+  collectSfx: {fileID: 0}
+  collectSfxVolume: 1
   destroyOnPickup: 1
 --- !u!1 &7159802606896399596
 GameObject:
@@ -16599,8 +16941,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ab48b9f73da621e43af1d4d781550424, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  healthAmount: 20
-  weightAmountKg: 1
+  healthAmount: 10
+  weightAmountKg: 0.05
+  collectVfxPrefab: {fileID: 5091917010390914830, guid: 46b81de729581ad41aacc1f98373dc95, type: 3}
+  collectSfx: {fileID: 8300000, guid: 217c9f4e4ace78f4384d1c66692400f5, type: 3}
+  collectSfxVolume: 0.05
   destroyOnPickup: 1
 --- !u!114 &5007076029097079964
 MonoBehaviour:
@@ -16616,6 +16961,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   healthAmount: 10
   weightAmountKg: 0.5
+  collectVfxPrefab: {fileID: 0}
+  collectSfx: {fileID: 0}
+  collectSfxVolume: 1
   destroyOnPickup: 1
 --- !u!1 &7177432022278844805
 GameObject:
@@ -16759,8 +17107,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ab48b9f73da621e43af1d4d781550424, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  healthAmount: 20
-  weightAmountKg: 1
+  healthAmount: 10
+  weightAmountKg: 0.05
+  collectVfxPrefab: {fileID: 5091917010390914830, guid: 46b81de729581ad41aacc1f98373dc95, type: 3}
+  collectSfx: {fileID: 8300000, guid: 217c9f4e4ace78f4384d1c66692400f5, type: 3}
+  collectSfxVolume: 0.05
   destroyOnPickup: 1
 --- !u!114 &7220946601434109338
 MonoBehaviour:
@@ -16776,6 +17127,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   healthAmount: 10
   weightAmountKg: 0.5
+  collectVfxPrefab: {fileID: 0}
+  collectSfx: {fileID: 0}
+  collectSfxVolume: 1
   destroyOnPickup: 1
 --- !u!1 &7268482626542913577
 GameObject:
@@ -17033,8 +17387,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ab48b9f73da621e43af1d4d781550424, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  healthAmount: 20
-  weightAmountKg: 1
+  healthAmount: 10
+  weightAmountKg: 0.05
+  collectVfxPrefab: {fileID: 5091917010390914830, guid: d1fe802ee7b6fc24497016910b9375d6, type: 3}
+  collectSfx: {fileID: 8300000, guid: ed52034a2c2439241805129e2da4d69c, type: 3}
+  collectSfxVolume: 10
   destroyOnPickup: 1
 --- !u!1 &7417241684950461238
 GameObject:
@@ -17147,8 +17504,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ab48b9f73da621e43af1d4d781550424, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  healthAmount: 20
-  weightAmountKg: 1
+  healthAmount: 10
+  weightAmountKg: 0.05
+  collectVfxPrefab: {fileID: 5091917010390914830, guid: 46b81de729581ad41aacc1f98373dc95, type: 3}
+  collectSfx: {fileID: 8300000, guid: 217c9f4e4ace78f4384d1c66692400f5, type: 3}
+  collectSfxVolume: 0.05
   destroyOnPickup: 1
 --- !u!114 &7564976741902369656
 MonoBehaviour:
@@ -17164,6 +17524,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   healthAmount: 10
   weightAmountKg: 0.5
+  collectVfxPrefab: {fileID: 0}
+  collectSfx: {fileID: 0}
+  collectSfxVolume: 1
   destroyOnPickup: 1
 --- !u!1 &7420647667398146640
 GameObject:
@@ -17275,8 +17638,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ab48b9f73da621e43af1d4d781550424, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  healthAmount: 20
-  weightAmountKg: 1
+  healthAmount: 10
+  weightAmountKg: 0.05
+  collectVfxPrefab: {fileID: 5091917010390914830, guid: d1fe802ee7b6fc24497016910b9375d6, type: 3}
+  collectSfx: {fileID: 8300000, guid: ed52034a2c2439241805129e2da4d69c, type: 3}
+  collectSfxVolume: 10
   destroyOnPickup: 1
 --- !u!1 &7519688609824149115
 GameObject:
@@ -17419,8 +17785,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ab48b9f73da621e43af1d4d781550424, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  healthAmount: 20
-  weightAmountKg: 1
+  healthAmount: 10
+  weightAmountKg: 0.05
+  collectVfxPrefab: {fileID: 5091917010390914830, guid: d1fe802ee7b6fc24497016910b9375d6, type: 3}
+  collectSfx: {fileID: 8300000, guid: ed52034a2c2439241805129e2da4d69c, type: 3}
+  collectSfxVolume: 10
   destroyOnPickup: 1
 --- !u!1 &7572222012242948763
 GameObject:
@@ -17532,8 +17901,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ab48b9f73da621e43af1d4d781550424, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  healthAmount: 20
-  weightAmountKg: 1
+  healthAmount: 10
+  weightAmountKg: 0.05
+  collectVfxPrefab: {fileID: 5091917010390914830, guid: d1fe802ee7b6fc24497016910b9375d6, type: 3}
+  collectSfx: {fileID: 8300000, guid: ed52034a2c2439241805129e2da4d69c, type: 3}
+  collectSfxVolume: 10
   destroyOnPickup: 1
 --- !u!1 &7610430692272353796
 GameObject:
@@ -17646,8 +18018,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ab48b9f73da621e43af1d4d781550424, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  healthAmount: 20
-  weightAmountKg: 1
+  healthAmount: 10
+  weightAmountKg: 0.05
+  collectVfxPrefab: {fileID: 5091917010390914830, guid: 46b81de729581ad41aacc1f98373dc95, type: 3}
+  collectSfx: {fileID: 8300000, guid: 217c9f4e4ace78f4384d1c66692400f5, type: 3}
+  collectSfxVolume: 0.05
   destroyOnPickup: 1
 --- !u!114 &245159857107985584
 MonoBehaviour:
@@ -17663,6 +18038,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   healthAmount: 10
   weightAmountKg: 0.5
+  collectVfxPrefab: {fileID: 0}
+  collectSfx: {fileID: 0}
+  collectSfxVolume: 1
   destroyOnPickup: 1
 --- !u!1 &7648024078696560920
 GameObject:
@@ -17774,8 +18152,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ab48b9f73da621e43af1d4d781550424, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  healthAmount: 20
-  weightAmountKg: 1
+  healthAmount: 10
+  weightAmountKg: 0.05
+  collectVfxPrefab: {fileID: 5091917010390914830, guid: d1fe802ee7b6fc24497016910b9375d6, type: 3}
+  collectSfx: {fileID: 8300000, guid: ed52034a2c2439241805129e2da4d69c, type: 3}
+  collectSfxVolume: 10
   destroyOnPickup: 1
 --- !u!1 &7794564769691624183
 GameObject:
@@ -18002,8 +18383,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ab48b9f73da621e43af1d4d781550424, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  healthAmount: 20
-  weightAmountKg: 1
+  healthAmount: 10
+  weightAmountKg: 0.05
+  collectVfxPrefab: {fileID: 5091917010390914830, guid: d1fe802ee7b6fc24497016910b9375d6, type: 3}
+  collectSfx: {fileID: 8300000, guid: ed52034a2c2439241805129e2da4d69c, type: 3}
+  collectSfxVolume: 10
   destroyOnPickup: 1
 --- !u!1 &7896892523020649255
 GameObject:
@@ -18178,8 +18562,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ab48b9f73da621e43af1d4d781550424, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  healthAmount: 20
-  weightAmountKg: 1
+  healthAmount: 10
+  weightAmountKg: 0.05
+  collectVfxPrefab: {fileID: 5091917010390914830, guid: 46b81de729581ad41aacc1f98373dc95, type: 3}
+  collectSfx: {fileID: 8300000, guid: 217c9f4e4ace78f4384d1c66692400f5, type: 3}
+  collectSfxVolume: 0.05
   destroyOnPickup: 1
 --- !u!114 &3842795816472680621
 MonoBehaviour:
@@ -18195,6 +18582,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   healthAmount: 10
   weightAmountKg: 0.5
+  collectVfxPrefab: {fileID: 0}
+  collectSfx: {fileID: 0}
+  collectSfxVolume: 1
   destroyOnPickup: 1
 --- !u!1 &7930216870316776211
 GameObject:
@@ -18307,8 +18697,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ab48b9f73da621e43af1d4d781550424, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  healthAmount: 20
-  weightAmountKg: 1
+  healthAmount: 10
+  weightAmountKg: 0.05
+  collectVfxPrefab: {fileID: 5091917010390914830, guid: 46b81de729581ad41aacc1f98373dc95, type: 3}
+  collectSfx: {fileID: 8300000, guid: 217c9f4e4ace78f4384d1c66692400f5, type: 3}
+  collectSfxVolume: 0.05
   destroyOnPickup: 1
 --- !u!114 &9098946216992661792
 MonoBehaviour:
@@ -18324,6 +18717,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   healthAmount: 10
   weightAmountKg: 0.5
+  collectVfxPrefab: {fileID: 0}
+  collectSfx: {fileID: 0}
+  collectSfxVolume: 1
   destroyOnPickup: 1
 --- !u!1 &7941471027850248489
 GameObject:
@@ -18435,8 +18831,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ab48b9f73da621e43af1d4d781550424, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  healthAmount: 20
-  weightAmountKg: 1
+  healthAmount: 10
+  weightAmountKg: 0.05
+  collectVfxPrefab: {fileID: 5091917010390914830, guid: d1fe802ee7b6fc24497016910b9375d6, type: 3}
+  collectSfx: {fileID: 8300000, guid: ed52034a2c2439241805129e2da4d69c, type: 3}
+  collectSfxVolume: 10
   destroyOnPickup: 1
 --- !u!1 &8063548149627828696
 GameObject:
@@ -18548,8 +18947,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ab48b9f73da621e43af1d4d781550424, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  healthAmount: 20
-  weightAmountKg: 1
+  healthAmount: 10
+  weightAmountKg: 0.05
+  collectVfxPrefab: {fileID: 5091917010390914830, guid: d1fe802ee7b6fc24497016910b9375d6, type: 3}
+  collectSfx: {fileID: 8300000, guid: ed52034a2c2439241805129e2da4d69c, type: 3}
+  collectSfxVolume: 10
   destroyOnPickup: 1
 --- !u!1 &8096132944051790859
 GameObject:
@@ -18662,8 +19064,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ab48b9f73da621e43af1d4d781550424, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  healthAmount: 20
-  weightAmountKg: 1
+  healthAmount: 10
+  weightAmountKg: 0.05
+  collectVfxPrefab: {fileID: 5091917010390914830, guid: 46b81de729581ad41aacc1f98373dc95, type: 3}
+  collectSfx: {fileID: 8300000, guid: 217c9f4e4ace78f4384d1c66692400f5, type: 3}
+  collectSfxVolume: 0.05
   destroyOnPickup: 1
 --- !u!114 &4741757234119807809
 MonoBehaviour:
@@ -18679,6 +19084,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   healthAmount: 10
   weightAmountKg: 0.5
+  collectVfxPrefab: {fileID: 0}
+  collectSfx: {fileID: 0}
+  collectSfxVolume: 1
   destroyOnPickup: 1
 --- !u!1 &8099639967776110331
 GameObject:
@@ -18790,8 +19198,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ab48b9f73da621e43af1d4d781550424, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  healthAmount: 20
-  weightAmountKg: 1
+  healthAmount: 10
+  weightAmountKg: 0.05
+  collectVfxPrefab: {fileID: 5091917010390914830, guid: d1fe802ee7b6fc24497016910b9375d6, type: 3}
+  collectSfx: {fileID: 8300000, guid: ed52034a2c2439241805129e2da4d69c, type: 3}
+  collectSfxVolume: 10
   destroyOnPickup: 1
 --- !u!1 &8127636739822184595
 GameObject:
@@ -19039,8 +19450,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ab48b9f73da621e43af1d4d781550424, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  healthAmount: 20
-  weightAmountKg: 1
+  healthAmount: 10
+  weightAmountKg: 0.05
+  collectVfxPrefab: {fileID: 5091917010390914830, guid: 46b81de729581ad41aacc1f98373dc95, type: 3}
+  collectSfx: {fileID: 8300000, guid: 217c9f4e4ace78f4384d1c66692400f5, type: 3}
+  collectSfxVolume: 0.05
   destroyOnPickup: 1
 --- !u!114 &175606411658315173
 MonoBehaviour:
@@ -19056,6 +19470,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   healthAmount: 10
   weightAmountKg: 0.5
+  collectVfxPrefab: {fileID: 0}
+  collectSfx: {fileID: 0}
+  collectSfxVolume: 1
   destroyOnPickup: 1
 --- !u!1 &8207450630809959141
 GameObject:
@@ -19167,8 +19584,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ab48b9f73da621e43af1d4d781550424, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  healthAmount: 20
-  weightAmountKg: 1
+  healthAmount: 10
+  weightAmountKg: 0.05
+  collectVfxPrefab: {fileID: 5091917010390914830, guid: d1fe802ee7b6fc24497016910b9375d6, type: 3}
+  collectSfx: {fileID: 8300000, guid: ed52034a2c2439241805129e2da4d69c, type: 3}
+  collectSfxVolume: 10
   destroyOnPickup: 1
 --- !u!1 &8246981499265195462
 GameObject:
@@ -19280,8 +19700,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ab48b9f73da621e43af1d4d781550424, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  healthAmount: 20
-  weightAmountKg: 1
+  healthAmount: 10
+  weightAmountKg: 0.05
+  collectVfxPrefab: {fileID: 5091917010390914830, guid: d1fe802ee7b6fc24497016910b9375d6, type: 3}
+  collectSfx: {fileID: 8300000, guid: ed52034a2c2439241805129e2da4d69c, type: 3}
+  collectSfxVolume: 10
   destroyOnPickup: 1
 --- !u!1 &8251582221352528822
 GameObject:
@@ -19509,8 +19932,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ab48b9f73da621e43af1d4d781550424, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  healthAmount: 20
-  weightAmountKg: 1
+  healthAmount: 10
+  weightAmountKg: 0.05
+  collectVfxPrefab: {fileID: 5091917010390914830, guid: 46b81de729581ad41aacc1f98373dc95, type: 3}
+  collectSfx: {fileID: 8300000, guid: 217c9f4e4ace78f4384d1c66692400f5, type: 3}
+  collectSfxVolume: 0.05
   destroyOnPickup: 1
 --- !u!114 &4446853753643448335
 MonoBehaviour:
@@ -19526,6 +19952,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   healthAmount: 10
   weightAmountKg: 0.5
+  collectVfxPrefab: {fileID: 0}
+  collectSfx: {fileID: 0}
+  collectSfxVolume: 1
   destroyOnPickup: 1
 --- !u!1 &8280154657546712354
 GameObject:
@@ -19699,8 +20128,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ab48b9f73da621e43af1d4d781550424, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  healthAmount: 20
-  weightAmountKg: 1
+  healthAmount: 10
+  weightAmountKg: 0.05
+  collectVfxPrefab: {fileID: 5091917010390914830, guid: d1fe802ee7b6fc24497016910b9375d6, type: 3}
+  collectSfx: {fileID: 8300000, guid: ed52034a2c2439241805129e2da4d69c, type: 3}
+  collectSfxVolume: 10
   destroyOnPickup: 1
 --- !u!1 &8425763667267506357
 GameObject:
@@ -20150,8 +20582,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ab48b9f73da621e43af1d4d781550424, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  healthAmount: 20
-  weightAmountKg: 1
+  healthAmount: 10
+  weightAmountKg: 0.05
+  collectVfxPrefab: {fileID: 5091917010390914830, guid: d1fe802ee7b6fc24497016910b9375d6, type: 3}
+  collectSfx: {fileID: 8300000, guid: ed52034a2c2439241805129e2da4d69c, type: 3}
+  collectSfxVolume: 10
   destroyOnPickup: 1
 --- !u!1 &9091328553549621761
 GameObject:
@@ -20263,8 +20698,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ab48b9f73da621e43af1d4d781550424, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  healthAmount: 20
-  weightAmountKg: 1
+  healthAmount: 10
+  weightAmountKg: 0.05
+  collectVfxPrefab: {fileID: 5091917010390914830, guid: d1fe802ee7b6fc24497016910b9375d6, type: 3}
+  collectSfx: {fileID: 8300000, guid: ed52034a2c2439241805129e2da4d69c, type: 3}
+  collectSfxVolume: 10
   destroyOnPickup: 1
 --- !u!1 &9122487461572359173
 GameObject:
@@ -20377,8 +20815,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ab48b9f73da621e43af1d4d781550424, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  healthAmount: 20
-  weightAmountKg: 1
+  healthAmount: 10
+  weightAmountKg: 0.05
+  collectVfxPrefab: {fileID: 5091917010390914830, guid: 46b81de729581ad41aacc1f98373dc95, type: 3}
+  collectSfx: {fileID: 8300000, guid: 217c9f4e4ace78f4384d1c66692400f5, type: 3}
+  collectSfxVolume: 0.05
   destroyOnPickup: 1
 --- !u!114 &8525354664717824517
 MonoBehaviour:
@@ -20394,6 +20835,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   healthAmount: 10
   weightAmountKg: 0.5
+  collectVfxPrefab: {fileID: 0}
+  collectSfx: {fileID: 0}
+  collectSfxVolume: 1
   destroyOnPickup: 1
 --- !u!1 &9136809492221009351
 GameObject:
@@ -20614,9 +21058,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c6536b07155f3b741a660223d13a2a1f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  damageAmount: 25
-  hitSfx: {fileID: 0}
-  hitVolume: 1
+  damageAmount: 1000
+  hitSfx: {fileID: 8300000, guid: 446b77d70b5dc0f48a57cbe9e96d61ac, type: 3}
+  hitVolume: 0.1
   destroyAfterHit: 0
 --- !u!1001 &26534066490897474
 PrefabInstance:
@@ -21574,9 +22018,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c6536b07155f3b741a660223d13a2a1f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  damageAmount: 25
-  hitSfx: {fileID: 0}
-  hitVolume: 1
+  damageAmount: 1000
+  hitSfx: {fileID: 8300000, guid: 446b77d70b5dc0f48a57cbe9e96d61ac, type: 3}
+  hitVolume: 0.1
   destroyAfterHit: 0
 --- !u!1001 &422280698443847764
 PrefabInstance:
@@ -22501,9 +22945,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c6536b07155f3b741a660223d13a2a1f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  damageAmount: 10000
-  hitSfx: {fileID: 0}
-  hitVolume: 1
+  damageAmount: 1000
+  hitSfx: {fileID: 8300000, guid: 446b77d70b5dc0f48a57cbe9e96d61ac, type: 3}
+  hitVolume: 0.1
   destroyAfterHit: 0
 --- !u!4 &838553255291580743 stripped
 Transform:
@@ -23002,8 +23446,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   damageAmount: 1000
-  hitSfx: {fileID: 0}
-  hitVolume: 1
+  hitSfx: {fileID: 8300000, guid: 446b77d70b5dc0f48a57cbe9e96d61ac, type: 3}
+  hitVolume: 0.1
   destroyAfterHit: 0
 --- !u!4 &655696822031259631 stripped
 Transform:
@@ -24826,8 +25270,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   damageAmount: 1000
-  hitSfx: {fileID: 0}
-  hitVolume: 1
+  hitSfx: {fileID: 8300000, guid: 446b77d70b5dc0f48a57cbe9e96d61ac, type: 3}
+  hitVolume: 0.1
   destroyAfterHit: 0
 --- !u!4 &2120818544568939439 stripped
 Transform:
@@ -25605,9 +26049,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c6536b07155f3b741a660223d13a2a1f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  damageAmount: 25
-  hitSfx: {fileID: 0}
-  hitVolume: 1
+  damageAmount: 1000
+  hitSfx: {fileID: 8300000, guid: 446b77d70b5dc0f48a57cbe9e96d61ac, type: 3}
+  hitVolume: 0.1
   destroyAfterHit: 0
 --- !u!4 &1778946780905436519 stripped
 Transform:
@@ -31889,8 +32333,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   damageAmount: 1000
-  hitSfx: {fileID: 0}
-  hitVolume: 1
+  hitSfx: {fileID: 8300000, guid: 446b77d70b5dc0f48a57cbe9e96d61ac, type: 3}
+  hitVolume: 0.1
   destroyAfterHit: 0
 --- !u!4 &5578487189172548017 stripped
 Transform:
@@ -34614,8 +35058,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   damageAmount: 1000
-  hitSfx: {fileID: 0}
-  hitVolume: 1
+  hitSfx: {fileID: 8300000, guid: 446b77d70b5dc0f48a57cbe9e96d61ac, type: 3}
+  hitVolume: 0.1
   destroyAfterHit: 0
 --- !u!4 &6867993932147475304 stripped
 Transform:
@@ -35578,8 +36022,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   damageAmount: 1000
-  hitSfx: {fileID: 0}
-  hitVolume: 1
+  hitSfx: {fileID: 8300000, guid: 446b77d70b5dc0f48a57cbe9e96d61ac, type: 3}
+  hitVolume: 0.1
   destroyAfterHit: 0
 --- !u!4 &6369310298834820925 stripped
 Transform:
@@ -36748,8 +37192,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   damageAmount: 1000
-  hitSfx: {fileID: 0}
-  hitVolume: 1
+  hitSfx: {fileID: 8300000, guid: 446b77d70b5dc0f48a57cbe9e96d61ac, type: 3}
+  hitVolume: 0.1
   destroyAfterHit: 0
 --- !u!1001 &7472910566945293330
 PrefabInstance:
@@ -36855,9 +37299,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c6536b07155f3b741a660223d13a2a1f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  damageAmount: 25
-  hitSfx: {fileID: 0}
-  hitVolume: 1
+  damageAmount: 1000
+  hitSfx: {fileID: 8300000, guid: 446b77d70b5dc0f48a57cbe9e96d61ac, type: 3}
+  hitVolume: 0.1
   destroyAfterHit: 0
 --- !u!1001 &7487760625985506477
 PrefabInstance:
@@ -40315,9 +40759,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c6536b07155f3b741a660223d13a2a1f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  damageAmount: 25
-  hitSfx: {fileID: 0}
-  hitVolume: 1
+  damageAmount: 1000
+  hitSfx: {fileID: 8300000, guid: 446b77d70b5dc0f48a57cbe9e96d61ac, type: 3}
+  hitVolume: 0.1
   destroyAfterHit: 0
 --- !u!4 &8874514157139951980 stripped
 Transform:

@@ -3,7 +3,9 @@ guid: ab48b9f73da621e43af1d4d781550424
 MonoImporter:
   externalObjects: {}
   serializedVersion: 2
-  defaultReferences: []
+  defaultReferences:
+  - collectVfxPrefab: {instanceID: 0}
+  - collectSfx: {instanceID: 0}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 
