@@ -8,36 +8,26 @@ public class CutsceneManager : MonoBehaviour
     public static CutsceneManager Instance { get; private set; }
 
     [Header("Video System")]
-    [Tooltip("Canvas that contains the RawImage + VideoPlayer.")]
     public GameObject videoCanvas;
     public VideoPlayer videoPlayer;
-
-    [Header("Render Texture")]
-    [Tooltip("RenderTexture used by the VideoPlayer & RawImage.")]
     public RenderTexture videoRenderTexture;
 
-    [Header("Success Clips (end of game)")]
-    public VideoClip clipGather;        // 4Gather
-    public VideoClip clipLuckyChicken;  // 5LuckyChicken
-
-    [Header("Re-Hatch Clips (intro / rehatch)")]
-    public VideoClip clipHatch;   // 1Hatch
-    public VideoClip clipFemale;  // 2Female
-    public VideoClip clipMale;    // 3Male
+    [Header("StreamingAssets Video File Names")]
+    public string hatchVideoFile = "1Hatch.mp4";
+    public string femaleVideoFile = "2Female.mp4";
+    public string maleVideoFile = "3Male.mp4";
+    public string gatherVideoFile = "4Gather.mp4";
+    public string luckyChickenVideoFile = "5LuckyChicken.mp4";
 
     [Header("UI References")]
-    [Tooltip("Root of the in-game HUD (health/weight). Can be empty in Main Menu.")]
     public GameObject gameHudCanvas;
-
-    [Tooltip("Game Over panel specifically for MALE chick path in this scene.")]
-    public GameObject gameOverPanel; // e.g. GAME OVER HATCH in menu or game
-
-    [Tooltip("Panel with 'Game is finished' buttons (Restart / Main Menu), shown after success.")]
+    public GameObject gameOverPanel;
     public GameObject endGamePlayAgainPanel;
+    public GameObject pausePanel;
+    public GameObject blackBackground;
 
     [Header("Scenes")]
-    [Tooltip("Gameplay scene to load after female path from re-hatch.")]
-    public string gameplaySceneName = "";
+    public string gameplaySceneName = "GameScene";
 
     private bool _sequenceRunning = false;
 
@@ -51,103 +41,33 @@ public class CutsceneManager : MonoBehaviour
 
         Instance = this;
 
-        // Start with video UI hidden
+        HideCutscenePanels();
+
         if (videoCanvas != null)
             videoCanvas.SetActive(false);
 
-        // HUD should start visible if present
+        if (blackBackground != null)
+            blackBackground.SetActive(false);
+
         if (gameHudCanvas != null)
             gameHudCanvas.SetActive(true);
 
-        if (gameOverPanel != null)
-            gameOverPanel.SetActive(false);
-
-        if (endGamePlayAgainPanel != null)
-            endGamePlayAgainPanel.SetActive(false);
-    }
-
-    // ───────────────── SUCCESS SEQUENCE (4 + 5) ─────────────────
-
-    public void PlaySuccessSequence()
-    {
-        if (_sequenceRunning)
-            return;
-
-        if (videoPlayer == null || clipGather == null || clipLuckyChicken == null)
+        if (videoPlayer != null)
         {
-            Debug.LogError("[CutsceneManager] Missing clips or VideoPlayer for success sequence.");
-            return;
+            videoPlayer.playOnAwake = false;
+            videoPlayer.isLooping = false;
+            videoPlayer.source = VideoSource.Url;
         }
-
-        StartCoroutine(SuccessSequenceRoutine());
     }
-
-    private IEnumerator SuccessSequenceRoutine()
-    {
-        _sequenceRunning = true;
-
-        float previousTimeScale = Time.timeScale;
-        Time.timeScale = 0f;
-
-        // Hide HUD while video plays
-        if (gameHudCanvas != null)
-            gameHudCanvas.SetActive(false);
-
-        if (endGamePlayAgainPanel != null)
-            endGamePlayAgainPanel.SetActive(false);
-
-        if (videoCanvas != null)
-            videoCanvas.SetActive(true);
-
-        ClearVideoRenderTexture();
-
-        // Mute all non-video audio sources
-        AudioSource[] allAudio = FindObjectsOfType<AudioSource>();
-        bool[] previousMute = new bool[allAudio.Length];
-
-        for (int i = 0; i < allAudio.Length; i++)
-        {
-            previousMute[i] = allAudio[i].mute;
-
-            bool isVideoSource = (videoPlayer != null &&
-                                  (allAudio[i].gameObject == videoPlayer.gameObject ||
-                                   allAudio[i].transform.IsChildOf(videoPlayer.transform)));
-
-            if (!isVideoSource)
-                allAudio[i].mute = true;
-        }
-
-        // 4Gather -> 5LuckyChicken
-        yield return PlayClipSequential(clipGather);
-        yield return PlayClipSequential(clipLuckyChicken);
-
-        // Restore audio mutes
-        for (int i = 0; i < allAudio.Length; i++)
-        {
-            if (allAudio[i] != null)
-                allAudio[i].mute = previousMute[i];
-        }
-
-        // Keep game paused until buttons are clicked
-        Time.timeScale = 0f;
-
-        // Show "GAME IS FINISHED" buttons over the video
-        if (endGamePlayAgainPanel != null)
-            endGamePlayAgainPanel.SetActive(true);
-
-        _sequenceRunning = false;
-    }
-
-    // ───────────────── RE-HATCH SEQUENCE (1 → 2/3) ─────────────────
 
     public void PlayRehatchSequence()
     {
         if (_sequenceRunning)
             return;
 
-        if (videoPlayer == null || clipHatch == null || clipFemale == null || clipMale == null)
+        if (videoPlayer == null)
         {
-            Debug.LogError("[CutsceneManager] Missing clips or VideoPlayer for re-hatch sequence.");
+            Debug.LogError("[CutsceneManager] Missing VideoPlayer.");
             return;
         }
 
@@ -158,119 +78,247 @@ public class CutsceneManager : MonoBehaviour
     {
         _sequenceRunning = true;
 
-        float previousTimeScale = Time.timeScale;
         Time.timeScale = 0f;
 
-        // Hide HUD & any existing panels
+        HideCutscenePanels();
+
         if (gameHudCanvas != null)
             gameHudCanvas.SetActive(false);
+
+        if (videoCanvas != null)
+            videoCanvas.SetActive(true);
+
+        if (blackBackground != null)
+            blackBackground.SetActive(true);
+
+        ClearVideoRenderTexture();
+
+        AudioSource[] allAudio = FindObjectsOfType<AudioSource>();
+        bool[] previousMute = MuteNonVideoAudio(allAudio);
+
+        yield return PlayVideoFromStreamingAssets(hatchVideoFile);
+
+        bool isMale = Random.value < 0.5f;
+
+        if (isMale)
+        {
+            Debug.Log("[CutsceneManager] Male chick path.");
+
+            yield return PlayVideoFromStreamingAssets(maleVideoFile);
+
+            if (DeathCounter.Instance != null)
+                DeathCounter.Instance.RegisterDeath();
+
+            RestoreAudio(allAudio, previousMute);
+
+            Time.timeScale = 0f;
+
+            if (videoCanvas != null)
+                videoCanvas.SetActive(true);
+
+            if (blackBackground != null)
+                blackBackground.SetActive(true);
+
+            HideCutscenePanels();
+
+            if (gameOverPanel != null)
+                gameOverPanel.SetActive(true);
+            else
+                Debug.LogError("[CutsceneManager] Game Over Panel is not assigned.");
+
+            _sequenceRunning = false;
+        }
+        else
+        {
+            Debug.Log("[CutsceneManager] Female chick path.");
+
+            yield return PlayVideoFromStreamingAssets(femaleVideoFile);
+
+            RestoreAudio(allAudio, previousMute);
+
+            HideCutscenePanels();
+
+            // IMPORTANT:
+            // Keep the black video canvas active while loading the gameplay scene.
+            // This prevents the main menu from flashing for one frame.
+            if (videoCanvas != null)
+                videoCanvas.SetActive(true);
+
+            if (blackBackground != null)
+                blackBackground.SetActive(true);
+
+            ClearVideoRenderTexture();
+
+            Time.timeScale = 1f;
+
+            yield return null;
+
+            if (!string.IsNullOrEmpty(gameplaySceneName))
+                SceneManager.LoadScene(gameplaySceneName);
+            else
+                Debug.LogError("[CutsceneManager] Gameplay Scene Name is empty.");
+
+            _sequenceRunning = false;
+        }
+    }
+
+    public void PlaySuccessSequence()
+    {
+        if (_sequenceRunning)
+            return;
+
+        if (videoPlayer == null)
+        {
+            Debug.LogError("[CutsceneManager] Missing VideoPlayer.");
+            return;
+        }
+
+        StartCoroutine(SuccessSequenceRoutine());
+    }
+
+    private IEnumerator SuccessSequenceRoutine()
+    {
+        _sequenceRunning = true;
+
+        Time.timeScale = 0f;
+
+        HideCutscenePanels();
+
+        if (gameHudCanvas != null)
+            gameHudCanvas.SetActive(false);
+
+        if (videoCanvas != null)
+            videoCanvas.SetActive(true);
+
+        if (blackBackground != null)
+            blackBackground.SetActive(true);
+
+        ClearVideoRenderTexture();
+
+        AudioSource[] allAudio = FindObjectsOfType<AudioSource>();
+        bool[] previousMute = MuteNonVideoAudio(allAudio);
+
+        yield return PlayVideoFromStreamingAssets(gatherVideoFile);
+        yield return PlayVideoFromStreamingAssets(luckyChickenVideoFile);
+
+        RestoreAudio(allAudio, previousMute);
+
+        Time.timeScale = 0f;
+
+        HideCutscenePanels();
+
+        if (videoCanvas != null)
+            videoCanvas.SetActive(true);
+
+        if (blackBackground != null)
+            blackBackground.SetActive(true);
+
+        if (endGamePlayAgainPanel != null)
+            endGamePlayAgainPanel.SetActive(true);
+        else
+            Debug.LogError("[CutsceneManager] End Game Play Again Panel is not assigned.");
+
+        _sequenceRunning = false;
+    }
+
+    private IEnumerator PlayVideoFromStreamingAssets(string fileName)
+    {
+        if (videoPlayer == null)
+            yield break;
+
+        string url = GetStreamingAssetsUrl(fileName);
+
+        Debug.Log("[CutsceneManager] Preparing video: " + url);
+
+        videoPlayer.Stop();
+        videoPlayer.source = VideoSource.Url;
+        videoPlayer.url = url;
+        videoPlayer.isLooping = false;
+
+        bool prepared = false;
+        bool completed = false;
+        bool failed = false;
+
+        VideoPlayer.EventHandler prepareHandler = null;
+        VideoPlayer.EventHandler completeHandler = null;
+        VideoPlayer.ErrorEventHandler errorHandler = null;
+
+        prepareHandler = (VideoPlayer vp) =>
+        {
+            prepared = true;
+        };
+
+        completeHandler = (VideoPlayer vp) =>
+        {
+            completed = true;
+        };
+
+        errorHandler = (VideoPlayer vp, string message) =>
+        {
+            failed = true;
+            Debug.LogError("[CutsceneManager] Video error: " + message);
+        };
+
+        videoPlayer.prepareCompleted += prepareHandler;
+        videoPlayer.loopPointReached += completeHandler;
+        videoPlayer.errorReceived += errorHandler;
+
+        videoPlayer.Prepare();
+
+        float timer = 0f;
+        float timeout = 15f;
+
+        while (!prepared && !failed && timer < timeout)
+        {
+            timer += Time.unscaledDeltaTime;
+            yield return null;
+        }
+
+        if (!prepared || failed)
+        {
+            Debug.LogError("[CutsceneManager] Failed to prepare video: " + fileName);
+            CleanupVideoEvents(prepareHandler, completeHandler, errorHandler);
+            yield break;
+        }
+
+        videoPlayer.Play();
+
+        while (!completed && !failed)
+            yield return null;
+
+        CleanupVideoEvents(prepareHandler, completeHandler, errorHandler);
+    }
+
+    private void CleanupVideoEvents(
+        VideoPlayer.EventHandler prepareHandler,
+        VideoPlayer.EventHandler completeHandler,
+        VideoPlayer.ErrorEventHandler errorHandler)
+    {
+        videoPlayer.prepareCompleted -= prepareHandler;
+        videoPlayer.loopPointReached -= completeHandler;
+        videoPlayer.errorReceived -= errorHandler;
+    }
+
+    private string GetStreamingAssetsUrl(string fileName)
+    {
+        string basePath = Application.streamingAssetsPath;
+
+        if (!basePath.EndsWith("/"))
+            basePath += "/";
+
+        return basePath + fileName;
+    }
+
+    private void HideCutscenePanels()
+    {
+        if (pausePanel != null)
+            pausePanel.SetActive(false);
 
         if (gameOverPanel != null)
             gameOverPanel.SetActive(false);
 
         if (endGamePlayAgainPanel != null)
             endGamePlayAgainPanel.SetActive(false);
-
-        if (videoCanvas != null)
-            videoCanvas.SetActive(true);
-
-        ClearVideoRenderTexture();
-
-        // Mute all non-video audio sources
-        AudioSource[] allAudio = FindObjectsOfType<AudioSource>();
-        bool[] previousMute = new bool[allAudio.Length];
-
-        for (int i = 0; i < allAudio.Length; i++)
-        {
-            previousMute[i] = allAudio[i].mute;
-
-            bool isVideoSource = (videoPlayer != null &&
-                                  (allAudio[i].gameObject == videoPlayer.gameObject ||
-                                   allAudio[i].transform.IsChildOf(videoPlayer.transform)));
-
-            if (!isVideoSource)
-                allAudio[i].mute = true;
-        }
-
-        // 1) 1Hatch intro
-        yield return PlayClipSequential(clipHatch);
-
-        // 2) Randomly choose Male/Female
-        bool isMale = Random.value < 0.5f;
-
-        if (isMale)
-        {
-            // 3Male: unlucky
-            yield return PlayClipSequential(clipMale);
-
-            // Count as death if DeathCounter exists
-            if (DeathCounter.Instance != null)
-                DeathCounter.Instance.RegisterDeath();
-
-            // Restore audio
-            for (int i = 0; i < allAudio.Length; i++)
-            {
-                if (allAudio[i] != null)
-                    allAudio[i].mute = previousMute[i];
-            }
-
-            // Show MALE death screen (GAME OVER HATCH) for this scene
-            Time.timeScale = 0f; // optional, you can keep game paused while this menu is up
-
-            if (gameOverPanel != null)
-                gameOverPanel.SetActive(true);
-        }
-        else
-        {
-            // 2Female: lucky – go to gameplay scene
-            yield return PlayClipSequential(clipFemale);
-
-            // Restore audio
-            for (int i = 0; i < allAudio.Length; i++)
-            {
-                if (allAudio[i] != null)
-                    allAudio[i].mute = previousMute[i];
-            }
-
-            // Hide video and clear last frame before loading new scene
-            if (videoCanvas != null)
-                videoCanvas.SetActive(false);
-
-            ClearVideoRenderTexture();
-
-            Time.timeScale = 1f;
-
-            if (!string.IsNullOrEmpty(gameplaySceneName))
-            {
-                SceneManager.LoadScene(gameplaySceneName);
-            }
-            else
-            {
-                SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
-            }
-        }
-
-        _sequenceRunning = false;
-    }
-
-    // ───────────────── HELPERS ─────────────────
-
-    private IEnumerator PlayClipSequential(VideoClip clip)
-    {
-        if (clip == null || videoPlayer == null)
-            yield break;
-
-        videoPlayer.clip = clip;
-        videoPlayer.isLooping = false;
-        videoPlayer.Play();
-
-        // Wait for it to actually start
-        while (!videoPlayer.isPlaying)
-            yield return null;
-
-        // Wait until it finishes
-        while (videoPlayer.isPlaying)
-            yield return null;
     }
 
     private void ClearVideoRenderTexture()
@@ -282,5 +330,37 @@ public class CutsceneManager : MonoBehaviour
         RenderTexture.active = videoRenderTexture;
         GL.Clear(true, true, Color.black);
         RenderTexture.active = active;
+    }
+
+    private bool[] MuteNonVideoAudio(AudioSource[] allAudio)
+    {
+        bool[] previousMute = new bool[allAudio.Length];
+
+        for (int i = 0; i < allAudio.Length; i++)
+        {
+            if (allAudio[i] == null)
+                continue;
+
+            previousMute[i] = allAudio[i].mute;
+
+            bool isVideoSource =
+                videoPlayer != null &&
+                (allAudio[i].gameObject == videoPlayer.gameObject ||
+                 allAudio[i].transform.IsChildOf(videoPlayer.transform));
+
+            if (!isVideoSource)
+                allAudio[i].mute = true;
+        }
+
+        return previousMute;
+    }
+
+    private void RestoreAudio(AudioSource[] allAudio, bool[] previousMute)
+    {
+        for (int i = 0; i < allAudio.Length; i++)
+        {
+            if (allAudio[i] != null)
+                allAudio[i].mute = previousMute[i];
+        }
     }
 }
