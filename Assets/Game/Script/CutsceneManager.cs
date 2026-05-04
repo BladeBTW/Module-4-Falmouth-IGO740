@@ -102,8 +102,6 @@ public class CutsceneManager : MonoBehaviour
 
         if (isMale)
         {
-            Debug.Log("[CutsceneManager] Male chick path.");
-
             yield return PlayVideoFromStreamingAssets(maleVideoFile);
 
             if (DeathCounter.Instance != null)
@@ -123,24 +121,17 @@ public class CutsceneManager : MonoBehaviour
 
             if (gameOverPanel != null)
                 gameOverPanel.SetActive(true);
-            else
-                Debug.LogError("[CutsceneManager] Game Over Panel is not assigned.");
 
             _sequenceRunning = false;
         }
         else
         {
-            Debug.Log("[CutsceneManager] Female chick path.");
-
             yield return PlayVideoFromStreamingAssets(femaleVideoFile);
 
             RestoreAudio(allAudio, previousMute);
 
             HideCutscenePanels();
 
-            // IMPORTANT:
-            // Keep the black video canvas active while loading the gameplay scene.
-            // This prevents the main menu from flashing for one frame.
             if (videoCanvas != null)
                 videoCanvas.SetActive(true);
 
@@ -215,8 +206,6 @@ public class CutsceneManager : MonoBehaviour
 
         if (endGamePlayAgainPanel != null)
             endGamePlayAgainPanel.SetActive(true);
-        else
-            Debug.LogError("[CutsceneManager] End Game Play Again Panel is not assigned.");
 
         _sequenceRunning = false;
     }
@@ -243,16 +232,8 @@ public class CutsceneManager : MonoBehaviour
         VideoPlayer.EventHandler completeHandler = null;
         VideoPlayer.ErrorEventHandler errorHandler = null;
 
-        prepareHandler = (VideoPlayer vp) =>
-        {
-            prepared = true;
-        };
-
-        completeHandler = (VideoPlayer vp) =>
-        {
-            completed = true;
-        };
-
+        prepareHandler = (VideoPlayer vp) => { prepared = true; };
+        completeHandler = (VideoPlayer vp) => { completed = true; };
         errorHandler = (VideoPlayer vp, string message) =>
         {
             failed = true;
