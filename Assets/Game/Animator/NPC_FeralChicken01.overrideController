@@ -9,9 +9,9 @@ AnimatorOverrideController:
   m_Name: NPC_FeralChicken01
   m_Controller: {fileID: 9100000, guid: 2571fb22e5f51b94a84dedac176aecfb, type: 2}
   m_Clips:
-  - m_OriginalClip: {fileID: -203655887218126122, guid: f44458ff59704d04681fc9bf05a79404, type: 3}
-    m_OverrideClip: {fileID: -203655887218126122, guid: 5f319988b65f55f44b9d26ea484662f0, type: 3}
   - m_OriginalClip: {fileID: -203655887218126122, guid: 22f6ffb33a0fb48438e405edfe378069, type: 3}
-    m_OverrideClip: {fileID: -203655887218126122, guid: 5c24fd0d50d503d4da3dc2a9d1135c1f, type: 3}
+    m_OverrideClip: {fileID: -203655887218126122, guid: c4fea8d32ae71004bb3832e0894b3fe7, type: 3}
   - m_OriginalClip: {fileID: -203655887218126122, guid: 39d96df4c339e51459e82734d820d31f, type: 3}
-    m_OverrideClip: {fileID: -203655887218126122, guid: 5f319988b65f55f44b9d26ea484662f0, type: 3}
+    m_OverrideClip: {fileID: -203655887218126122, guid: 1a10b31232f60174db0e2c1939f2cf6d, type: 3}
+  - m_OriginalClip: {fileID: -203655887218126122, guid: f44458ff59704d04681fc9bf05a79404, type: 3}
+    m_OverrideClip: {fileID: -203655887218126122, guid: 1a10b31232f60174db0e2c1939f2cf6d, type: 3}

@@ -33,6 +33,10 @@ public class FuriousChickenAI : MonoBehaviour
     [Header("Movement")]
     public float moveSpeed = 4f;
 
+    [Header("NavMesh Safety")]
+    public float navMeshSnapDistance = 10f;
+    public bool disableIfNotOnNavMesh = true;
+
     [Header("Approach / Breathing SFX")]
     public AudioClip approachLoopSfx;
     [Range(0f, 10f)]
@@ -59,33 +63,34 @@ public class FuriousChickenAI : MonoBehaviour
     private void Awake()
     {
         _agent = GetComponent<NavMeshAgent>();
-        _agent.speed = moveSpeed;
-        _agent.stoppingDistance = attackRange * 0.8f;
-
         _audio = GetComponent<AudioSource>();
-        _audio.spatialBlend = 1f; // 3D sound
-        _audio.loop = true;
-        _audio.playOnAwake = false;
+
+        if (_agent != null)
+        {
+            _agent.speed = moveSpeed;
+            _agent.stoppingDistance = attackRange * 0.8f;
+        }
+
+        if (_audio != null)
+        {
+            _audio.spatialBlend = 1f;
+            _audio.loop = true;
+            _audio.playOnAwake = false;
+        }
 
         if (animator == null)
             animator = GetComponentInChildren<Animator>();
+    }
 
-        if (targetOverride != null)
-            _player = targetOverride;
-        else
-        {
-            GameObject p = GameObject.FindGameObjectWithTag(playerTag);
-            if (p != null)
-                _player = p.transform;
-        }
-
-        if (_player != null)
-            _playerHealth = _player.GetComponent<PlayerHealth>();
+    private void Start()
+    {
+        ResolvePlayer();
+        EnsureAgentOnNavMesh();
     }
 
     private void Update()
     {
-        if (_player == null || _playerHealth == null)
+        if (!AgentReady())
         {
             UpdateAnimatorSpeed(0f);
             SetNpcAttacking(false);
@@ -93,11 +98,26 @@ public class FuriousChickenAI : MonoBehaviour
             return;
         }
 
-        Vector3 selfPos = transform.position; selfPos.y = 0f;
-        Vector3 playerPos = _player.position; playerPos.y = 0f;
+        if (_player == null || _playerHealth == null)
+            ResolvePlayer();
+
+        if (_player == null || _playerHealth == null)
+        {
+            SafeStopAgent();
+            UpdateAnimatorSpeed(0f);
+            SetNpcAttacking(false);
+            StopApproachLoop();
+            return;
+        }
+
+        Vector3 selfPos = transform.position;
+        selfPos.y = 0f;
+
+        Vector3 playerPos = _player.position;
+        playerPos.y = 0f;
+
         float dist = Vector3.Distance(selfPos, playerPos);
 
-        // ---- AGGRO LOGIC ----
         if (!_hasAggro && dist <= aggroRange)
         {
             _hasAggro = true;
@@ -106,28 +126,29 @@ public class FuriousChickenAI : MonoBehaviour
         else if (_hasAggro && dist >= loseAggroRange)
         {
             _hasAggro = false;
-            _agent.ResetPath();
+            SafeResetPath();
             StopApproachLoop();
         }
 
         bool inAttackRange = dist <= attackRange;
 
-        // ---- MOVEMENT ----
         if (_hasAggro && !_isAttacking)
         {
-            _agent.isStopped = false;
-            _agent.SetDestination(_player.position);
+            SafeSetStopped(false);
+            SafeSetDestination(_player.position);
         }
         else
         {
-            _agent.isStopped = true;
+            SafeSetStopped(true);
         }
 
-        float speedNorm = _agent.velocity.magnitude / Mathf.Max(0.01f, moveSpeed);
-        if (!_hasAggro || _isAttacking) speedNorm = 0f;
+        float speedNorm = 0f;
+
+        if (_hasAggro && !_isAttacking && AgentReady())
+            speedNorm = _agent.velocity.magnitude / Mathf.Max(0.01f, moveSpeed);
+
         UpdateAnimatorSpeed(speedNorm);
 
-        // ---- ATTACK STATE ----
         if (_isAttacking)
         {
             if (!_hasDealtDamageThisAttack && Time.time >= _damageTime)
@@ -145,6 +166,83 @@ public class FuriousChickenAI : MonoBehaviour
             SetNpcAttacking(false);
     }
 
+    private void ResolvePlayer()
+    {
+        if (targetOverride != null)
+            _player = targetOverride;
+        else
+        {
+            GameObject p = GameObject.FindGameObjectWithTag(playerTag);
+            if (p != null)
+                _player = p.transform;
+        }
+
+        if (_player != null)
+            _playerHealth = _player.GetComponent<PlayerHealth>();
+    }
+
+    private bool EnsureAgentOnNavMesh()
+    {
+        if (_agent == null || !_agent.enabled)
+            return false;
+
+        if (_agent.isOnNavMesh)
+            return true;
+
+        NavMeshHit hit;
+
+        if (NavMesh.SamplePosition(transform.position, out hit, navMeshSnapDistance, NavMesh.AllAreas))
+        {
+            _agent.Warp(hit.position);
+            return _agent.isOnNavMesh;
+        }
+
+        Debug.LogWarning("[FuriousChickenAI] " + gameObject.name + " is not on NavMesh.", this);
+
+        if (disableIfNotOnNavMesh)
+            enabled = false;
+
+        return false;
+    }
+
+    private bool AgentReady()
+    {
+        return _agent != null && _agent.enabled && _agent.isOnNavMesh;
+    }
+
+    private void SafeSetDestination(Vector3 destination)
+    {
+        if (!AgentReady())
+            return;
+
+        _agent.SetDestination(destination);
+    }
+
+    private void SafeSetStopped(bool stopped)
+    {
+        if (!AgentReady())
+            return;
+
+        _agent.isStopped = stopped;
+    }
+
+    private void SafeResetPath()
+    {
+        if (!AgentReady())
+            return;
+
+        _agent.ResetPath();
+    }
+
+    private void SafeStopAgent()
+    {
+        if (!AgentReady())
+            return;
+
+        _agent.isStopped = true;
+        _agent.velocity = Vector3.zero;
+    }
+
     private void StartAttack()
     {
         _isAttacking = true;
@@ -154,19 +252,18 @@ public class FuriousChickenAI : MonoBehaviour
         _damageTime = Time.time + hitDelay;
         _nextAttackAllowedTime = Time.time + AttackInterval;
 
-        _agent.isStopped = true;
-        _agent.velocity = Vector3.zero;
+        SafeStopAgent();
 
-        StopApproachLoop(); // stop breathing during attack
-
+        StopApproachLoop();
         SetNpcAttacking(true);
 
-        // Face player once
-        Vector3 look = _player.position;
-        look.y = transform.position.y;
-        transform.LookAt(look);
+        if (_player != null)
+        {
+            Vector3 look = _player.position;
+            look.y = transform.position.y;
+            transform.LookAt(look);
+        }
 
-        // 🔊 ATTACK SFX (once)
         if (attackSfx != null && attackVolume > 0f)
             AudioSource.PlayClipAtPoint(attackSfx, transform.position, attackVolume);
     }
@@ -182,13 +279,12 @@ public class FuriousChickenAI : MonoBehaviour
 
     private void DoDamage()
     {
-        if (_playerHealth == null) return;
+        if (_playerHealth == null)
+            return;
 
         _playerHealth.TakeDamage(damagePerHit);
         _hasDealtDamageThisAttack = true;
     }
-
-    // -------- APPROACH SFX --------
 
     private void StartApproachLoop()
     {
@@ -210,17 +306,15 @@ public class FuriousChickenAI : MonoBehaviour
             _audio.Stop();
     }
 
-    // -------- ANIMATOR --------
-
     private void UpdateAnimatorSpeed(float normalizedSpeed)
     {
-        if (animator && !string.IsNullOrEmpty(speedParamName))
+        if (animator != null && !string.IsNullOrEmpty(speedParamName))
             animator.SetFloat(speedParamName, normalizedSpeed);
     }
 
     private void SetNpcAttacking(bool attacking)
     {
-        if (animator && !string.IsNullOrEmpty(attackingBoolName))
+        if (animator != null && !string.IsNullOrEmpty(attackingBoolName))
             animator.SetBool(attackingBoolName, attacking);
     }
 

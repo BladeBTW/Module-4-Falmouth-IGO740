@@ -1,99 +1,125 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
+[RequireComponent(typeof(NavMeshAgent))]
 public class WanderingAI : MonoBehaviour
 {
     [Header("Movement")]
-    public float MoveSpeed = 5f;        // should match player MoveSpeed for similar feel
+    public float MoveSpeed = 5f;
 
     [Header("Wandering")]
     public float wanderRadius = 10f;
-    public float wanderInterval = 3f;   // idle time at destination
-    public float arrivalRadius = 0.5f;  // tolerance for "arrived"
+    public float wanderInterval = 3f;
+    public float arrivalRadius = 0.5f;
 
-    private NavMeshAgent _agent;
-    private Animator _animator;
+    [Header("NavMesh Safety")]
+    public float snapDistance = 50f;
+    public float retryInterval = 0.5f;
 
-    private float _idleTimer;
+    private NavMeshAgent agent;
+    private Animator animator;
+    private float wanderTimer;
+    private float retryTimer;
 
-    void Awake()
+    private void Awake()
     {
-        _agent = GetComponent<NavMeshAgent>();
-        _animator = GetComponent<Animator>();
+        agent = GetComponent<NavMeshAgent>();
+        animator = GetComponent<Animator>();
 
-        if (_agent != null)
+        if (agent != null)
         {
-            _agent.speed = MoveSpeed;
-            _agent.updatePosition = true;
-            _agent.updateRotation = true;
+            agent.enabled = true;
+            agent.speed = MoveSpeed;
+            agent.updatePosition = true;
+            agent.updateRotation = true;
         }
+    }
 
+    private void Start()
+    {
+        ForceSnapToNavMesh();
         PickNewDestination();
     }
 
-    void Update()
+    private void Update()
     {
-        if (_agent == null)
+        if (agent == null)
             return;
 
-        // --- arrival detection ---
-        float targetDistance = _agent.stoppingDistance + arrivalRadius;
+        if (!agent.enabled)
+            agent.enabled = true;
 
-        bool arrived =
-            !_agent.pathPending &&
-            _agent.remainingDistance <= targetDistance &&
-            _agent.remainingDistance != Mathf.Infinity;
-
-        if (arrived)
+        if (!agent.isOnNavMesh)
         {
-            _idleTimer += Time.deltaTime;
+            retryTimer += Time.deltaTime;
 
-            if (_idleTimer >= wanderInterval)
+            if (retryTimer >= retryInterval)
             {
-                PickNewDestination();
-                _idleTimer = 0f;
+                retryTimer = 0f;
+                ForceSnapToNavMesh();
             }
+
+            UpdateAnimator(0f);
+            return;
+        }
+
+        wanderTimer += Time.deltaTime;
+
+        if (wanderTimer >= wanderInterval)
+        {
+            PickNewDestination();
+            wanderTimer = 0f;
+        }
+
+        if (!agent.pathPending && agent.hasPath && agent.remainingDistance <= agent.stoppingDistance + arrivalRadius)
+        {
+            PickNewDestination();
+            wanderTimer = 0f;
+        }
+
+        UpdateAnimator(agent.velocity.magnitude / Mathf.Max(0.01f, MoveSpeed));
+    }
+
+    private void ForceSnapToNavMesh()
+    {
+        if (agent == null || !agent.enabled)
+            return;
+
+        NavMeshHit hit;
+
+        if (NavMesh.SamplePosition(transform.position, out hit, snapDistance, NavMesh.AllAreas))
+        {
+            agent.Warp(hit.position);
+            agent.isStopped = false;
         }
         else
         {
-            _idleTimer = 0f;
-        }
-
-        // --- Animator "Speed" that matches the player's scale ---
-        if (_animator != null)
-        {
-            Vector3 vel = _agent.velocity;
-            float worldSpeed = new Vector3(vel.x, 0f, vel.z).magnitude;
-
-            // normalize to 0–1 range, like player (_movementVelocity.magnitude before multiplying by MoveSpeed)
-            float normalizedSpeed = MoveSpeed > 0.01f ? worldSpeed / MoveSpeed : 0f;
-
-            _animator.SetFloat("Speed", normalizedSpeed);
-            _animator.SetBool("AirBorne", false); // NavMesh agents are grounded
+            Debug.LogWarning("[WanderingAI] Could not find NavMesh near: " + gameObject.name, this);
         }
     }
 
     private void PickNewDestination()
     {
-        if (_agent == null)
+        if (agent == null || !agent.enabled || !agent.isOnNavMesh)
             return;
 
-        Vector3 randDirection = Random.insideUnitSphere * wanderRadius;
-        randDirection += transform.position;
+        Vector3 randomPoint = transform.position + Random.insideUnitSphere * wanderRadius;
 
-        NavMeshHit navHit;
-        if (NavMesh.SamplePosition(randDirection, out navHit, wanderRadius, NavMesh.AllAreas))
+        NavMeshHit hit;
+
+        if (NavMesh.SamplePosition(randomPoint, out hit, wanderRadius, NavMesh.AllAreas))
         {
-            _agent.isStopped = false;
-            _agent.SetDestination(navHit.position);
+            agent.isStopped = false;
+            agent.SetDestination(hit.position);
         }
     }
 
-    private void OnDrawGizmosSelected()
+    private void UpdateAnimator(float speed)
     {
-        Gizmos.color = Color.yellow;
-        Gizmos.DrawWireSphere(transform.position, wanderRadius);
+        if (animator == null)
+            return;
+
+        animator.SetFloat("Speed", speed);
+        animator.SetBool("AirBorne", false);
     }
 }
