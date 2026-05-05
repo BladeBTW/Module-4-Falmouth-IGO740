@@ -1,25 +1,19 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.EventSystems;
 
 public class GameUIManager : MonoBehaviour
 {
     public static GameUIManager Instance { get; private set; }
 
-    [Header("Pause / Video Overlay")]
-    [Tooltip("The full video/menu canvas used for pause, game over and cutscenes. Example: MenuVideoCanvas")]
+    [Header("Overlay Canvas")]
     public GameObject menuVideoCanvas;
-
-    [Tooltip("The black fullscreen background inside MenuVideoCanvas.")]
     public GameObject blackBackground;
 
-    [Tooltip("Pause menu panel shown when pressing ESC.")]
+    [Header("UI Panels")]
     public GameObject pausePanel;
-
-    [Header("Game Result Panels")]
-    [Tooltip("Game Over panel with Re-Hatch / Main Menu buttons.")]
     public GameObject gameOverPanel;
-
-    [Tooltip("Game Finished panel. Usually shown only after the success cutscene.")]
     public GameObject gameFinishedPanel;
 
     [Header("Scenes")]
@@ -33,21 +27,18 @@ public class GameUIManager : MonoBehaviour
     {
         if (Instance != null && Instance != this)
         {
-            Debug.LogWarning("[GameUIManager] Duplicate instance found, destroying this one.");
             Destroy(gameObject);
             return;
         }
 
         Instance = this;
 
+        Time.timeScale = 1f;
         _isPaused = false;
         _gameEnded = false;
 
-        Time.timeScale = 1f;
-
         HideAllOverlayUI();
-
-        Debug.Log("[GameUIManager] Awake complete.");
+        ClearSelectionNextFrame();
     }
 
     private void Update()
@@ -55,7 +46,7 @@ public class GameUIManager : MonoBehaviour
         if (_gameEnded)
             return;
 
-        if (Input.GetKeyDown(KeyCode.Escape))
+        if (Input.GetKeyDown(KeyCode.Escape) || Input.GetKeyDown(KeyCode.Return))
         {
             if (_isPaused)
                 ResumeGame();
@@ -64,14 +55,10 @@ public class GameUIManager : MonoBehaviour
         }
     }
 
-    // ───────────────── PAUSE LOGIC ─────────────────
-
     public void PauseGame()
     {
         if (_gameEnded)
             return;
-
-        Debug.Log("[GameUIManager] PauseGame()");
 
         _isPaused = true;
         Time.timeScale = 0f;
@@ -82,49 +69,33 @@ public class GameUIManager : MonoBehaviour
         if (blackBackground != null)
             blackBackground.SetActive(true);
 
-        if (pausePanel != null)
-            pausePanel.SetActive(true);
-
         if (gameOverPanel != null)
             gameOverPanel.SetActive(false);
 
         if (gameFinishedPanel != null)
             gameFinishedPanel.SetActive(false);
+
+        if (pausePanel != null)
+            pausePanel.SetActive(true);
+
+        ClearSelectionNextFrame();
     }
 
     public void ResumeGame()
     {
-        Debug.Log("[GameUIManager] ResumeGame()");
-
         _isPaused = false;
         Time.timeScale = 1f;
 
-        if (pausePanel != null)
-            pausePanel.SetActive(false);
-
-        if (gameOverPanel != null)
-            gameOverPanel.SetActive(false);
-
-        if (gameFinishedPanel != null)
-            gameFinishedPanel.SetActive(false);
-
-        if (blackBackground != null)
-            blackBackground.SetActive(false);
-
-        if (menuVideoCanvas != null)
-            menuVideoCanvas.SetActive(false);
+        HideAllOverlayUI();
+        ClearSelectionNextFrame();
     }
-
-    // ───────────────── GAME OVER / FINISHED ─────────────────
 
     public void ShowGameOver()
     {
-        Debug.Log("[GameUIManager] ShowGameOver()");
-
         _gameEnded = true;
         _isPaused = false;
 
-        Time.timeScale = 1f;
+        Time.timeScale = 0f;
 
         if (menuVideoCanvas != null)
             menuVideoCanvas.SetActive(true);
@@ -141,17 +112,17 @@ public class GameUIManager : MonoBehaviour
         if (gameOverPanel != null)
             gameOverPanel.SetActive(true);
         else
-            Debug.LogError("[GameUIManager] gameOverPanel is not assigned.");
+            Debug.LogError("[GameUIManager] Game Over Panel is not assigned.");
+
+        ClearSelectionNextFrame();
     }
 
     public void ShowGameFinished()
     {
-        Debug.Log("[GameUIManager] ShowGameFinished()");
-
         _gameEnded = true;
         _isPaused = false;
 
-        Time.timeScale = 1f;
+        Time.timeScale = 0f;
 
         if (menuVideoCanvas != null)
             menuVideoCanvas.SetActive(true);
@@ -168,70 +139,54 @@ public class GameUIManager : MonoBehaviour
         if (gameFinishedPanel != null)
             gameFinishedPanel.SetActive(true);
         else
-            Debug.LogWarning("[GameUIManager] gameFinishedPanel is not assigned.");
-    }
+            Debug.LogError("[GameUIManager] Game Finished Panel is not assigned.");
 
-    // ───────────────── BUTTON HANDLERS ─────────────────
+        ClearSelectionNextFrame();
+    }
 
     public void OnButtonResume()
     {
-        Debug.Log("[GameUIManager] OnButtonResume()");
         ResumeGame();
     }
 
     public void OnButtonRestart()
     {
-        Debug.Log("[GameUIManager] OnButtonRestart()");
-
         Time.timeScale = 1f;
         _gameEnded = false;
         _isPaused = false;
 
         HideAllOverlayUI();
+        ClearSelectionNow();
 
         if (!string.IsNullOrEmpty(gameplaySceneName))
-        {
             SceneManager.LoadScene(gameplaySceneName);
-        }
         else
-        {
-            Scene current = SceneManager.GetActiveScene();
-            SceneManager.LoadScene(current.buildIndex);
-        }
+            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
 
     public void OnButtonMainMenu()
     {
-        Debug.Log("[GameUIManager] OnButtonMainMenu()");
-
         Time.timeScale = 1f;
         _gameEnded = false;
         _isPaused = false;
 
         HideAllOverlayUI();
+        ClearSelectionNow();
 
         if (!string.IsNullOrEmpty(mainMenuSceneName))
             SceneManager.LoadScene(mainMenuSceneName);
         else
-            Debug.LogError("[GameUIManager] mainMenuSceneName is not set.");
+            Debug.LogError("[GameUIManager] Main Menu Scene Name is empty.");
     }
 
     public void OnButtonRehatch()
     {
-        Debug.Log("[GameUIManager] OnButtonRehatch()");
-
         Time.timeScale = 1f;
         _gameEnded = false;
         _isPaused = false;
 
-        if (pausePanel != null)
-            pausePanel.SetActive(false);
-
-        if (gameOverPanel != null)
-            gameOverPanel.SetActive(false);
-
-        if (gameFinishedPanel != null)
-            gameFinishedPanel.SetActive(false);
+        HideAllOverlayUI();
+        ClearSelectionNow();
 
         if (CutsceneManager.Instance != null)
         {
@@ -239,12 +194,14 @@ public class GameUIManager : MonoBehaviour
         }
         else
         {
-            Debug.LogWarning("[GameUIManager] No CutsceneManager found. Restarting scene instead.");
-            OnButtonRestart();
+            Debug.LogWarning("[GameUIManager] No CutsceneManager found. Reloading gameplay scene as fallback.");
+
+            if (!string.IsNullOrEmpty(gameplaySceneName))
+                SceneManager.LoadScene(gameplaySceneName);
+            else
+                SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
         }
     }
-
-    // ───────────────── HELPERS ─────────────────
 
     private void HideAllOverlayUI()
     {
@@ -262,5 +219,24 @@ public class GameUIManager : MonoBehaviour
 
         if (menuVideoCanvas != null)
             menuVideoCanvas.SetActive(false);
+    }
+
+    private void ClearSelectionNow()
+    {
+        if (EventSystem.current != null)
+            EventSystem.current.SetSelectedGameObject(null);
+    }
+
+    private void ClearSelectionNextFrame()
+    {
+        StartCoroutine(ClearSelectionRoutine());
+    }
+
+    private IEnumerator ClearSelectionRoutine()
+    {
+        yield return null;
+
+        if (EventSystem.current != null)
+            EventSystem.current.SetSelectedGameObject(null);
     }
 }

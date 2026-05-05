@@ -2,6 +2,7 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.Video;
+using UnityEngine.EventSystems;
 
 public class CutsceneManager : MonoBehaviour
 {
@@ -29,7 +30,13 @@ public class CutsceneManager : MonoBehaviour
     [Header("Scenes")]
     public string gameplaySceneName = "GameScene";
 
+    [Header("Skip Settings")]
+    public bool allowDoublePressSkip = true;
+
     private bool _sequenceRunning = false;
+    private bool _videoIsPlaying = false;
+    private bool _skipArmed = false;
+    private bool _skipRequested = false;
 
     private void Awake()
     {
@@ -58,6 +65,37 @@ public class CutsceneManager : MonoBehaviour
             videoPlayer.isLooping = false;
             videoPlayer.source = VideoSource.Url;
         }
+
+        ClearSelection();
+    }
+
+    private void Update()
+    {
+        if (!_videoIsPlaying || !allowDoublePressSkip)
+            return;
+
+        bool pressed =
+            Input.GetMouseButtonDown(0) ||
+            Input.GetKeyDown(KeyCode.Space) ||
+            Input.GetKeyDown(KeyCode.Return) ||
+            Input.GetKeyDown(KeyCode.Escape) ||
+            Input.touchCount > 0 && Input.GetTouch(0).phase == TouchPhase.Began;
+
+        if (!pressed)
+            return;
+
+        if (!_skipArmed)
+        {
+            _skipArmed = true;
+            Debug.Log("[CutsceneManager] Skip armed. Press again to skip video.");
+        }
+        else
+        {
+            _skipRequested = true;
+            Debug.Log("[CutsceneManager] Skip requested.");
+        }
+
+        ClearSelection();
     }
 
     public void PlayRehatchSequence()
@@ -85,12 +123,7 @@ public class CutsceneManager : MonoBehaviour
         if (gameHudCanvas != null)
             gameHudCanvas.SetActive(false);
 
-        if (videoCanvas != null)
-            videoCanvas.SetActive(true);
-
-        if (blackBackground != null)
-            blackBackground.SetActive(true);
-
+        ShowVideoOverlay();
         ClearVideoRenderTexture();
 
         AudioSource[] allAudio = FindObjectsOfType<AudioSource>();
@@ -102,6 +135,8 @@ public class CutsceneManager : MonoBehaviour
 
         if (isMale)
         {
+            Debug.Log("[CutsceneManager] Male chick path.");
+
             yield return PlayVideoFromStreamingAssets(maleVideoFile);
 
             if (DeathCounter.Instance != null)
@@ -111,33 +146,37 @@ public class CutsceneManager : MonoBehaviour
 
             Time.timeScale = 0f;
 
-            if (videoCanvas != null)
-                videoCanvas.SetActive(true);
-
-            if (blackBackground != null)
-                blackBackground.SetActive(true);
-
+            ShowVideoOverlay();
             HideCutscenePanels();
 
             if (gameOverPanel != null)
+            {
                 gameOverPanel.SetActive(true);
+            }
+            else if (GameUIManager.Instance != null)
+            {
+                GameUIManager.Instance.ShowGameOver();
+            }
+            else
+            {
+                Debug.LogError("[CutsceneManager] No Game Over Panel and no GameUIManager found.");
+            }
+
+            ClearSelectionNextFrame();
 
             _sequenceRunning = false;
         }
         else
         {
+            Debug.Log("[CutsceneManager] Female chick path.");
+
             yield return PlayVideoFromStreamingAssets(femaleVideoFile);
 
             RestoreAudio(allAudio, previousMute);
 
             HideCutscenePanels();
 
-            if (videoCanvas != null)
-                videoCanvas.SetActive(true);
-
-            if (blackBackground != null)
-                blackBackground.SetActive(true);
-
+            ShowVideoOverlay();
             ClearVideoRenderTexture();
 
             Time.timeScale = 1f;
@@ -178,12 +217,7 @@ public class CutsceneManager : MonoBehaviour
         if (gameHudCanvas != null)
             gameHudCanvas.SetActive(false);
 
-        if (videoCanvas != null)
-            videoCanvas.SetActive(true);
-
-        if (blackBackground != null)
-            blackBackground.SetActive(true);
-
+        ShowVideoOverlay();
         ClearVideoRenderTexture();
 
         AudioSource[] allAudio = FindObjectsOfType<AudioSource>();
@@ -197,15 +231,16 @@ public class CutsceneManager : MonoBehaviour
         Time.timeScale = 0f;
 
         HideCutscenePanels();
-
-        if (videoCanvas != null)
-            videoCanvas.SetActive(true);
-
-        if (blackBackground != null)
-            blackBackground.SetActive(true);
+        ShowVideoOverlay();
 
         if (endGamePlayAgainPanel != null)
             endGamePlayAgainPanel.SetActive(true);
+        else if (GameUIManager.Instance != null)
+            GameUIManager.Instance.ShowGameFinished();
+        else
+            Debug.LogError("[CutsceneManager] End Game Panel is not assigned.");
+
+        ClearSelectionNextFrame();
 
         _sequenceRunning = false;
     }
@@ -214,6 +249,10 @@ public class CutsceneManager : MonoBehaviour
     {
         if (videoPlayer == null)
             yield break;
+
+        _videoIsPlaying = false;
+        _skipArmed = false;
+        _skipRequested = false;
 
         string url = GetStreamingAssetsUrl(fileName);
 
@@ -232,8 +271,16 @@ public class CutsceneManager : MonoBehaviour
         VideoPlayer.EventHandler completeHandler = null;
         VideoPlayer.ErrorEventHandler errorHandler = null;
 
-        prepareHandler = (VideoPlayer vp) => { prepared = true; };
-        completeHandler = (VideoPlayer vp) => { completed = true; };
+        prepareHandler = (VideoPlayer vp) =>
+        {
+            prepared = true;
+        };
+
+        completeHandler = (VideoPlayer vp) =>
+        {
+            completed = true;
+        };
+
         errorHandler = (VideoPlayer vp, string message) =>
         {
             failed = true;
@@ -263,11 +310,23 @@ public class CutsceneManager : MonoBehaviour
         }
 
         videoPlayer.Play();
+        _videoIsPlaying = true;
 
-        while (!completed && !failed)
+        while (!completed && !failed && !_skipRequested)
             yield return null;
 
+        if (_skipRequested && videoPlayer != null)
+        {
+            Debug.Log("[CutsceneManager] Skipping video: " + fileName);
+            videoPlayer.Stop();
+        }
+
+        _videoIsPlaying = false;
+        _skipArmed = false;
+        _skipRequested = false;
+
         CleanupVideoEvents(prepareHandler, completeHandler, errorHandler);
+        ClearSelection();
     }
 
     private void CleanupVideoEvents(
@@ -275,6 +334,9 @@ public class CutsceneManager : MonoBehaviour
         VideoPlayer.EventHandler completeHandler,
         VideoPlayer.ErrorEventHandler errorHandler)
     {
+        if (videoPlayer == null)
+            return;
+
         videoPlayer.prepareCompleted -= prepareHandler;
         videoPlayer.loopPointReached -= completeHandler;
         videoPlayer.errorReceived -= errorHandler;
@@ -288,6 +350,15 @@ public class CutsceneManager : MonoBehaviour
             basePath += "/";
 
         return basePath + fileName;
+    }
+
+    private void ShowVideoOverlay()
+    {
+        if (videoCanvas != null)
+            videoCanvas.SetActive(true);
+
+        if (blackBackground != null)
+            blackBackground.SetActive(true);
     }
 
     private void HideCutscenePanels()
@@ -343,5 +414,22 @@ public class CutsceneManager : MonoBehaviour
             if (allAudio[i] != null)
                 allAudio[i].mute = previousMute[i];
         }
+    }
+
+    private void ClearSelection()
+    {
+        if (EventSystem.current != null)
+            EventSystem.current.SetSelectedGameObject(null);
+    }
+
+    private void ClearSelectionNextFrame()
+    {
+        StartCoroutine(ClearSelectionRoutine());
+    }
+
+    private IEnumerator ClearSelectionRoutine()
+    {
+        yield return null;
+        ClearSelection();
     }
 }
