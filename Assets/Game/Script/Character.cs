@@ -1,25 +1,37 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class Character : MonoBehaviour
 {
     private CharacterController _cc;
-    public float MoveSpeed = 5f;
-    private Vector3 _movementVelocity;
     private PlayerInput _playerInput;
-    private float _verticalVelocity;
-    public float Gravity = -9.8f;
     private Animator _animator;
+
+    public float MoveSpeed = 5f;
+    public float Gravity = -20f;
+
+    private Vector3 _movementVelocity;
+    private float _verticalVelocity;
 
     private void Awake()
     {
         _cc = GetComponent<CharacterController>();
-        _animator = GetComponent<Animator>();
-
         _playerInput = GetComponent<PlayerInput>();
+        _animator = GetComponentInChildren<Animator>();
+
+        if (_cc == null)
+            Debug.LogError("CharacterController missing on Player.", this);
+
         if (_playerInput == null)
-            Debug.LogError("PlayerInput component missing on Player object!", this);
+            Debug.LogError("PlayerInput missing on Player.", this);
+
+        if (_animator == null)
+            Debug.LogError("Animator missing on Player child Visual.", this);
+    }
+
+    private void Update()
+    {
+        CalculatePlayerMovement();
+        ApplyGravityAndMove();
     }
 
     private void CalculatePlayerMovement()
@@ -27,40 +39,48 @@ public class Character : MonoBehaviour
         if (_playerInput == null)
             return;
 
-        // 1. Input direction
-        _movementVelocity.Set(_playerInput.HorizontalInput, 0f, _playerInput.VerticalInput);
-        _movementVelocity.Normalize();
+        Vector3 inputDirection = new Vector3(
+            _playerInput.HorizontalInput,
+            0f,
+            _playerInput.VerticalInput
+        );
 
-        // 2. Rotate input 45 degrees (just like your original script)
-        _movementVelocity = Quaternion.Euler(0, -45f, 0) * _movementVelocity;
+        float inputMagnitude = Mathf.Clamp01(inputDirection.magnitude);
 
-        // 3. Animator SPEED uses normalized magnitude (0–1)
-        _animator.SetFloat("Speed", _movementVelocity.magnitude);
+        if (inputMagnitude > 0.01f)
+        {
+            inputDirection.Normalize();
 
-        // 4. Apply movement speed afterwards for actual world movement
-        _movementVelocity *= MoveSpeed * Time.deltaTime;
+            Vector3 rotatedDirection = Quaternion.Euler(0f, -45f, 0f) * inputDirection;
 
-        // Rotate player toward movement direction
-        if (_movementVelocity != Vector3.zero)
-            transform.rotation = Quaternion.LookRotation(_movementVelocity);
+            _movementVelocity = rotatedDirection * MoveSpeed;
+            transform.rotation = Quaternion.LookRotation(rotatedDirection);
+        }
+        else
+        {
+            _movementVelocity = Vector3.zero;
+        }
 
-        // Use airborne animation same as original
-        _animator.SetBool("AirBorne", !_cc.isGrounded);
+        if (_animator != null)
+        {
+            _animator.SetFloat("Speed", inputMagnitude);
+            _animator.SetBool("AirBorne", !_cc.isGrounded);
+        }
     }
 
-    private void FixedUpdate()
+    private void ApplyGravityAndMove()
     {
-        CalculatePlayerMovement();
+        if (_cc == null)
+            return;
 
-        // Gravity (player only)
-        if (_cc.isGrounded == false)
-            _verticalVelocity = Gravity;
+        if (_cc.isGrounded && _verticalVelocity < 0f)
+            _verticalVelocity = -2f;
         else
-            _verticalVelocity = Gravity * 0.3f;
+            _verticalVelocity += Gravity * Time.deltaTime;
 
-        _movementVelocity += _verticalVelocity * Vector3.up * Time.deltaTime;
+        Vector3 finalMovement = _movementVelocity;
+        finalMovement.y = _verticalVelocity;
 
-        // CharacterController final move
-        _cc.Move(_movementVelocity);
+        _cc.Move(finalMovement * Time.deltaTime);
     }
 }

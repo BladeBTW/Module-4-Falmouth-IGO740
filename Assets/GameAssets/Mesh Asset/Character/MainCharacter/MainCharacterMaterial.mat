@@ -29,7 +29,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _BumpMap:
-        m_Texture: {fileID: 2800000, guid: c304bc2c369e00942ab263ecbacb0df6, type: 3}
+        m_Texture: {fileID: 2800000, guid: e541da630bdeaa14f8e225ee2db5027b, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _DetailAlbedoMap:
@@ -57,7 +57,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _OcclusionMap:
-        m_Texture: {fileID: 2800000, guid: 828194cb3d05cb841a5f8b0d42fedb60, type: 3}
+        m_Texture: {fileID: 2800000, guid: e8853648144e9a446af1ced4a79b6f83, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _ParallaxMap:
@@ -84,7 +84,7 @@ Material:
     m_Floats:
     - _AlphaClip: 0
     - _Blend: 0
-    - _BumpScale: 1
+    - _BumpScale: 0.5
     - _ClearCoatMask: 0
     - _ClearCoatSmoothness: 0
     - _Cull: 2
@@ -98,7 +98,7 @@ Material:
     - _GlossyReflections: 0
     - _Metallic: 0
     - _Mode: 0
-    - _OcclusionStrength: 1
+    - _OcclusionStrength: 0.556
     - _Parallax: 0.005
     - _QueueOffset: 0
     - _ReceiveShadows: 0

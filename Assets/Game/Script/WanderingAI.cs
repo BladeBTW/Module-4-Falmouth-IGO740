@@ -6,6 +6,7 @@ public class WanderingAI : MonoBehaviour
 {
     [Header("Movement")]
     public float MoveSpeed = 5f;
+    public float turnSpeed = 6f;
 
     [Header("Wandering")]
     public float wanderRadius = 10f;
@@ -31,7 +32,9 @@ public class WanderingAI : MonoBehaviour
             agent.enabled = true;
             agent.speed = MoveSpeed;
             agent.updatePosition = true;
-            agent.updateRotation = true;
+
+            // Important: we rotate manually now.
+            agent.updateRotation = false;
         }
     }
 
@@ -77,7 +80,26 @@ public class WanderingAI : MonoBehaviour
             wanderTimer = 0f;
         }
 
+        RotateOnlyWhileMoving();
+
         UpdateAnimator(agent.velocity.magnitude / Mathf.Max(0.01f, MoveSpeed));
+    }
+
+    private void RotateOnlyWhileMoving()
+    {
+        Vector3 velocity = agent.velocity;
+        velocity.y = 0f;
+
+        if (velocity.sqrMagnitude < 0.05f)
+            return;
+
+        Quaternion targetRotation = Quaternion.LookRotation(velocity.normalized, Vector3.up);
+
+        transform.rotation = Quaternion.Slerp(
+            transform.rotation,
+            targetRotation,
+            Time.deltaTime * turnSpeed
+        );
     }
 
     private void ForceSnapToNavMesh()

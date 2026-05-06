@@ -4,35 +4,49 @@ using UnityEngine;
 public class DamageTrigger : MonoBehaviour
 {
     [Header("Damage")]
-    public int damageAmount = 25;
+    public int damageAmount = 5;
+    public bool damageOnlyOnce = false;
 
-    [Header("Optional SFX")]
-    public AudioClip hitSfx;
-    [Tooltip("Audio volume (0–2). 1 = normal, 2 = double loud, 0.5 = quieter.")]
-    public float hitVolume = 1f;
+    [Header("Target")]
+    public string playerTag = "Player";
 
-    [Tooltip("Destroy this object after dealing damage once (e.g. spike trap one-shot).")]
-    public bool destroyAfterHit = false;
+    [Header("Debug")]
+    public bool logDamage = true;
+
+    private bool _hasDamaged;
 
     private void Reset()
     {
-        // Ensure collider behaves as a trigger
-        GetComponent<Collider>().isTrigger = true;
+        Collider col = GetComponent<Collider>();
+        col.isTrigger = true;
     }
 
     private void OnTriggerEnter(Collider other)
     {
+        if (_hasDamaged && damageOnlyOnce)
+            return;
+
+        if (!other.CompareTag(playerTag))
+            return;
+
         PlayerHealth playerHealth = other.GetComponent<PlayerHealth>();
-        if (playerHealth == null) return;
 
-        // Apply damage
-        playerHealth.TakeDamage(damageAmount);
+        if (playerHealth == null)
+            playerHealth = other.GetComponentInParent<PlayerHealth>();
 
-        // Play SFX if assigned
-        if (hitSfx != null && hitVolume > 0f)
-            AudioSource.PlayClipAtPoint(hitSfx, transform.position, hitVolume);
+        if (playerHealth == null)
+            return;
 
-        if (destroyAfterHit)
-            Destroy(gameObject);
+        if (logDamage)
+        {
+            Debug.Log(
+                $"[DamageTrigger] {gameObject.name} damaged {other.name} for {damageAmount}. Trigger position: {transform.position}",
+                this
+            );
+        }
+
+        playerHealth.TakeDamage(damageAmount, gameObject);
+
+        _hasDamaged = true;
     }
 }

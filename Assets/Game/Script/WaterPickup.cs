@@ -8,13 +8,17 @@ public class WaterPickup : MonoBehaviour
     public float weightAmountKg = 1f;
 
     [Header("VFX / SFX")]
-    [Tooltip("Prefab with ParticleSystem or VisualEffect on it.")]
     public GameObject collectVfxPrefab;
-
     public AudioClip collectSfx;
-    [Tooltip("1 = normal, 2 = loud, 5 = very loud, 10 = extreme")]
-    [Range(0f, 10f)]
+
+    [Tooltip("Now goes up to 40, so max is 4x louder than before.")]
+    [Range(0f, 40f)]
     public float collectSfxVolume = 3f;
+
+    [Header("VFX Placement")]
+    public Vector3 vfxOffset = Vector3.zero;
+    public Vector3 vfxRotationEuler = Vector3.zero;
+    public float vfxLifetime = 5f;
 
     public bool destroyOnPickup = true;
 
@@ -26,39 +30,40 @@ public class WaterPickup : MonoBehaviour
     private void OnTriggerEnter(Collider other)
     {
         PlayerHealth playerHealth = other.GetComponent<PlayerHealth>();
+
         if (playerHealth == null)
             return;
 
-        // Apply gameplay effects
         if (healthAmount > 0)
             playerHealth.Heal(healthAmount);
 
         if (weightAmountKg != 0f)
             playerHealth.AddWeight(weightAmountKg);
 
-        // --- VFX at THIS pickup's position (like before) ---
-        if (collectVfxPrefab != null)
-        {
-            GameObject vfx = Instantiate(
-                collectVfxPrefab,
-                transform.position,
-                Quaternion.identity
-            );
+        SpawnVFX();
 
-            Destroy(vfx, 5f); // adjust lifetime if needed
-        }
-
-        // --- SFX ---
         if (collectSfx != null && collectSfxVolume > 0f)
-        {
-            AudioSource.PlayClipAtPoint(
-                collectSfx,
-                transform.position,
-                collectSfxVolume
-            );
-        }
+            AudioSource.PlayClipAtPoint(collectSfx, transform.position, collectSfxVolume);
 
         if (destroyOnPickup)
             Destroy(gameObject);
+    }
+
+    private void SpawnVFX()
+    {
+        if (collectVfxPrefab == null)
+            return;
+
+        Vector3 spawnPos = transform.position + transform.TransformDirection(vfxOffset);
+        Quaternion spawnRot = Quaternion.Euler(vfxRotationEuler);
+
+        GameObject vfx = Instantiate(collectVfxPrefab, spawnPos, spawnRot);
+
+        ParticleSystem ps = vfx.GetComponentInChildren<ParticleSystem>();
+        if (ps != null)
+            ps.Play(true);
+
+        if (vfxLifetime > 0f)
+            Destroy(vfx, vfxLifetime);
     }
 }
