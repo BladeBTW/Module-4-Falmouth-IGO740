@@ -20,21 +20,32 @@ public class PlayerHealth : MonoBehaviour
 
     [Header("Hurt Behaviour")]
     public float hurtDuration = 0.3f;
-    [Range(0f, 1f)] public float hurtSpeedMultiplier = 0.1f;
+
+    [Range(0f, 1f)]
+    public float hurtSpeedMultiplier = 0.65f;
+
+    [Header("Camera Shake")]
+    public bool shakeCameraOnDamage = true;
+    public float damageShakeDuration = 0.12f;
+    public float damageShakeStrength = 0.08f;
 
     [Header("Hurt VFX / SFX")]
     public GameObject hurtVfxPrefab;
     public Vector3 hurtVfxRotationEuler = Vector3.zero;
     public float hurtVfxLifetime = 3f;
     public AudioClip hurtSfx;
-    [Range(0f, 10f)] public float hurtSfxVolume = 1f;
+
+    [Range(0f, 10f)]
+    public float hurtSfxVolume = 1f;
 
     [Header("Heal VFX / SFX")]
     public GameObject healVfxPrefab;
     public Vector3 healVfxRotationEuler = Vector3.zero;
     public float healVfxLifetime = 3f;
     public AudioClip healSfx;
-    [Range(0f, 10f)] public float healSfxVolume = 1f;
+
+    [Range(0f, 10f)]
+    public float healSfxVolume = 0.4f;
 
     [Header("VFX Spawn")]
     public Transform vfxSpawnPoint;
@@ -52,15 +63,17 @@ public class PlayerHealth : MonoBehaviour
     [Header("Death")]
     public float deathGameOverDelay = 2f;
 
-    private bool _isDead;
-    private Character _character;
-    private float _baseMoveSpeed;
-    private bool _hasBaseMoveSpeed;
+    private bool isDead;
+    private Character character;
+    private float baseMoveSpeed;
+    private bool hasBaseMoveSpeed;
 
-    private Material[] _materials;
-    private Color[] _originalBaseColors;
-    private Color[] _originalEmissionColors;
-    private bool _hasMaterials;
+    private Material[] materials;
+    private Color[] originalBaseColors;
+    private Color[] originalEmissionColors;
+    private bool hasMaterials;
+
+    private Coroutine hurtRoutine;
 
     private void Awake()
     {
@@ -70,11 +83,12 @@ public class PlayerHealth : MonoBehaviour
         if (animator == null)
             animator = GetComponentInChildren<Animator>();
 
-        _character = GetComponent<Character>();
-        if (_character != null)
+        character = GetComponent<Character>();
+
+        if (character != null)
         {
-            _baseMoveSpeed = _character.MoveSpeed;
-            _hasBaseMoveSpeed = true;
+            baseMoveSpeed = character.MoveSpeed;
+            hasBaseMoveSpeed = true;
         }
 
         SetupRenderersForFlash();
@@ -88,35 +102,53 @@ public class PlayerHealth : MonoBehaviour
 
     public void TakeDamage(int amount, GameObject source)
     {
-        if (_isDead || amount <= 0)
+        if (isDead || amount <= 0)
             return;
 
         if (logDamageSource)
         {
             string sourceName = source != null ? source.name : "UNKNOWN";
-            string sourcePos = source != null ? source.transform.position.ToString() : "no position";
+            string sourcePos = source != null
+                ? source.transform.position.ToString()
+                : "no position";
+
             Debug.Log($"[DAMAGE] Player took {amount} damage from {sourceName} at {sourcePos}", source);
         }
 
         currentHealth = Mathf.Max(0, currentHealth - amount);
+
         UpdateAnimatorHealth();
 
         FlashDamageColor();
         PlayHurtEffects();
 
+        if (shakeCameraOnDamage && CameraShake.Instance != null)
+        {
+            CameraShake.Instance.Shake(
+                damageShakeDuration,
+                damageShakeStrength
+            );
+        }
+
         if (currentHealth <= 0)
+        {
             Die();
+        }
         else
+        {
             TriggerHurt();
+        }
     }
 
     public void Heal(int amount)
     {
-        if (_isDead || amount <= 0)
+        if (isDead || amount <= 0)
             return;
 
         currentHealth = Mathf.Clamp(currentHealth + amount, 0, maxHealth);
+
         UpdateAnimatorHealth();
+
         PlayHealEffects();
     }
 
@@ -127,53 +159,96 @@ public class PlayerHealth : MonoBehaviour
 
     private void TriggerHurt()
     {
+        if (hurtRoutine != null)
+            StopCoroutine(hurtRoutine);
+
+        hurtRoutine = StartCoroutine(HurtRoutine());
+    }
+
+    private IEnumerator HurtRoutine()
+    {
         if (animator != null && !string.IsNullOrEmpty(hurtBoolParam))
             animator.SetBool(hurtBoolParam, true);
 
-        if (_character != null && _hasBaseMoveSpeed)
-            _character.MoveSpeed = _baseMoveSpeed * Mathf.Clamp01(hurtSpeedMultiplier);
+        if (character != null && hasBaseMoveSpeed)
+        {
+            character.MoveSpeed =
+                baseMoveSpeed * Mathf.Clamp01(hurtSpeedMultiplier);
+        }
 
-        CancelInvoke(nameof(EndHurt));
-        Invoke(nameof(EndHurt), hurtDuration);
-    }
+        yield return new WaitForSeconds(hurtDuration);
 
-    private void EndHurt()
-    {
         if (animator != null && !string.IsNullOrEmpty(hurtBoolParam))
             animator.SetBool(hurtBoolParam, false);
 
-        if (!_isDead && _character != null && _hasBaseMoveSpeed)
-            _character.MoveSpeed = _baseMoveSpeed;
+        if (!isDead && character != null && hasBaseMoveSpeed)
+        {
+            character.MoveSpeed = baseMoveSpeed;
+        }
+
+        hurtRoutine = null;
     }
 
     private void PlayHurtEffects()
     {
-        SpawnVFX(hurtVfxPrefab, hurtVfxRotationEuler, hurtVfxLifetime);
+        SpawnVFX(
+            hurtVfxPrefab,
+            hurtVfxRotationEuler,
+            hurtVfxLifetime
+        );
 
         if (hurtSfx != null && hurtSfxVolume > 0f)
-            AudioSource.PlayClipAtPoint(hurtSfx, transform.position, hurtSfxVolume);
+        {
+            AudioSource.PlayClipAtPoint(
+                hurtSfx,
+                transform.position,
+                hurtSfxVolume
+            );
+        }
     }
 
     private void PlayHealEffects()
     {
-        SpawnVFX(healVfxPrefab, healVfxRotationEuler, healVfxLifetime);
+        SpawnVFX(
+            healVfxPrefab,
+            healVfxRotationEuler,
+            healVfxLifetime
+        );
 
         if (healSfx != null && healSfxVolume > 0f)
-            AudioSource.PlayClipAtPoint(healSfx, transform.position, healSfxVolume);
+        {
+            AudioSource.PlayClipAtPoint(
+                healSfx,
+                transform.position,
+                healSfxVolume
+            );
+        }
     }
 
-    private void SpawnVFX(GameObject prefab, Vector3 rotationEuler, float lifetime)
+    private void SpawnVFX(
+        GameObject prefab,
+        Vector3 rotationEuler,
+        float lifetime
+    )
     {
         if (prefab == null)
             return;
 
-        Transform origin = vfxSpawnPoint != null ? vfxSpawnPoint : transform;
-        Vector3 pos = origin.position + origin.TransformDirection(vfxSpawnOffset);
+        Transform origin =
+            vfxSpawnPoint != null
+            ? vfxSpawnPoint
+            : transform;
+
+        Vector3 pos =
+            origin.position +
+            origin.TransformDirection(vfxSpawnOffset);
+
         Quaternion rot = Quaternion.Euler(rotationEuler);
 
         GameObject vfx = Instantiate(prefab, pos, rot);
 
         ParticleSystem ps = vfx.GetComponentInChildren<ParticleSystem>();
+
         if (ps != null)
             ps.Play(true);
 
@@ -183,18 +258,25 @@ public class PlayerHealth : MonoBehaviour
 
     private void Die()
     {
-        if (_isDead)
+        if (isDead)
             return;
 
-        _isDead = true;
+        isDead = true;
+
+        if (hurtRoutine != null)
+        {
+            StopCoroutine(hurtRoutine);
+            hurtRoutine = null;
+        }
+
+        if (animator != null && !string.IsNullOrEmpty(hurtBoolParam))
+            animator.SetBool(hurtBoolParam, false);
 
         if (DeathCounter.Instance != null)
             DeathCounter.Instance.RegisterDeath();
 
-        CancelInvoke(nameof(EndHurt));
-
-        if (_character != null)
-            _character.MoveSpeed = 0f;
+        if (character != null)
+            character.MoveSpeed = 0f;
 
         if (animator != null && !string.IsNullOrEmpty(deathTriggerName))
             animator.SetTrigger(deathTriggerName);
@@ -204,12 +286,7 @@ public class PlayerHealth : MonoBehaviour
 
     private IEnumerator DeathGameOverSequence()
     {
-        float t = 0f;
-        while (t < deathGameOverDelay)
-        {
-            t += Time.unscaledDeltaTime;
-            yield return null;
-        }
+        yield return new WaitForSecondsRealtime(deathGameOverDelay);
 
         if (GameUIManager.Instance != null)
             GameUIManager.Instance.ShowGameOver();
@@ -218,55 +295,62 @@ public class PlayerHealth : MonoBehaviour
     private void UpdateAnimatorHealth()
     {
         if (animator != null && !string.IsNullOrEmpty(healthFloatParam))
-            animator.SetFloat(healthFloatParam, currentHealth);
+        {
+            animator.SetFloat(
+                healthFloatParam,
+                currentHealth
+            );
+        }
     }
 
     private void SetupRenderersForFlash()
     {
-        Renderer[] renderers = targetRenderers != null && targetRenderers.Length > 0
+        Renderer[] renderers =
+            targetRenderers != null && targetRenderers.Length > 0
             ? targetRenderers
             : GetComponentsInChildren<Renderer>();
 
-        _materials = new Material[renderers.Length];
-        _originalBaseColors = new Color[renderers.Length];
-        _originalEmissionColors = new Color[renderers.Length];
+        materials = new Material[renderers.Length];
+        originalBaseColors = new Color[renderers.Length];
+        originalEmissionColors = new Color[renderers.Length];
 
         for (int i = 0; i < renderers.Length; i++)
         {
             Renderer r = renderers[i];
 
-            if (r == null)
-                continue;
-
-            if (r is ParticleSystemRenderer)
+            if (r == null || r is ParticleSystemRenderer)
                 continue;
 
             Material mat = r.material;
+
             if (mat == null)
                 continue;
 
-            _materials[i] = mat;
-            _originalBaseColors[i] = GetBaseColor(mat);
-            _originalEmissionColors[i] = GetEmissionColor(mat);
-            _hasMaterials = true;
+            materials[i] = mat;
+            originalBaseColors[i] = GetBaseColor(mat);
+            originalEmissionColors[i] = GetEmissionColor(mat);
+
+            hasMaterials = true;
         }
     }
 
     private void FlashDamageColor()
     {
-        if (!_hasMaterials)
+        if (!hasMaterials || materials == null)
             return;
 
         CancelInvoke(nameof(ResetDamageColor));
 
-        for (int i = 0; i < _materials.Length; i++)
+        foreach (Material mat in materials)
         {
-            Material mat = _materials[i];
             if (mat == null)
                 continue;
 
             SetBaseColor(mat, flashColor);
-            SetEmissionColor(mat, flashColor * flashEmissionBoost);
+            SetEmissionColor(
+                mat,
+                flashColor * flashEmissionBoost
+            );
         }
 
         Invoke(nameof(ResetDamageColor), flashDuration);
@@ -274,37 +358,48 @@ public class PlayerHealth : MonoBehaviour
 
     private void ResetDamageColor()
     {
-        if (!_hasMaterials)
+        if (!hasMaterials || materials == null)
             return;
 
-        for (int i = 0; i < _materials.Length; i++)
+        for (int i = 0; i < materials.Length; i++)
         {
-            Material mat = _materials[i];
+            Material mat = materials[i];
+
             if (mat == null)
                 continue;
 
-            SetBaseColor(mat, _originalBaseColors[i]);
-            SetEmissionColor(mat, _originalEmissionColors[i]);
+            SetBaseColor(mat, originalBaseColors[i]);
+            SetEmissionColor(mat, originalEmissionColors[i]);
         }
     }
 
     private static Color GetBaseColor(Material m)
     {
-        if (m.HasProperty("_BaseColor")) return m.GetColor("_BaseColor");
-        if (m.HasProperty("_Color")) return m.GetColor("_Color");
+        if (m.HasProperty("_BaseColor"))
+            return m.GetColor("_BaseColor");
+
+        if (m.HasProperty("_Color"))
+            return m.GetColor("_Color");
+
         return Color.white;
     }
 
     private static void SetBaseColor(Material m, Color c)
     {
-        if (m.HasProperty("_BaseColor")) m.SetColor("_BaseColor", c);
-        else if (m.HasProperty("_Color")) m.SetColor("_Color", c);
+        if (m.HasProperty("_BaseColor"))
+            m.SetColor("_BaseColor", c);
+        else if (m.HasProperty("_Color"))
+            m.SetColor("_Color", c);
     }
 
     private static Color GetEmissionColor(Material m)
     {
-        if (m.HasProperty("_EmissionColor")) return m.GetColor("_EmissionColor");
-        if (m.HasProperty("_EmissiveColor")) return m.GetColor("_EmissiveColor");
+        if (m.HasProperty("_EmissionColor"))
+            return m.GetColor("_EmissionColor");
+
+        if (m.HasProperty("_EmissiveColor"))
+            return m.GetColor("_EmissiveColor");
+
         return Color.black;
     }
 

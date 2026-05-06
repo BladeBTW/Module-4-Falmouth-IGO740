@@ -3,7 +3,12 @@ guid: f82999d15cb6c654eaff8962b58ea4f4
 ModelImporter:
   serializedVersion: 21300
   internalIDToNameTable: []
-  externalObjects: {}
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Material.001
+    second: {fileID: 2100000, guid: e1fa5380da6f0474babc615d46f41d57, type: 2}
   materials:
     materialImportMode: 2
     materialName: 0
@@ -19,7 +24,11 @@ ModelImporter:
     rigImportErrors: 
     rigImportWarnings: 
     animationImportErrors: 
-    animationImportWarnings: 
+    animationImportWarnings: Event BurstFootStep has a time (3.502786) outside the
+      clip's valid range (0.000000..1.466667). It will never be firedEvent BurstFootStep
+      has a time (4.130643) outside the clip's valid range (0.000000..1.466667).
+      It will never be firedEvent BurstFootStep has a time (5.369836) outside the
+      clip's valid range (0.000000..1.466667). It will never be fired
     animationRetargetingWarnings: 
     animationDoRetargetingWarnings: 0
     importAnimatedCustomProperties: 0
@@ -37,7 +46,7 @@ ModelImporter:
       takeName: mixamo.com
       internalID: -203655887218126122
       firstFrame: 0
-      lastFrame: 172
+      lastFrame: 44
       wrapMode: 0
       orientationOffsetY: 0
       level: 0
@@ -45,7 +54,7 @@ ModelImporter:
       loop: 0
       hasAdditiveReferencePose: 0
       loopTime: 1
-      loopBlend: 0
+      loopBlend: 1
       loopBlendOrientation: 0
       loopBlendPositionY: 0
       loopBlendPositionXZ: 0
@@ -57,28 +66,21 @@ ModelImporter:
       bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
       curves: []
       events:
-      - time: 0.610951
+      - time: 0.09628434
         functionName: BurstFootStep
         data: 
         objectReferenceParameter: {instanceID: 0}
         floatParameter: 0
         intParameter: 0
         messageOptions: 0
-      - time: 0.16426513
+      - time: 0.097598456
         functionName: BurstFootStep
         data: 
         objectReferenceParameter: {instanceID: 0}
         floatParameter: 0
         intParameter: 0
         messageOptions: 0
-      - time: 0.7204611
-        functionName: BurstFootStep
-        data: 
-        objectReferenceParameter: {instanceID: 0}
-        floatParameter: 0
-        intParameter: 0
-        messageOptions: 0
-      - time: 0.9365994
+      - time: 0.6854566
         functionName: BurstFootStep
         data: 
         objectReferenceParameter: {instanceID: 0}
