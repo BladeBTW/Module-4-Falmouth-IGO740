@@ -17,8 +17,8 @@ TagManager:
   - Tree
   - Ground
   - CursorTest
-  - 
-  - 
+  - CollisionEnvironment
+  - VFX
   - 
   - 
   - 

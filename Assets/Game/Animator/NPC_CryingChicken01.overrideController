@@ -7,7 +7,7 @@ AnimatorOverrideController:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: NPC_CryingChicken01
-  m_Controller: {fileID: 9100000, guid: 2571fb22e5f51b94a84dedac176aecfb, type: 2}
+  m_Controller: {fileID: 9100000, guid: 8f87e789625a87e439e1acea87d8b967, type: 2}
   m_Clips:
   - m_OriginalClip: {fileID: -203655887218126122, guid: 39d96df4c339e51459e82734d820d31f, type: 3}
     m_OverrideClip: {fileID: -203655887218126122, guid: 557a169382eefe6409d9b5fe62ed1749, type: 3}

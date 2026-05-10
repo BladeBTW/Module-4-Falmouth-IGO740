@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 7670952555964272165}
   - component: {fileID: 723555143328989150}
   - component: {fileID: 8262156713083497111}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: _PS_WaterPickupSplash
   m_TagString: Untagged
   m_Icon: {fileID: 0}

@@ -3,50 +3,115 @@ using UnityEngine.AI;
 
 public class NPCWorkerTrigger : MonoBehaviour
 {
-    private NavMeshAgent agent;
-    private bool isWorking = false;
+    [Header("Interaction")]
+    public KeyCode interactKey = KeyCode.E;
+    public float interactRange = 2.2f;
+    public bool requireInteractKey = true;
 
-    void Awake()
+    [Header("Win / Lose Condition")]
+    [Range(0f, 1f)]
+    public float requiredHealthPercent = 0.5f;
+
+    [Header("References")]
+    public Transform player;
+    public PlayerHealth playerHealth;
+
+    [Header("Optional Worker AI")]
+    public bool stopWorkerWhenPlayerNear = true;
+
+    private NavMeshAgent agent;
+    private bool hasTriggered;
+
+    private void Awake()
     {
         agent = GetComponent<NavMeshAgent>();
-    }
 
-    void Update()
-    {
-        if (agent == null || !agent.isOnNavMesh) return;
-
-        // Example idle/working behavior
-        if (!isWorking && !agent.pathPending && agent.remainingDistance <= agent.stoppingDistance)
+        if (player == null)
         {
-            StartWorking();
+            GameObject foundPlayer = GameObject.FindGameObjectWithTag("Player");
+
+            if (foundPlayer != null)
+                player = foundPlayer.transform;
         }
+
+        if (playerHealth == null && player != null)
+            playerHealth = player.GetComponent<PlayerHealth>();
     }
 
-    void StartWorking()
+    private void Update()
     {
-        isWorking = true;
-        agent.isStopped = true;
+        if (hasTriggered)
+            return;
 
-        // Simulate doing work (you can replace this)
-        Invoke(nameof(StopWorking), 3f);
+        if (player == null || playerHealth == null)
+            return;
+
+        float distance = Vector3.Distance(
+            Flatten(transform.position),
+            Flatten(player.position)
+        );
+
+        bool playerIsClose = distance <= interactRange;
+
+        if (stopWorkerWhenPlayerNear && agent != null && agent.isOnNavMesh)
+            agent.isStopped = playerIsClose;
+
+        if (!playerIsClose)
+            return;
+
+        if (requireInteractKey && !Input.GetKeyDown(interactKey))
+            return;
+
+        ResolveWorkerInteraction();
     }
 
-    void StopWorking()
+    private void ResolveWorkerInteraction()
     {
-        isWorking = false;
+        hasTriggered = true;
 
-        if (agent != null && agent.isOnNavMesh)
+        float healthPercent =
+            playerHealth.maxHealth > 0
+                ? (float)playerHealth.currentHealth / playerHealth.maxHealth
+                : 0f;
+
+        if (healthPercent > requiredHealthPercent)
         {
-            agent.isStopped = false;
+            Debug.Log("[NPCWorkerTrigger] Player reached worker above half health. Playing success cutscenes.");
 
-            // Send to random point again
-            Vector3 randomDir = Random.insideUnitSphere * 10f;
-            randomDir += transform.position;
-
-            if (NavMesh.SamplePosition(randomDir, out NavMeshHit hit, 10f, NavMesh.AllAreas))
+            if (CutsceneManager.Instance != null)
             {
-                agent.SetDestination(hit.position);
+                CutsceneManager.Instance.PlaySuccessSequence();
+            }
+            else if (GameUIManager.Instance != null)
+            {
+                Debug.LogWarning("[NPCWorkerTrigger] No CutsceneManager found. Showing finished menu directly.");
+                GameUIManager.Instance.ShowGameFinished();
+            }
+            else
+            {
+                Debug.LogError("[NPCWorkerTrigger] No CutsceneManager or GameUIManager found.");
             }
         }
+        else
+        {
+            Debug.Log("[NPCWorkerTrigger] Player reached worker with half health or less. Game over.");
+
+            if (GameUIManager.Instance != null)
+                GameUIManager.Instance.ShowGameOver();
+            else
+                Debug.LogError("[NPCWorkerTrigger] No GameUIManager found.");
+        }
+    }
+
+    private Vector3 Flatten(Vector3 value)
+    {
+        value.y = 0f;
+        return value;
+    }
+
+    private void OnDrawGizmosSelected()
+    {
+        Gizmos.color = Color.green;
+        Gizmos.DrawWireSphere(transform.position, interactRange);
     }
 }

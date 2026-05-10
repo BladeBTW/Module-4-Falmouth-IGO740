@@ -3,36 +3,55 @@ using UnityEngine;
 [RequireComponent(typeof(Collider))]
 public class WaterPickup : MonoBehaviour
 {
-    [Header("Water Pickup")]
+    [Header("Health")]
     public int healthAmount = 20;
     public float weightAmountKg = 1f;
+
+    [Header("Anxiety")]
+    public float anxietyReductionAmount = 25f;
 
     [Header("VFX / SFX")]
     public GameObject collectVfxPrefab;
     public AudioClip collectSfx;
 
-    [Tooltip("Now goes up to 40, so max is 4x louder than before.")]
     [Range(0f, 40f)]
     public float collectSfxVolume = 3f;
 
-    [Header("VFX Placement")]
     public Vector3 vfxOffset = Vector3.zero;
     public Vector3 vfxRotationEuler = Vector3.zero;
     public float vfxLifetime = 5f;
 
+    [Header("Pickup")]
     public bool destroyOnPickup = true;
 
-    private void Reset()
+    private bool collected;
+    private Collider pickupCollider;
+
+    private void Awake()
     {
-        GetComponent<Collider>().isTrigger = true;
+        pickupCollider = GetComponent<Collider>();
+
+        if (pickupCollider != null)
+            pickupCollider.isTrigger = true;
     }
 
     private void OnTriggerEnter(Collider other)
     {
+        if (collected)
+            return;
+
         PlayerHealth playerHealth = other.GetComponent<PlayerHealth>();
 
         if (playerHealth == null)
+            playerHealth = other.GetComponentInParent<PlayerHealth>();
+
+        if (playerHealth == null)
             return;
+
+        collected = true;
+
+        if (pickupCollider != null)
+            pickupCollider.enabled = false;
 
         if (healthAmount > 0)
             playerHealth.Heal(healthAmount);
@@ -40,13 +59,21 @@ public class WaterPickup : MonoBehaviour
         if (weightAmountKg != 0f)
             playerHealth.AddWeight(weightAmountKg);
 
-        SpawnVFX();
+        PlayerAnxiety playerAnxiety = other.GetComponent<PlayerAnxiety>();
 
-        if (collectSfx != null && collectSfxVolume > 0f)
-            AudioSource.PlayClipAtPoint(collectSfx, transform.position, collectSfxVolume);
+        if (playerAnxiety == null)
+            playerAnxiety = other.GetComponentInParent<PlayerAnxiety>();
+
+        if (playerAnxiety != null && anxietyReductionAmount > 0f)
+            playerAnxiety.ReduceAnxiety(anxietyReductionAmount);
+
+        SpawnVFX();
+        PlaySFX();
 
         if (destroyOnPickup)
             Destroy(gameObject);
+        else
+            gameObject.SetActive(false);
     }
 
     private void SpawnVFX()
@@ -54,16 +81,39 @@ public class WaterPickup : MonoBehaviour
         if (collectVfxPrefab == null)
             return;
 
-        Vector3 spawnPos = transform.position + transform.TransformDirection(vfxOffset);
-        Quaternion spawnRot = Quaternion.Euler(vfxRotationEuler);
+        Vector3 spawnPos =
+            transform.position + transform.TransformDirection(vfxOffset);
 
-        GameObject vfx = Instantiate(collectVfxPrefab, spawnPos, spawnRot);
+        Quaternion spawnRot =
+            Quaternion.Euler(vfxRotationEuler);
+
+        GameObject vfx = Instantiate(
+            collectVfxPrefab,
+            spawnPos,
+            spawnRot
+        );
 
         ParticleSystem ps = vfx.GetComponentInChildren<ParticleSystem>();
+
         if (ps != null)
             ps.Play(true);
 
         if (vfxLifetime > 0f)
             Destroy(vfx, vfxLifetime);
+    }
+
+    private void PlaySFX()
+    {
+        if (collectSfx == null)
+            return;
+
+        if (collectSfxVolume <= 0f)
+            return;
+
+        AudioSource.PlayClipAtPoint(
+            collectSfx,
+            transform.position,
+            collectSfxVolume
+        );
     }
 }

@@ -8,6 +8,75 @@ public class PlayerHealth : MonoBehaviour
     public int startingHealth = 100;
     public int currentHealth;
 
+    [Header("Anxiety Locked Health")]
+    [SerializeField] private int anxietyLockedHealthLoss;
+
+    public int AnxietyLockedHealthLoss => anxietyLockedHealthLoss;
+    public bool IsRegeneratingAnxietyLockedHealth => isRegeneratingAnxietyLockedHealth;
+
+    public bool IsAnxietyLockedHealthFlashing
+    {
+        get
+        {
+            return anxietyLockedHealthLoss > 0 &&
+                   IsAnxietyDamageFlashActive &&
+                   !isRegeneratingAnxietyLockedHealth;
+        }
+    }
+
+    public bool IsAnxietyDamageFlashActive
+    {
+        get
+        {
+            return Time.time < anxietyDamageFlashUntil &&
+                   !isRegeneratingAnxietyLockedHealth;
+        }
+    }
+
+    public bool IsAnxietyRegenFlashActive
+    {
+        get
+        {
+            return Time.time < anxietyRegenFlashUntil;
+        }
+    }
+
+    public float AnxietyRegenFlashStartPercent => anxietyRegenFlashStartPercent;
+    public float AnxietyRegenFlashEndPercent => anxietyRegenFlashEndPercent;
+
+    public Color AnxietyDamageFlashColor => anxietyFlashColor;
+    public float AnxietyDamageFlashDuration => anxietyFlashDuration;
+    public float AnxietyDamageFlashEmissionBoost => anxietyFlashEmissionBoost;
+
+    public Color AnxietyLockedHealthBaseColor => anxietyLockedHealthBaseColor;
+    public Color AnxietyLockedHealthRegenFlashColor => anxietyLockedHealthRegenFlashColor;
+
+    [Tooltip("If ON, health lost through anxiety cannot be restored by normal healing until anxiety has calmed down.")]
+    public bool lockHealthLostToAnxiety = true;
+
+    [Header("Anxiety Health Unlocking")]
+    [Tooltip("If ON, locked anxiety health slowly becomes healable again once anxiety is low enough.")]
+    public bool regenerateAnxietyDamageAtLowAnxiety = true;
+
+    [Tooltip("Locked anxiety health unlocks when current anxiety is at or below this value. Example: 0 = only fully calm, 25 = unlock when anxiety is 25 or lower.")]
+    public float unlockWhenAnxietyAtOrBelow = 0.01f;
+
+    [Tooltip("How much locked anxiety health becomes healable again each tick. This does NOT heal the player.")]
+    public int anxietyRegenAmountPerTick = 5;
+
+    [Tooltip("How often locked anxiety health becomes healable again while anxiety is low enough.")]
+    public float anxietyRegenTickInterval = 1f;
+
+    [Tooltip("How long the newly unlocked health chunk flashes in the UI.")]
+    public float anxietyRegenFlashDuration = 0.25f;
+
+    [Header("Anxiety Locked UI Colors")]
+    [Tooltip("Default color for health that is locked by anxiety. Usually red.")]
+    public Color anxietyLockedHealthBaseColor = Color.red;
+
+    [Tooltip("Color the locked-health section flashes to while anxiety-locked health is becoming healable again. Usually purple.")]
+    public Color anxietyLockedHealthRegenFlashColor = new Color(0.65f, 0f, 1f, 1f);
+
     [Header("Weight")]
     public float startingWeightKg = 1.9f;
     public float currentWeightKg = 1.9f;
@@ -16,20 +85,42 @@ public class PlayerHealth : MonoBehaviour
     public Animator animator;
     public string healthFloatParam = "Health";
     public string hurtBoolParam = "Hurt";
+    public string halfHealthBoolParam = "HalfHealth";
     public string deathTriggerName = "Die";
 
-    [Header("Hurt Behaviour")]
+    [Header("Half Health Animation")]
+    [Range(0f, 1f)]
+    public float halfHealthThreshold = 0.5f;
+
+    [Header("Normal Hurt Behaviour")]
     public float hurtDuration = 0.3f;
 
     [Range(0f, 1f)]
     public float hurtSpeedMultiplier = 0.65f;
 
-    [Header("Camera Shake")]
+    [Header("Anxiety Damage Behaviour")]
+    [Tooltip("Keep this OFF if anxiety damage should not trigger the upper-body Hurt animation.")]
+    public bool anxietyDamageTriggersHurtAnimation = false;
+
+    [Tooltip("1 = no movement slow. 0.5 = half speed.")]
+    [Range(0f, 1f)]
+    public float anxietyDamageSpeedMultiplier = 1f;
+
+    [Header("Normal Damage Camera Shake")]
     public bool shakeCameraOnDamage = true;
     public float damageShakeDuration = 0.12f;
     public float damageShakeStrength = 0.08f;
 
-    [Header("Hurt VFX / SFX")]
+    [Header("High Anxiety Damage Camera Shake")]
+    public bool useHighAnxietyDamageShake = true;
+
+    [Range(0f, 1f)]
+    public float highAnxietyShakeThreshold = 0.5f;
+
+    public float highAnxietyDamageShakeDuration = 0.08f;
+    public float highAnxietyDamageShakeStrength = 0.025f;
+
+    [Header("Normal Hurt VFX / SFX")]
     public GameObject hurtVfxPrefab;
     public Vector3 hurtVfxRotationEuler = Vector3.zero;
     public float hurtVfxLifetime = 3f;
@@ -37,6 +128,18 @@ public class PlayerHealth : MonoBehaviour
 
     [Range(0f, 10f)]
     public float hurtSfxVolume = 1f;
+
+    [Header("Anxiety Hurt VFX / SFX")]
+    public GameObject anxietyHurtVfxPrefab;
+    public Vector3 anxietyHurtVfxRotationEuler = Vector3.zero;
+    public float anxietyHurtVfxLifetime = 3f;
+    public AudioClip anxietyHurtSfx;
+
+    [Range(0f, 10f)]
+    public float anxietyHurtSfxVolume = 1f;
+
+    public bool useNormalHurtVfxIfAnxietyVfxMissing = false;
+    public bool useNormalHurtSfxIfAnxietySfxMissing = true;
 
     [Header("Heal VFX / SFX")]
     public GameObject healVfxPrefab;
@@ -54,17 +157,29 @@ public class PlayerHealth : MonoBehaviour
     [Header("Damage Debug")]
     public bool logDamageSource = true;
 
-    [Header("Damage Flash")]
+    [Header("Normal Damage Flash")]
     public Renderer[] targetRenderers;
     public Color flashColor = Color.red;
     public float flashDuration = 0.15f;
-    public float flashEmissionBoost = 3f;
+    public float flashEmissionBoost = 1f;
+
+    [Header("Anxiety Damage Flash")]
+    public Color anxietyFlashColor = new Color(0.65f, 0f, 1f, 1f);
+
+    [Tooltip("Total time for one full anxiety flash: base -> purple -> base.")]
+    public float anxietyFlashDuration = 0.15f;
+
+    public float anxietyFlashEmissionBoost = 1f;
 
     [Header("Death")]
     public float deathGameOverDelay = 2f;
 
     private bool isDead;
+    private bool isRegeneratingAnxietyLockedHealth;
+
     private Character character;
+    private PlayerAnxiety playerAnxiety;
+
     private float baseMoveSpeed;
     private bool hasBaseMoveSpeed;
 
@@ -74,6 +189,17 @@ public class PlayerHealth : MonoBehaviour
     private bool hasMaterials;
 
     private Coroutine hurtRoutine;
+    private Coroutine flashRoutine;
+
+    private float nextAnxietyRegenTickTime;
+
+    private float anxietyDamageFlashStartTime;
+    private float anxietyDamageFlashUntil;
+
+    private float anxietyRegenFlashStartPercent;
+    private float anxietyRegenFlashEndPercent;
+    private float anxietyRegenFlashStartTime;
+    private float anxietyRegenFlashUntil;
 
     private void Awake()
     {
@@ -84,6 +210,7 @@ public class PlayerHealth : MonoBehaviour
             animator = GetComponentInChildren<Animator>();
 
         character = GetComponent<Character>();
+        playerAnxiety = GetComponent<PlayerAnxiety>();
 
         if (character != null)
         {
@@ -95,12 +222,142 @@ public class PlayerHealth : MonoBehaviour
         UpdateAnimatorHealth();
     }
 
+    private void Update()
+    {
+        UnlockAnxietyLockedHealthIfCalm();
+    }
+
+    public int GetHealableMaxHealth()
+    {
+        if (!lockHealthLostToAnxiety)
+            return maxHealth;
+
+        return Mathf.Max(0, maxHealth - anxietyLockedHealthLoss);
+    }
+
+    public float GetHealthPercent()
+    {
+        if (maxHealth <= 0)
+            return 0f;
+
+        return (float)currentHealth / maxHealth;
+    }
+
+    public float GetAnxietyLockedHealthPercent()
+    {
+        if (maxHealth <= 0)
+            return 0f;
+
+        return (float)anxietyLockedHealthLoss / maxHealth;
+    }
+
+    public float GetHealthPlusLockedAnxietyPercent()
+    {
+        if (maxHealth <= 0)
+            return 0f;
+
+        return (float)(currentHealth + anxietyLockedHealthLoss) / maxHealth;
+    }
+
+    public float GetSyncedAnxietyFlashPhase()
+    {
+        float duration = Mathf.Max(0.01f, anxietyFlashDuration);
+
+        if (!IsAnxietyDamageFlashActive)
+            return 0f;
+
+        float elapsed = Time.time - anxietyDamageFlashStartTime;
+        float normalized = Mathf.Clamp01(elapsed / duration);
+
+        return Mathf.Sin(normalized * Mathf.PI);
+    }
+
+    public float GetAnxietyRegenFlashPhase()
+    {
+        float duration = Mathf.Max(0.01f, anxietyRegenFlashDuration);
+
+        if (!IsAnxietyRegenFlashActive)
+            return 0f;
+
+        float elapsed = Time.time - anxietyRegenFlashStartTime;
+        float normalized = Mathf.Clamp01(elapsed / duration);
+
+        return Mathf.Sin(normalized * Mathf.PI);
+    }
+
+    public float GetAnxietyRegenFlashFade()
+    {
+        float duration = Mathf.Max(0.01f, anxietyRegenFlashDuration);
+
+        if (!IsAnxietyRegenFlashActive)
+            return 0f;
+
+        float elapsed = Time.time - anxietyRegenFlashStartTime;
+        float normalized = Mathf.Clamp01(elapsed / duration);
+
+        return 1f - normalized;
+    }
+
+    public float GetAnxietyLockedFlashProgress()
+    {
+        return GetSyncedAnxietyFlashPhase();
+    }
+
+    public Color GetBoostedAnxietyFlashColor()
+    {
+        Color boosted = anxietyFlashColor * Mathf.Max(1f, anxietyFlashEmissionBoost);
+        boosted.a = anxietyFlashColor.a;
+        return boosted;
+    }
+
+    public Color GetCurrentAnxietyLockedHealthUIColor()
+    {
+        if (IsAnxietyRegenFlashActive)
+        {
+            float t = GetAnxietyRegenFlashPhase();
+
+            return Color.Lerp(
+                anxietyLockedHealthBaseColor,
+                anxietyLockedHealthRegenFlashColor,
+                t
+            );
+        }
+
+        if (IsAnxietyLockedHealthFlashing)
+        {
+            float t = GetSyncedAnxietyFlashPhase();
+
+            return Color.Lerp(
+                anxietyLockedHealthBaseColor,
+                anxietyFlashColor,
+                t
+            );
+        }
+
+        return anxietyLockedHealthBaseColor;
+    }
+
     public void TakeDamage(int amount)
     {
         TakeDamage(amount, null);
     }
 
     public void TakeDamage(int amount, GameObject source)
+    {
+        ApplyDamage(amount, source, false);
+    }
+
+    public void TakeAnxietyDamage(int amount)
+    {
+        TakeAnxietyDamage(amount, null);
+    }
+
+    public void TakeAnxietyDamage(int amount, GameObject source)
+    {
+        ApplyDamage(amount, source, true);
+    }
+
+    private void ApplyDamage(int amount, GameObject source, bool isAnxietyDamage)
     {
         if (isDead || amount <= 0)
             return;
@@ -112,32 +369,73 @@ public class PlayerHealth : MonoBehaviour
                 ? source.transform.position.ToString()
                 : "no position";
 
-            Debug.Log($"[DAMAGE] Player took {amount} damage from {sourceName} at {sourcePos}", source);
+            string damageType = isAnxietyDamage ? "ANXIETY" : "NORMAL";
+
+            Debug.Log(
+                $"[DAMAGE:{damageType}] Player took {amount} damage from {sourceName} at {sourcePos}",
+                source
+            );
         }
 
+        int previousHealth = currentHealth;
         currentHealth = Mathf.Max(0, currentHealth - amount);
+        int actualDamage = previousHealth - currentHealth;
+
+        if (isAnxietyDamage && lockHealthLostToAnxiety && actualDamage > 0)
+        {
+            anxietyLockedHealthLoss = Mathf.Clamp(
+                anxietyLockedHealthLoss + actualDamage,
+                0,
+                maxHealth
+            );
+
+            anxietyDamageFlashStartTime = Time.time;
+            anxietyDamageFlashUntil = anxietyDamageFlashStartTime + anxietyFlashDuration;
+            isRegeneratingAnxietyLockedHealth = false;
+        }
 
         UpdateAnimatorHealth();
 
-        FlashDamageColor();
-        PlayHurtEffects();
-
-        if (shakeCameraOnDamage && CameraShake.Instance != null)
+        if (isAnxietyDamage)
         {
-            CameraShake.Instance.Shake(
-                damageShakeDuration,
-                damageShakeStrength
+            FlashDamageColor(
+                anxietyFlashColor,
+                anxietyFlashDuration,
+                anxietyFlashEmissionBoost,
+                true
             );
+
+            PlayAnxietyHurtEffects();
         }
+        else
+        {
+            FlashDamageColor(
+                flashColor,
+                flashDuration,
+                flashEmissionBoost,
+                false
+            );
+
+            PlayNormalHurtEffects();
+        }
+
+        PlayDamageCameraShake();
 
         if (currentHealth <= 0)
         {
             Die();
+            return;
         }
-        else
+
+        if (isAnxietyDamage)
         {
-            TriggerHurt();
+            if (anxietyDamageTriggersHurtAnimation)
+                TriggerHurt(anxietyDamageSpeedMultiplier);
+
+            return;
         }
+
+        TriggerHurt(hurtSpeedMultiplier);
     }
 
     public void Heal(int amount)
@@ -145,10 +443,15 @@ public class PlayerHealth : MonoBehaviour
         if (isDead || amount <= 0)
             return;
 
-        currentHealth = Mathf.Clamp(currentHealth + amount, 0, maxHealth);
+        int healableMax = GetHealableMaxHealth();
+
+        currentHealth = Mathf.Clamp(
+            currentHealth + amount,
+            0,
+            healableMax
+        );
 
         UpdateAnimatorHealth();
-
         PlayHealEffects();
     }
 
@@ -157,15 +460,133 @@ public class PlayerHealth : MonoBehaviour
         currentWeightKg += amountKg;
     }
 
-    private void TriggerHurt()
+    private void UnlockAnxietyLockedHealthIfCalm()
+    {
+        isRegeneratingAnxietyLockedHealth = false;
+
+        if (isDead)
+            return;
+
+        if (!lockHealthLostToAnxiety)
+            return;
+
+        if (!regenerateAnxietyDamageAtLowAnxiety)
+            return;
+
+        if (anxietyLockedHealthLoss <= 0)
+            return;
+
+        if (playerAnxiety == null)
+            playerAnxiety = GetComponent<PlayerAnxiety>();
+
+        if (playerAnxiety == null)
+            return;
+
+        if (playerAnxiety.currentAnxiety > unlockWhenAnxietyAtOrBelow)
+        {
+            nextAnxietyRegenTickTime = 0f;
+            return;
+        }
+
+        isRegeneratingAnxietyLockedHealth = true;
+
+        anxietyDamageFlashStartTime = 0f;
+        anxietyDamageFlashUntil = 0f;
+
+        if (Time.time < nextAnxietyRegenTickTime)
+            return;
+
+        float safeInterval = Mathf.Max(0.01f, anxietyRegenTickInterval);
+        nextAnxietyRegenTickTime = Time.time + safeInterval;
+
+        int unlockAmount = Mathf.Max(1, anxietyRegenAmountPerTick);
+
+        int previousLockedLoss = anxietyLockedHealthLoss;
+
+        int actualUnlock = Mathf.Min(
+            unlockAmount,
+            anxietyLockedHealthLoss
+        );
+
+        if (actualUnlock <= 0)
+            return;
+
+        // Important:
+        // This does NOT heal currentHealth.
+        // It only removes the locked/unhealable health penalty.
+        anxietyLockedHealthLoss -= actualUnlock;
+
+        StartAnxietyUnlockFlash(previousLockedLoss, anxietyLockedHealthLoss);
+
+        UpdateAnimatorHealth();
+    }
+
+    private void StartAnxietyUnlockFlash(int oldLockedLoss, int newLockedLoss)
+    {
+        if (maxHealth <= 0)
+            return;
+
+        if (newLockedLoss >= oldLockedLoss)
+            return;
+
+        float oldLockedStartPercent =
+            Mathf.Clamp01((float)(currentHealth + newLockedLoss) / maxHealth);
+
+        float oldLockedEndPercent =
+            Mathf.Clamp01((float)(currentHealth + oldLockedLoss) / maxHealth);
+
+        anxietyRegenFlashStartPercent = oldLockedStartPercent;
+        anxietyRegenFlashEndPercent = oldLockedEndPercent;
+
+        anxietyRegenFlashStartTime = Time.time;
+        anxietyRegenFlashUntil =
+            anxietyRegenFlashStartTime + anxietyRegenFlashDuration;
+    }
+
+    private void PlayDamageCameraShake()
+    {
+        if (CameraShake.Instance == null)
+            return;
+
+        if (playerAnxiety == null)
+            playerAnxiety = GetComponent<PlayerAnxiety>();
+
+        bool anxietyIsHigh = false;
+
+        if (playerAnxiety != null)
+        {
+            anxietyIsHigh =
+                playerAnxiety.GetAnxietyPercent() >= highAnxietyShakeThreshold;
+        }
+
+        if (anxietyIsHigh && useHighAnxietyDamageShake)
+        {
+            CameraShake.Instance.Shake(
+                highAnxietyDamageShakeDuration,
+                highAnxietyDamageShakeStrength
+            );
+
+            return;
+        }
+
+        if (shakeCameraOnDamage)
+        {
+            CameraShake.Instance.Shake(
+                damageShakeDuration,
+                damageShakeStrength
+            );
+        }
+    }
+
+    private void TriggerHurt(float speedMultiplier)
     {
         if (hurtRoutine != null)
             StopCoroutine(hurtRoutine);
 
-        hurtRoutine = StartCoroutine(HurtRoutine());
+        hurtRoutine = StartCoroutine(HurtRoutine(speedMultiplier));
     }
 
-    private IEnumerator HurtRoutine()
+    private IEnumerator HurtRoutine(float speedMultiplier)
     {
         if (animator != null && !string.IsNullOrEmpty(hurtBoolParam))
             animator.SetBool(hurtBoolParam, true);
@@ -173,7 +594,7 @@ public class PlayerHealth : MonoBehaviour
         if (character != null && hasBaseMoveSpeed)
         {
             character.MoveSpeed =
-                baseMoveSpeed * Mathf.Clamp01(hurtSpeedMultiplier);
+                baseMoveSpeed * Mathf.Clamp01(speedMultiplier);
         }
 
         yield return new WaitForSeconds(hurtDuration);
@@ -182,62 +603,56 @@ public class PlayerHealth : MonoBehaviour
             animator.SetBool(hurtBoolParam, false);
 
         if (!isDead && character != null && hasBaseMoveSpeed)
-        {
             character.MoveSpeed = baseMoveSpeed;
-        }
 
         hurtRoutine = null;
     }
 
-    private void PlayHurtEffects()
+    private void PlayNormalHurtEffects()
     {
-        SpawnVFX(
-            hurtVfxPrefab,
-            hurtVfxRotationEuler,
-            hurtVfxLifetime
-        );
+        SpawnVFX(hurtVfxPrefab, hurtVfxRotationEuler, hurtVfxLifetime);
 
         if (hurtSfx != null && hurtSfxVolume > 0f)
+            AudioSource.PlayClipAtPoint(hurtSfx, transform.position, hurtSfxVolume);
+    }
+
+    private void PlayAnxietyHurtEffects()
+    {
+        if (anxietyHurtVfxPrefab != null)
         {
-            AudioSource.PlayClipAtPoint(
-                hurtSfx,
-                transform.position,
-                hurtSfxVolume
-            );
+            SpawnVFX(anxietyHurtVfxPrefab, anxietyHurtVfxRotationEuler, anxietyHurtVfxLifetime);
+        }
+        else if (useNormalHurtVfxIfAnxietyVfxMissing)
+        {
+            SpawnVFX(hurtVfxPrefab, hurtVfxRotationEuler, hurtVfxLifetime);
+        }
+
+        if (anxietyHurtSfx != null && anxietyHurtSfxVolume > 0f)
+        {
+            AudioSource.PlayClipAtPoint(anxietyHurtSfx, transform.position, anxietyHurtSfxVolume);
+        }
+        else if (useNormalHurtSfxIfAnxietySfxMissing &&
+                 hurtSfx != null &&
+                 hurtSfxVolume > 0f)
+        {
+            AudioSource.PlayClipAtPoint(hurtSfx, transform.position, hurtSfxVolume);
         }
     }
 
     private void PlayHealEffects()
     {
-        SpawnVFX(
-            healVfxPrefab,
-            healVfxRotationEuler,
-            healVfxLifetime
-        );
+        SpawnVFX(healVfxPrefab, healVfxRotationEuler, healVfxLifetime);
 
         if (healSfx != null && healSfxVolume > 0f)
-        {
-            AudioSource.PlayClipAtPoint(
-                healSfx,
-                transform.position,
-                healSfxVolume
-            );
-        }
+            AudioSource.PlayClipAtPoint(healSfx, transform.position, healSfxVolume);
     }
 
-    private void SpawnVFX(
-        GameObject prefab,
-        Vector3 rotationEuler,
-        float lifetime
-    )
+    private void SpawnVFX(GameObject prefab, Vector3 rotationEuler, float lifetime)
     {
         if (prefab == null)
             return;
 
-        Transform origin =
-            vfxSpawnPoint != null
-            ? vfxSpawnPoint
-            : transform;
+        Transform origin = vfxSpawnPoint != null ? vfxSpawnPoint : transform;
 
         Vector3 pos =
             origin.position +
@@ -269,6 +684,14 @@ public class PlayerHealth : MonoBehaviour
             hurtRoutine = null;
         }
 
+        if (flashRoutine != null)
+        {
+            StopCoroutine(flashRoutine);
+            flashRoutine = null;
+        }
+
+        ResetDamageColor();
+
         if (animator != null && !string.IsNullOrEmpty(hurtBoolParam))
             animator.SetBool(hurtBoolParam, false);
 
@@ -294,12 +717,18 @@ public class PlayerHealth : MonoBehaviour
 
     private void UpdateAnimatorHealth()
     {
-        if (animator != null && !string.IsNullOrEmpty(healthFloatParam))
+        if (animator == null)
+            return;
+
+        if (!string.IsNullOrEmpty(healthFloatParam))
+            animator.SetFloat(healthFloatParam, currentHealth);
+
+        if (!string.IsNullOrEmpty(halfHealthBoolParam))
         {
-            animator.SetFloat(
-                healthFloatParam,
-                currentHealth
-            );
+            bool isHalfHealth =
+                currentHealth <= maxHealth * halfHealthThreshold;
+
+            animator.SetBool(halfHealthBoolParam, isHalfHealth);
         }
     }
 
@@ -307,8 +736,8 @@ public class PlayerHealth : MonoBehaviour
     {
         Renderer[] renderers =
             targetRenderers != null && targetRenderers.Length > 0
-            ? targetRenderers
-            : GetComponentsInChildren<Renderer>();
+                ? targetRenderers
+                : GetComponentsInChildren<Renderer>();
 
         materials = new Material[renderers.Length];
         originalBaseColors = new Color[renderers.Length];
@@ -334,26 +763,80 @@ public class PlayerHealth : MonoBehaviour
         }
     }
 
-    private void FlashDamageColor()
+    private void FlashDamageColor(
+        Color color,
+        float duration,
+        float emissionBoost,
+        bool useSyncedAnxietyClock
+    )
     {
         if (!hasMaterials || materials == null)
             return;
 
-        CancelInvoke(nameof(ResetDamageColor));
+        if (flashRoutine != null)
+            StopCoroutine(flashRoutine);
 
-        foreach (Material mat in materials)
+        flashRoutine = StartCoroutine(
+            FlashDamageColorRoutine(
+                color,
+                duration,
+                emissionBoost,
+                useSyncedAnxietyClock
+            )
+        );
+    }
+
+    private IEnumerator FlashDamageColorRoutine(
+        Color color,
+        float duration,
+        float emissionBoost,
+        bool useSyncedAnxietyClock
+    )
+    {
+        float startTime = Time.time;
+        float safeDuration = Mathf.Max(0.01f, duration);
+
+        Color boostedColor = color * Mathf.Max(1f, emissionBoost);
+        boostedColor.a = color.a;
+
+        while (Time.time < startTime + safeDuration)
         {
-            if (mat == null)
-                continue;
+            float phase;
 
-            SetBaseColor(mat, flashColor);
-            SetEmissionColor(
-                mat,
-                flashColor * flashEmissionBoost
-            );
+            if (useSyncedAnxietyClock)
+            {
+                float elapsed = Time.time - anxietyDamageFlashStartTime;
+                float normalized = Mathf.Clamp01(elapsed / safeDuration);
+
+                phase = Mathf.Sin(normalized * Mathf.PI);
+            }
+            else
+            {
+                float elapsed = Time.time - startTime;
+                float normalized = Mathf.Clamp01(elapsed / safeDuration);
+
+                phase = Mathf.Sin(normalized * Mathf.PI);
+            }
+
+            for (int i = 0; i < materials.Length; i++)
+            {
+                Material mat = materials[i];
+
+                if (mat == null)
+                    continue;
+
+                Color baseColor = Color.Lerp(originalBaseColors[i], color, phase);
+                Color emissionColor = Color.Lerp(originalEmissionColors[i], boostedColor, phase);
+
+                SetBaseColor(mat, baseColor);
+                SetEmissionColor(mat, emissionColor);
+            }
+
+            yield return null;
         }
 
-        Invoke(nameof(ResetDamageColor), flashDuration);
+        ResetDamageColor();
+        flashRoutine = null;
     }
 
     private void ResetDamageColor()

@@ -3,7 +3,13 @@ guid: eb69213230f39c84ab5cc6471d4d71f5
 MonoImporter:
   externalObjects: {}
   serializedVersion: 2
-  defaultReferences: []
+  defaultReferences:
+  - player: {instanceID: 0}
+  - animator: {instanceID: 0}
+  - chaseVfxPrefab: {fileID: 1911842569194571458, guid: 268b20138bab9024aa439ad1957f2f88, type: 3}
+  - chaseVfxSpawnPoint: {instanceID: 0}
+  - attackSfx: {instanceID: 0}
+  - touchDamageSfx: {instanceID: 0}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 

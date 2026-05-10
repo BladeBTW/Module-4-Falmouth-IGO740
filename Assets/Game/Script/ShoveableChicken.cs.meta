@@ -1,0 +1,13 @@
+fileFormatVersion: 2
+guid: 3386089a48db9db429d4bdcfd7d0ebfb
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - playerShoveVfxPrefab: {fileID: 1911842569194571458, guid: 137983ef95728b94ea89f547d0ae5eca, type: 3}
+  - shoveSfx: {instanceID: 0}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

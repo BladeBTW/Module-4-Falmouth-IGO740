@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 8815832362703590046}
   - component: {fileID: 5540184630660944310}
   - component: {fileID: 4610040386102694349}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: _damage
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4819,7 +4819,7 @@ ParticleSystemRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 52ac0dc47f642ef489c6076bda037dd2, type: 2}
+  - {fileID: 2100000, guid: dfac8a40298bcc14fa8f5800f588849d, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0

@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 5305334319569930592}
   - component: {fileID: 5305334319569930593}
   - component: {fileID: 5305334319569930590}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: footstepVFXPartical
   m_TagString: Untagged
   m_Icon: {fileID: 0}

@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 6091063711166107272}
   - component: {fileID: 314732213293728322}
   - component: {fileID: 2783931933351668037}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: _FoodPickUp
   m_TagString: Untagged
   m_Icon: {fileID: 0}
