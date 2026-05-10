@@ -20,7 +20,11 @@ public class DamageTrigger : MonoBehaviour
     [Header("Slow Terrain")]
     [Tooltip("1 = normal speed, 0.5 = half speed, 0 = fully stopped.")]
     [Range(0f, 1f)]
-    public float slowMoveSpeedMultiplier = 0.5f;
+    public float playerSlowMoveSpeedMultiplier = 0.5f;
+
+    [Tooltip("Separate slow multiplier for NPCs/enemies.")]
+    [Range(0f, 1f)]
+    public float npcSlowMoveSpeedMultiplier = 0.5f;
 
     [Tooltip("If true, target is slowed while inside this trigger. If false, slow lasts for Slow Duration.")]
     public bool slowWhileInside = true;
@@ -53,24 +57,28 @@ public class DamageTrigger : MonoBehaviour
         col.isTrigger = true;
     }
 
+    private void Awake()
+    {
+        Collider col = GetComponent<Collider>();
+
+        if (col != null)
+            col.isTrigger = true;
+    }
+
     private void OnTriggerEnter(Collider other)
     {
-        if (!IsValidTarget(other))
-            return;
+        ApplyEffects(other, true);
+    }
 
-        if (ShouldDamage())
-            TryDamage(other);
-
-        if (ShouldSlow())
+    private void OnTriggerStay(Collider other)
+    {
+        if (ShouldSlow() && slowWhileInside)
             TryStartSlow(other);
     }
 
     private void OnTriggerExit(Collider other)
     {
         if (!slowWhileInside)
-            return;
-
-        if (!IsValidTarget(other))
             return;
 
         SlowableMovement slowable = GetSlowable(other);
@@ -89,6 +97,18 @@ public class DamageTrigger : MonoBehaviour
         }
     }
 
+    private void ApplyEffects(Collider other, bool allowDamage)
+    {
+        if (!IsValidTarget(other))
+            return;
+
+        if (allowDamage && ShouldDamage())
+            TryDamage(other);
+
+        if (ShouldSlow())
+            TryStartSlow(other);
+    }
+
     private bool ShouldDamage()
     {
         return effectMode == TriggerEffectMode.Damage ||
@@ -103,27 +123,41 @@ public class DamageTrigger : MonoBehaviour
 
     private bool IsValidTarget(Collider other)
     {
-        if (other == null)
+        return IsPlayerTarget(other) || IsNPCTarget(other);
+    }
+
+    private bool IsPlayerTarget(Collider other)
+    {
+        if (!affectPlayer || other == null)
             return false;
 
-        if (affectPlayer && other.CompareTag(playerTag))
+        return other.CompareTag(playerTag) ||
+               other.GetComponentInParent<Character>() != null;
+    }
+
+    private bool IsNPCTarget(Collider other)
+    {
+        if (!affectNPCs || other == null)
+            return false;
+
+        if (other.GetComponentInParent<SlowableMovement>() != null && !IsPlayerTarget(other))
             return true;
 
-        if (affectNPCs)
+        for (int i = 0; i < npcTags.Length; i++)
         {
-            SlowableMovement slowable = GetSlowable(other);
-
-            if (slowable != null)
+            if (!string.IsNullOrEmpty(npcTags[i]) && other.CompareTag(npcTags[i]))
                 return true;
-
-            for (int i = 0; i < npcTags.Length; i++)
-            {
-                if (!string.IsNullOrEmpty(npcTags[i]) && other.CompareTag(npcTags[i]))
-                    return true;
-            }
         }
 
         return false;
+    }
+
+    private float GetSlowMultiplierForTarget(Collider other)
+    {
+        if (IsPlayerTarget(other))
+            return playerSlowMoveSpeedMultiplier;
+
+        return npcSlowMoveSpeedMultiplier;
     }
 
     private void TryDamage(Collider other)
@@ -154,6 +188,9 @@ public class DamageTrigger : MonoBehaviour
 
     private void TryStartSlow(Collider other)
     {
+        if (!IsValidTarget(other))
+            return;
+
         SlowableMovement slowable = GetSlowable(other);
 
         if (slowable == null)
@@ -161,7 +198,7 @@ public class DamageTrigger : MonoBehaviour
             if (logSlow)
             {
                 Debug.LogWarning(
-                    $"[DamageTrigger] {other.name} entered slow terrain, but has no SlowableMovement component.",
+                    $"[DamageTrigger] {other.name} entered slow terrain, but has no SlowableMovement component. Add SlowableMovement to the Player/NPC root.",
                     other
                 );
             }
@@ -169,12 +206,15 @@ public class DamageTrigger : MonoBehaviour
             return;
         }
 
-        slowable.AddSlow(this, slowMoveSpeedMultiplier);
+        float multiplier = GetSlowMultiplierForTarget(other);
+        slowable.AddSlow(this, multiplier);
 
         if (logSlow)
         {
+            string targetType = IsPlayerTarget(other) ? "Player" : "NPC";
+
             Debug.Log(
-                $"[DamageTrigger] {gameObject.name} slowed {other.name}. Multiplier: {slowMoveSpeedMultiplier}",
+                $"[DamageTrigger] {gameObject.name} slowed {slowable.name} as {targetType}. Multiplier: {multiplier}",
                 this
             );
         }
@@ -196,17 +236,14 @@ public class DamageTrigger : MonoBehaviour
 
     private SlowableMovement GetSlowable(Collider other)
     {
+        if (other == null)
+            return null;
+
         SlowableMovement slowable = other.GetComponent<SlowableMovement>();
 
         if (slowable == null)
             slowable = other.GetComponentInParent<SlowableMovement>();
 
         return slowable;
-    }
-
-    private void OnDisable()
-    {
-        // Nothing global here, because multiple targets may have been slowed.
-        // Each target removes this source on exit, or when its SlowableMovement restores speed on disable/destroy.
     }
 }

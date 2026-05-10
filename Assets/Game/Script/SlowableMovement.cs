@@ -4,153 +4,190 @@ using UnityEngine.AI;
 
 public class SlowableMovement : MonoBehaviour
 {
-    [Header("Player / Character Movement")]
-    [Tooltip("Enable if this object uses your Character.cs movement script.")]
-    public bool affectCharacterMoveSpeed = true;
-
-    [Tooltip("Optional. Auto-found if left empty.")]
-    public Character character;
-
-    [Header("NPC / NavMeshAgent Movement")]
-    [Tooltip("Enable if this object uses NavMeshAgent movement.")]
-    public bool affectNavMeshAgentSpeed = true;
-
-    [Tooltip("Optional. Auto-found if left empty.")]
+    [Header("Optional References")]
+    public CharacterController characterController;
     public NavMeshAgent navMeshAgent;
+
+    [Header("Player Movement Scripts")]
+    [Tooltip("Drag your custom player movement script here if it has a public moveSpeed/speed field.")]
+    public MonoBehaviour customMovementScript;
+
+    [Tooltip("The field name on your movement script. Common examples: moveSpeed, movementSpeed, speed, walkSpeed.")]
+    public string customSpeedFieldName = "moveSpeed";
+
+    [Header("Base Speed")]
+    public float baseMoveSpeed = 5f;
+
+    [Tooltip("If true, reads the original speed from NavMeshAgent/custom script on Awake.")]
+    public bool autoReadBaseSpeed = true;
 
     [Header("Debug")]
     public bool logSlowChanges = false;
 
-    private readonly Dictionary<Object, float> activeSlowSources = new Dictionary<Object, float>();
+    private readonly Dictionary<object, float> activeSlows = new Dictionary<object, float>();
 
-    private float baseCharacterMoveSpeed;
-    private float baseAgentSpeed;
-
-    private bool hasCharacterBaseSpeed;
-    private bool hasAgentBaseSpeed;
+    private float currentMultiplier = 1f;
+    private System.Reflection.FieldInfo customSpeedField;
+    private System.Reflection.PropertyInfo customSpeedProperty;
 
     private void Awake()
     {
-        if (character == null)
-            character = GetComponent<Character>();
-
-        if (character == null)
-            character = GetComponentInParent<Character>();
+        if (characterController == null)
+            characterController = GetComponent<CharacterController>();
 
         if (navMeshAgent == null)
             navMeshAgent = GetComponent<NavMeshAgent>();
 
-        if (navMeshAgent == null)
-            navMeshAgent = GetComponentInParent<NavMeshAgent>();
+        CacheCustomSpeedMember();
 
-        CacheBaseSpeeds();
-        ApplyCurrentSlow();
-    }
-
-    private void OnEnable()
-    {
-        CacheBaseSpeeds();
-        ApplyCurrentSlow();
-    }
-
-    private void CacheBaseSpeeds()
-    {
-        if (affectCharacterMoveSpeed && character != null && !hasCharacterBaseSpeed)
+        if (autoReadBaseSpeed)
         {
-            baseCharacterMoveSpeed = character.MoveSpeed;
-            hasCharacterBaseSpeed = true;
+            if (navMeshAgent != null)
+            {
+                baseMoveSpeed = navMeshAgent.speed;
+            }
+            else if (TryGetCustomSpeed(out float customSpeed))
+            {
+                baseMoveSpeed = customSpeed;
+            }
         }
 
-        if (affectNavMeshAgentSpeed && navMeshAgent != null && !hasAgentBaseSpeed)
-        {
-            baseAgentSpeed = navMeshAgent.speed;
-            hasAgentBaseSpeed = true;
-        }
+        ApplySpeed();
     }
 
-    public void AddSlow(Object source, float speedMultiplier)
+    public void AddSlow(object source, float multiplier)
     {
         if (source == null)
             return;
 
-        CacheBaseSpeeds();
+        multiplier = Mathf.Clamp01(multiplier);
 
-        speedMultiplier = Mathf.Clamp01(speedMultiplier);
+        activeSlows[source] = multiplier;
 
-        activeSlowSources[source] = speedMultiplier;
-
-        ApplyCurrentSlow();
+        RecalculateMultiplier();
     }
 
-    public void RemoveSlow(Object source)
+    public void RemoveSlow(object source)
     {
         if (source == null)
             return;
 
-        if (activeSlowSources.Remove(source))
-            ApplyCurrentSlow();
+        if (activeSlows.Remove(source))
+            RecalculateMultiplier();
     }
 
     public void ClearAllSlows()
     {
-        activeSlowSources.Clear();
-        ApplyCurrentSlow();
+        activeSlows.Clear();
+        RecalculateMultiplier();
     }
 
-    private void ApplyCurrentSlow()
+    private void RecalculateMultiplier()
     {
-        float strongestMultiplier = GetStrongestSlowMultiplier();
+        float strongestSlow = 1f;
 
-        if (affectCharacterMoveSpeed && character != null && hasCharacterBaseSpeed)
-        {
-            character.MoveSpeed = baseCharacterMoveSpeed * strongestMultiplier;
-        }
+        foreach (float multiplier in activeSlows.Values)
+            strongestSlow = Mathf.Min(strongestSlow, multiplier);
 
-        if (affectNavMeshAgentSpeed && navMeshAgent != null && hasAgentBaseSpeed)
-        {
-            navMeshAgent.speed = baseAgentSpeed * strongestMultiplier;
-        }
+        currentMultiplier = strongestSlow;
+
+        ApplySpeed();
 
         if (logSlowChanges)
         {
             Debug.Log(
-                $"[SlowableMovement] {name} slow multiplier: {strongestMultiplier}. Active sources: {activeSlowSources.Count}",
+                $"[SlowableMovement] {name} slow multiplier: {currentMultiplier}. Active slows: {activeSlows.Count}",
                 this
             );
         }
     }
 
-    private float GetStrongestSlowMultiplier()
+    private void ApplySpeed()
     {
-        if (activeSlowSources.Count <= 0)
-            return 1f;
+        float finalSpeed = baseMoveSpeed * currentMultiplier;
 
-        float strongest = 1f;
+        if (navMeshAgent != null)
+            navMeshAgent.speed = finalSpeed;
 
-        foreach (float multiplier in activeSlowSources.Values)
+        TrySetCustomSpeed(finalSpeed);
+    }
+
+    private void CacheCustomSpeedMember()
+    {
+        if (customMovementScript == null || string.IsNullOrEmpty(customSpeedFieldName))
+            return;
+
+        System.Type type = customMovementScript.GetType();
+
+        customSpeedField = type.GetField(
+            customSpeedFieldName,
+            System.Reflection.BindingFlags.Instance |
+            System.Reflection.BindingFlags.Public |
+            System.Reflection.BindingFlags.NonPublic
+        );
+
+        customSpeedProperty = type.GetProperty(
+            customSpeedFieldName,
+            System.Reflection.BindingFlags.Instance |
+            System.Reflection.BindingFlags.Public |
+            System.Reflection.BindingFlags.NonPublic
+        );
+    }
+
+    private bool TryGetCustomSpeed(out float speed)
+    {
+        speed = baseMoveSpeed;
+
+        if (customMovementScript == null)
+            return false;
+
+        CacheCustomSpeedMember();
+
+        if (customSpeedField != null && customSpeedField.FieldType == typeof(float))
         {
-            strongest = Mathf.Min(strongest, multiplier);
+            speed = (float)customSpeedField.GetValue(customMovementScript);
+            return true;
         }
 
-        return Mathf.Clamp01(strongest);
+        if (customSpeedProperty != null &&
+            customSpeedProperty.PropertyType == typeof(float) &&
+            customSpeedProperty.CanRead)
+        {
+            speed = (float)customSpeedProperty.GetValue(customMovementScript);
+            return true;
+        }
+
+        return false;
+    }
+
+    private bool TrySetCustomSpeed(float speed)
+    {
+        if (customMovementScript == null)
+            return false;
+
+        CacheCustomSpeedMember();
+
+        if (customSpeedField != null && customSpeedField.FieldType == typeof(float))
+        {
+            customSpeedField.SetValue(customMovementScript, speed);
+            return true;
+        }
+
+        if (customSpeedProperty != null &&
+            customSpeedProperty.PropertyType == typeof(float) &&
+            customSpeedProperty.CanWrite)
+        {
+            customSpeedProperty.SetValue(customMovementScript, speed);
+            return true;
+        }
+
+        return false;
     }
 
     private void OnDisable()
     {
-        RestoreBaseSpeeds();
-    }
-
-    private void OnDestroy()
-    {
-        RestoreBaseSpeeds();
-    }
-
-    private void RestoreBaseSpeeds()
-    {
-        if (affectCharacterMoveSpeed && character != null && hasCharacterBaseSpeed)
-            character.MoveSpeed = baseCharacterMoveSpeed;
-
-        if (affectNavMeshAgentSpeed && navMeshAgent != null && hasAgentBaseSpeed)
-            navMeshAgent.speed = baseAgentSpeed;
+        activeSlows.Clear();
+        currentMultiplier = 1f;
+        ApplySpeed();
     }
 }

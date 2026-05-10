@@ -33,7 +33,7 @@ public class FuriousChickenAI : MonoBehaviour
 
     public bool increaseAnxietyWhenChasing = true;
 
-    [Tooltip("Anxiety added per second while the furious chicken is chasing.")]
+    [Tooltip("Anxiety added per second while the furious chicken is chasing OR attacking.")]
     public float chasingAnxietyPerSecond = 6f;
 
     [Header("Spotted VFX / SFX On NPC")]
@@ -58,7 +58,7 @@ public class FuriousChickenAI : MonoBehaviour
     public float spottedSfxVolume = 1f;
 
     [Header("Player Chase VFX")]
-    [Tooltip("VFX spawned on the player while this furious chicken is chasing.")]
+    [Tooltip("VFX spawned on the player while this furious chicken is chasing or attacking.")]
     public GameObject chaseVfxPrefab;
 
     [Tooltip("Optional player-side spawn point. If empty, VFX attaches to player root.")]
@@ -82,7 +82,7 @@ public class FuriousChickenAI : MonoBehaviour
     public int attackDamage = 60;
     public float attackCooldown = 2.5f;
 
-    [Tooltip("How long the AI stays locked in attack behaviour. This does NOT control hit timing.")]
+    [Tooltip("How long the AI stays locked in attack behaviour. This does NOT control hit timing if you use animation events.")]
     public float attackDuration = 1.2f;
 
     [Tooltip("Bool parameter used to enter the attack animation.")]
@@ -121,6 +121,9 @@ public class FuriousChickenAI : MonoBehaviour
     public float moveSpeed = 4f;
     public float turnSpeed = 8f;
 
+    [Tooltip("Velocity below this is treated as stopped for rotation.")]
+    public float stopVelocityThreshold = 0.05f;
+
     [Header("Patrol")]
     public float patrolRadius = 10f;
     public float minWalkDistance = 2f;
@@ -133,6 +136,7 @@ public class FuriousChickenAI : MonoBehaviour
 
     [Header("Debug")]
     public bool logAnxiety = false;
+    public bool logAttackEvents = true;
 
     private NavMeshAgent agent;
 
@@ -208,8 +212,7 @@ public class FuriousChickenAI : MonoBehaviour
 
         CachePlayerComponents();
 
-        float distanceToPlayer =
-            FlatDistance(transform.position, player.position);
+        float distanceToPlayer = FlatDistance(transform.position, player.position);
 
         HandleDetection(distanceToPlayer);
         HandleContinuousTouchDamage(distanceToPlayer);
@@ -228,6 +231,12 @@ public class FuriousChickenAI : MonoBehaviour
             StopAgentHard();
             FacePlayer();
             UpdateAnimatorSpeed(0f);
+
+            // Attack now creates the same anxiety pressure as chasing.
+            if (increaseAnxietyWhenChasing)
+                AddPlayerAnxiety(chasingAnxietyPerSecond * Time.deltaTime, "attack pressure");
+
+            ShowChaseVfx();
             return;
         }
 
@@ -245,7 +254,7 @@ public class FuriousChickenAI : MonoBehaviour
 
     private void HandleDetection(float distanceToPlayer)
     {
-        if (!isChasing && !isSpotting && distanceToPlayer <= aggroRange)
+        if (!isChasing && !isSpotting && !isAttacking && distanceToPlayer <= aggroRange)
         {
             StartSpottedState();
             return;
@@ -311,10 +320,12 @@ public class FuriousChickenAI : MonoBehaviour
 
         ShowChaseVfx();
 
-        if (agent != null && agent.enabled && agent.isOnNavMesh)
+        if (AgentReady())
         {
             agent.isStopped = false;
-            agent.speed = moveSpeed;
+
+            // Do NOT force agent.speed here.
+            // SlowableMovement may currently be controlling NavMeshAgent.speed.
 
             if (player != null)
                 agent.SetDestination(player.position);
@@ -334,6 +345,245 @@ public class FuriousChickenAI : MonoBehaviour
         HideChaseVfx();
         SetSpottedAnimation(false);
         SetAttackAnimation(false);
+
+        StartIdle();
+    }
+
+    private void ChaseUpdate(float distanceToPlayer)
+    {
+        isIdle = false;
+
+        if (increaseAnxietyWhenChasing)
+            AddPlayerAnxiety(chasingAnxietyPerSecond * Time.deltaTime, "chase");
+
+        if (distanceToPlayer <= attackRange)
+        {
+            TryStartAttack();
+            return;
+        }
+
+        agent.isStopped = false;
+
+        // Do NOT force agent.speed here.
+        // This allows SlowableMovement / slow terrain to work.
+
+        agent.SetDestination(player.position);
+
+        RotateTowardVelocity();
+        UpdateAnimatorSpeed(agent.velocity.magnitude);
+    }
+
+    private void TryStartAttack()
+    {
+        StopAgentHard();
+        FacePlayer();
+        UpdateAnimatorSpeed(0f);
+
+        if (Time.time < nextAttackTime)
+            return;
+
+        if (attackRoutine != null)
+            return;
+
+        attackRoutine = StartCoroutine(AttackRoutine());
+    }
+
+    private IEnumerator AttackRoutine()
+    {
+        isAttacking = true;
+        isChasing = true;
+        isIdle = false;
+
+        hasDamagedThisAttack = false;
+        nextAttackTime = Time.time + attackCooldown;
+
+        StopAgentHard();
+        FacePlayer();
+        ShowChaseVfx();
+
+        if (attackSfx != null && attackAudioSource != null)
+            attackAudioSource.PlayOneShot(attackSfx, attackSfxVolume);
+
+        SetAttackAnimation(true);
+
+        if (!useAnimationEventDamage)
+        {
+            DamagePlayerIfInRange(
+                attackDamage,
+                attackRange + attackDamageExtraRange,
+                "attack direct"
+            );
+        }
+
+        yield return new WaitForSeconds(Mathf.Max(0.01f, attackDuration));
+
+        SetAttackAnimation(false);
+
+        isAttacking = false;
+        attackRoutine = null;
+
+        if (player != null && FlatDistance(transform.position, player.position) <= loseRange)
+        {
+            isChasing = true;
+            agent.isStopped = false;
+            agent.SetDestination(player.position);
+        }
+        else
+        {
+            LosePlayer();
+        }
+    }
+
+    // Call this from your attack animation event.
+    public void AttackHitEvent()
+    {
+        if (logAttackEvents)
+            Debug.Log("[FuriousChickenAI] AttackHitEvent fired.", this);
+
+        if (!useAnimationEventDamage)
+            return;
+
+        if (!isAttacking)
+            return;
+
+        if (hasDamagedThisAttack)
+            return;
+
+        bool didDamage = DamagePlayerIfInRange(
+            attackDamage,
+            attackRange + attackDamageExtraRange,
+            "attack animation event"
+        );
+
+        if (didDamage)
+            hasDamagedThisAttack = true;
+    }
+
+    private void HandleContinuousTouchDamage(float distanceToPlayer)
+    {
+        if (!damagePlayerOnTouch)
+        {
+            StopTouchSfxIfNeeded();
+            touchSfxPlayedThisContact = false;
+            return;
+        }
+
+        bool touchingPlayer = distanceToPlayer <= touchDamageRadius;
+
+        if (!touchingPlayer)
+        {
+            StopTouchSfxIfNeeded();
+            touchSfxPlayedThisContact = false;
+            return;
+        }
+
+        PlayTouchSfxIfNeeded();
+
+        if (Time.time < nextTouchDamageTime)
+            return;
+
+        nextTouchDamageTime = Time.time + Mathf.Max(0.05f, touchDamageTickInterval);
+
+        DamagePlayerIfInRange(
+            touchDamagePerTick,
+            touchDamageRadius,
+            "touch damage"
+        );
+    }
+
+    private bool DamagePlayerIfInRange(int damage, float range, string reason)
+    {
+        if (player == null)
+            return false;
+
+        float distance = FlatDistance(transform.position, player.position);
+
+        if (distance > range)
+            return false;
+
+        if (playerHealth == null)
+            CachePlayerComponents();
+
+        if (playerHealth == null)
+            return false;
+
+        playerHealth.TakeDamage(damage, gameObject);
+
+        if (logAttackEvents)
+        {
+            Debug.Log(
+                $"[FuriousChickenAI] Damaged player for {damage} from {reason}.",
+                this
+            );
+        }
+
+        return true;
+    }
+
+    private void PatrolUpdate()
+    {
+        if (isIdle)
+        {
+            idleTimer -= Time.deltaTime;
+
+            StopAgentHard();
+            UpdateAnimatorSpeed(0f);
+
+            if (idleTimer <= 0f)
+                PickRandomDestination();
+
+            return;
+        }
+
+        if (!agent.pathPending &&
+            agent.remainingDistance <= agent.stoppingDistance + 0.2f)
+        {
+            StartIdle();
+            return;
+        }
+
+        RotateTowardVelocity();
+        UpdateAnimatorSpeed(agent.velocity.magnitude);
+    }
+
+    private void StartIdle()
+    {
+        isIdle = true;
+        idleTimer = Random.Range(minIdleTime, maxIdleTime);
+
+        StopAgentHard();
+        UpdateAnimatorSpeed(0f);
+    }
+
+    private void PickRandomDestination()
+    {
+        if (!AgentReady())
+            return;
+
+        for (int i = 0; i < 12; i++)
+        {
+            Vector2 random =
+                Random.insideUnitCircle.normalized *
+                Random.Range(minWalkDistance, maxWalkDistance);
+
+            Vector3 candidate =
+                transform.position + new Vector3(random.x, 0f, random.y);
+
+            if (Vector3.Distance(candidate, spawnPosition) > patrolRadius)
+                continue;
+
+            if (NavMesh.SamplePosition(candidate, out NavMeshHit hit, 3f, agent.areaMask))
+            {
+                isIdle = false;
+                agent.isStopped = false;
+
+                // Do NOT force agent.speed here.
+                // This keeps slow terrain compatible.
+
+                agent.SetDestination(hit.position);
+                return;
+            }
+        }
 
         StartIdle();
     }
@@ -360,6 +610,38 @@ public class FuriousChickenAI : MonoBehaviour
         }
     }
 
+    private void AddPlayerAnxiety(float amount, string reason)
+    {
+        if (amount <= 0f)
+            return;
+
+        if (playerAnxiety == null)
+            CachePlayerComponents();
+
+        if (playerAnxiety == null)
+        {
+            if (logAnxiety)
+            {
+                Debug.LogWarning(
+                    "[FuriousChickenAI] Could not add anxiety because PlayerAnxiety was not found.",
+                    this
+                );
+            }
+
+            return;
+        }
+
+        playerAnxiety.AddAnxiety(amount);
+
+        if (logAnxiety)
+        {
+            Debug.Log(
+                $"[FuriousChickenAI] Added {amount:0.00} anxiety from {reason}. Current anxiety: {playerAnxiety.currentAnxiety:0.00}",
+                this
+            );
+        }
+    }
+
     private void SetupAudioSources()
     {
         attackAudioSource = gameObject.AddComponent<AudioSource>();
@@ -376,36 +658,6 @@ public class FuriousChickenAI : MonoBehaviour
         spottedAudioSource.playOnAwake = false;
         spottedAudioSource.spatialBlend = 1f;
         spottedAudioSource.loop = false;
-    }
-
-    private void AddPlayerAnxiety(float amount, string reason)
-    {
-        if (amount <= 0f)
-            return;
-
-        if (playerAnxiety == null)
-            CachePlayerComponents();
-
-        if (playerAnxiety == null)
-        {
-            if (logAnxiety)
-                Debug.LogWarning("[FuriousChickenAI] Could not add anxiety because PlayerAnxiety was not found.", this);
-
-            return;
-        }
-
-        // Important:
-        // Use PlayerAnxiety.AddAnxiety(), not currentAnxiety += amount.
-        // AddAnxiety updates the UI, animator state, and overflow damage.
-        playerAnxiety.AddAnxiety(amount);
-
-        if (logAnxiety)
-        {
-            Debug.Log(
-                $"[FuriousChickenAI] Added {amount:0.00} anxiety from {reason}. Current anxiety: {playerAnxiety.currentAnxiety:0.00}",
-                this
-            );
-        }
     }
 
     private void PlaySpottedEffects()
@@ -453,7 +705,7 @@ public class FuriousChickenAI : MonoBehaviour
 
     private void UpdateChaseVfx()
     {
-        if (isChasing)
+        if (isChasing || isAttacking)
             ShowChaseVfx();
         else
             HideChaseVfx();
@@ -477,10 +729,7 @@ public class FuriousChickenAI : MonoBehaviour
 
         if (activeChaseVfx == null)
         {
-            activeChaseVfx = Instantiate(
-                chaseVfxPrefab,
-                parent
-            );
+            activeChaseVfx = Instantiate(chaseVfxPrefab, parent);
 
             activeChaseVfx.transform.localPosition = chaseVfxLocalOffset;
             activeChaseVfx.transform.localRotation =
@@ -546,186 +795,10 @@ public class FuriousChickenAI : MonoBehaviour
         }
     }
 
-    private void ForceLayerIfNeeded(GameObject obj, string layerName)
-    {
-        if (obj == null)
-            return;
-
-        if (string.IsNullOrWhiteSpace(layerName))
-            return;
-
-        int layer = LayerMask.NameToLayer(layerName);
-
-        if (layer < 0)
-            return;
-
-        SetLayerRecursively(obj, layer);
-    }
-
-    private void SetLayerRecursively(GameObject obj, int layer)
-    {
-        if (obj == null)
-            return;
-
-        obj.layer = layer;
-
-        foreach (Transform child in obj.transform)
-        {
-            if (child != null)
-                SetLayerRecursively(child.gameObject, layer);
-        }
-    }
-
-    private void ChaseUpdate(float distanceToPlayer)
-    {
-        isIdle = false;
-
-        if (increaseAnxietyWhenChasing)
-            AddPlayerAnxiety(chasingAnxietyPerSecond * Time.deltaTime, "chase");
-
-        if (distanceToPlayer <= attackRange)
-        {
-            TryStartAttack();
-            return;
-        }
-
-        agent.isStopped = false;
-        agent.speed = moveSpeed;
-        agent.SetDestination(player.position);
-
-        RotateTowardVelocity();
-        UpdateAnimatorSpeed(agent.velocity.magnitude);
-    }
-
-    private void TryStartAttack()
-    {
-        StopAgentHard();
-        FacePlayer();
-        UpdateAnimatorSpeed(0f);
-
-        if (Time.time < nextAttackTime)
-            return;
-
-        if (attackRoutine != null)
-            return;
-
-        attackRoutine = StartCoroutine(AttackRoutine());
-    }
-
-    private IEnumerator AttackRoutine()
-    {
-        isAttacking = true;
-        hasDamagedThisAttack = false;
-        nextAttackTime = Time.time + attackCooldown;
-
-        StopAgentHard();
-        FacePlayer();
-        UpdateAnimatorSpeed(0f);
-
-        if (attackSfx != null && attackAudioSource != null)
-            attackAudioSource.PlayOneShot(attackSfx, attackSfxVolume);
-
-        SetAttackAnimation(true);
-
-        yield return null;
-
-        SetAttackAnimation(false);
-
-        yield return new WaitForSeconds(attackDuration);
-
-        isAttacking = false;
-        hasDamagedThisAttack = false;
-        attackRoutine = null;
-    }
-
-    // Called by the Animation Event on the furious chicken attack clip.
-    // Event function name should be exactly:
-    // AttackHitEvent
-    public void AttackHitEvent()
-    {
-        Debug.Log("[FuriousChickenAI] AttackHitEvent fired.");
-
-        if (!useAnimationEventDamage)
-            return;
-
-        if (!isAttacking)
-        {
-            Debug.Log("[FuriousChickenAI] Attack event fired, but chicken is not currently attacking.");
-            return;
-        }
-
-        if (hasDamagedThisAttack)
-            return;
-
-        hasDamagedThisAttack = true;
-
-        DamagePlayerIfInRange(
-            attackDamage,
-            attackRange + attackDamageExtraRange
-        );
-    }
-
-    private void HandleContinuousTouchDamage(float distanceToPlayer)
-    {
-        if (!damagePlayerOnTouch || player == null)
-        {
-            StopTouchSfxIfNeeded();
-            return;
-        }
-
-        if (isSpotting)
-        {
-            StopTouchSfxIfNeeded();
-            return;
-        }
-
-        bool touchingPlayer = distanceToPlayer <= touchDamageRadius;
-
-        if (!touchingPlayer)
-        {
-            touchSfxPlayedThisContact = false;
-            StopTouchSfxIfNeeded();
-            return;
-        }
-
-        HandleTouchSfx();
-
-        if (Time.time < nextTouchDamageTime)
-            return;
-
-        nextTouchDamageTime = Time.time + touchDamageTickInterval;
-
-        DamagePlayerIfInRange(
-            touchDamagePerTick,
-            touchDamageRadius
-        );
-    }
-
-    private void DamagePlayerIfInRange(int damage, float range)
-    {
-        if (player == null)
-            return;
-
-        float distance = FlatDistance(transform.position, player.position);
-
-        if (distance > range)
-            return;
-
-        if (playerHealth == null)
-            CachePlayerComponents();
-
-        if (playerHealth == null)
-            return;
-
-        playerHealth.TakeDamage(damage, gameObject);
-    }
-
-    private void HandleTouchSfx()
+    private void PlayTouchSfxIfNeeded()
     {
         if (touchDamageSfx == null || touchAudioSource == null)
             return;
-
-        touchAudioSource.volume = touchDamageSfxVolume;
 
         if (loopTouchSfxWhileTouching)
         {
@@ -733,6 +806,7 @@ public class FuriousChickenAI : MonoBehaviour
             {
                 touchAudioSource.clip = touchDamageSfx;
                 touchAudioSource.loop = true;
+                touchAudioSource.volume = touchDamageSfxVolume;
                 touchAudioSource.Play();
             }
 
@@ -745,8 +819,7 @@ public class FuriousChickenAI : MonoBehaviour
             {
                 touchSfxPlayedThisContact = true;
                 touchAudioSource.loop = false;
-                touchAudioSource.clip = touchDamageSfx;
-                touchAudioSource.Play();
+                touchAudioSource.PlayOneShot(touchDamageSfx, touchDamageSfxVolume);
             }
 
             return;
@@ -755,8 +828,7 @@ public class FuriousChickenAI : MonoBehaviour
         if (!touchAudioSource.isPlaying)
         {
             touchAudioSource.loop = false;
-            touchAudioSource.clip = touchDamageSfx;
-            touchAudioSource.Play();
+            touchAudioSource.PlayOneShot(touchDamageSfx, touchDamageSfxVolume);
         }
     }
 
@@ -765,88 +837,8 @@ public class FuriousChickenAI : MonoBehaviour
         if (touchAudioSource == null)
             return;
 
-        if (touchAudioSource.isPlaying && loopTouchSfxWhileTouching)
+        if (loopTouchSfxWhileTouching && touchAudioSource.isPlaying)
             touchAudioSource.Stop();
-    }
-
-    private void PatrolUpdate()
-    {
-        if (isIdle)
-        {
-            idleTimer -= Time.deltaTime;
-
-            StopAgentHard();
-            UpdateAnimatorSpeed(0f);
-
-            if (idleTimer <= 0f)
-                PickRandomDestination();
-
-            return;
-        }
-
-        if (!agent.pathPending &&
-            agent.remainingDistance <= agent.stoppingDistance + 0.2f)
-        {
-            StartIdle();
-            return;
-        }
-
-        RotateTowardVelocity();
-        UpdateAnimatorSpeed(agent.velocity.magnitude);
-    }
-
-    private void StartIdle()
-    {
-        isIdle = true;
-        idleTimer = Random.Range(minIdleTime, maxIdleTime);
-
-        StopAgentHard();
-        UpdateAnimatorSpeed(0f);
-    }
-
-    private void PickRandomDestination()
-    {
-        if (!AgentReady())
-            return;
-
-        for (int i = 0; i < 12; i++)
-        {
-            Vector2 random =
-                Random.insideUnitCircle.normalized *
-                Random.Range(minWalkDistance, maxWalkDistance);
-
-            Vector3 candidate =
-                transform.position + new Vector3(random.x, 0f, random.y);
-
-            if (FlatDistance(candidate, spawnPosition) > patrolRadius)
-                continue;
-
-            if (NavMesh.SamplePosition(
-                candidate,
-                out NavMeshHit hit,
-                3f,
-                agent.areaMask))
-            {
-                isIdle = false;
-                agent.isStopped = false;
-                agent.speed = moveSpeed;
-                agent.SetDestination(hit.position);
-                return;
-            }
-        }
-
-        StartIdle();
-    }
-
-    private void SetAttackAnimation(bool value)
-    {
-        if (animator == null)
-            return;
-
-        if (string.IsNullOrEmpty(attackBoolParam))
-            return;
-
-        animator.SetBool(attackBoolParam, value);
     }
 
     private void SetSpottedAnimation(bool value)
@@ -858,6 +850,17 @@ public class FuriousChickenAI : MonoBehaviour
             return;
 
         animator.SetBool(spottedBoolParam, value);
+    }
+
+    private void SetAttackAnimation(bool value)
+    {
+        if (animator == null)
+            return;
+
+        if (string.IsNullOrEmpty(attackBoolParam))
+            return;
+
+        animator.SetBool(attackBoolParam, value);
     }
 
     private void UpdateAnimatorSpeed(float speed)
@@ -900,7 +903,7 @@ public class FuriousChickenAI : MonoBehaviour
         Vector3 velocity = agent.velocity;
         velocity.y = 0f;
 
-        if (velocity.sqrMagnitude < 0.01f)
+        if (velocity.magnitude <= stopVelocityThreshold)
             return;
 
         Quaternion targetRotation =
@@ -924,7 +927,9 @@ public class FuriousChickenAI : MonoBehaviour
 
     private bool AgentReady()
     {
-        return agent != null && agent.enabled && agent.isOnNavMesh;
+        return agent != null &&
+               agent.enabled &&
+               agent.isOnNavMesh;
     }
 
     private void SnapToNavMesh()
@@ -932,14 +937,8 @@ public class FuriousChickenAI : MonoBehaviour
         if (agent == null)
             return;
 
-        if (NavMesh.SamplePosition(
-            transform.position,
-            out NavMeshHit hit,
-            3f,
-            agent.areaMask))
-        {
+        if (NavMesh.SamplePosition(transform.position, out NavMeshHit hit, 3f, agent.areaMask))
             transform.position = hit.position;
-        }
     }
 
     private float FlatDistance(Vector3 a, Vector3 b)
@@ -950,54 +949,98 @@ public class FuriousChickenAI : MonoBehaviour
         return Vector3.Distance(a, b);
     }
 
+    private void ForceLayerIfNeeded(GameObject obj, string layerName)
+    {
+        if (obj == null)
+            return;
+
+        if (string.IsNullOrWhiteSpace(layerName))
+            return;
+
+        int layer = LayerMask.NameToLayer(layerName);
+
+        if (layer < 0)
+            return;
+
+        SetLayerRecursively(obj, layer);
+    }
+
+    private void SetLayerRecursively(GameObject obj, int layer)
+    {
+        if (obj == null)
+            return;
+
+        obj.layer = layer;
+
+        foreach (Transform child in obj.transform)
+        {
+            if (child != null)
+                SetLayerRecursively(child.gameObject, layer);
+        }
+    }
+
     private void OnDisable()
     {
-        if (attackRoutine != null)
-        {
-            StopCoroutine(attackRoutine);
-            attackRoutine = null;
-        }
-
         if (spottedRoutine != null)
         {
             StopCoroutine(spottedRoutine);
             spottedRoutine = null;
         }
 
-        isAttacking = false;
+        if (attackRoutine != null)
+        {
+            StopCoroutine(attackRoutine);
+            attackRoutine = null;
+        }
+
         isSpotting = false;
         isChasing = false;
-        hasDamagedThisAttack = false;
-        hasAppliedSpottedThisChase = false;
+        isAttacking = false;
 
-        SetAttackAnimation(false);
+        HideChaseVfx();
         SetSpottedAnimation(false);
-
-        if (attackAudioSource != null)
-            attackAudioSource.Stop();
+        SetAttackAnimation(false);
 
         if (touchAudioSource != null)
             touchAudioSource.Stop();
 
+        if (attackAudioSource != null)
+            attackAudioSource.Stop();
+
         if (spottedAudioSource != null)
             spottedAudioSource.Stop();
+    }
 
-        if (activeChaseVfx != null)
-            Destroy(activeChaseVfx);
+    private void OnValidate()
+    {
+        if (attackCooldown < 0.01f)
+            attackCooldown = 0.01f;
 
-        activeChaseVfx = null;
-        chaseVfxActive = false;
+        if (touchDamageTickInterval < 0.05f)
+            touchDamageTickInterval = 0.05f;
+
+        if (loseRange < aggroRange)
+            loseRange = aggroRange + 1f;
+
+        if (maxWalkDistance < minWalkDistance)
+            maxWalkDistance = minWalkDistance;
+
+        if (maxIdleTime < minIdleTime)
+            maxIdleTime = minIdleTime;
     }
 
     private void OnDrawGizmosSelected()
     {
-        Gizmos.color = Color.red;
-        Gizmos.DrawWireSphere(transform.position, attackRange);
-
         Gizmos.color = Color.yellow;
         Gizmos.DrawWireSphere(transform.position, aggroRange);
 
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireSphere(transform.position, attackRange);
+
         Gizmos.color = Color.magenta;
         Gizmos.DrawWireSphere(transform.position, touchDamageRadius);
+
+        Gizmos.color = Color.gray;
+        Gizmos.DrawWireSphere(transform.position, loseRange);
     }
 }
