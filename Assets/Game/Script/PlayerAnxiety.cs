@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -6,166 +7,289 @@ public class PlayerAnxiety : MonoBehaviour
     [Header("Anxiety")]
     public float maxAnxiety = 100f;
     public float startingAnxiety = 0f;
+
+    // Kept public because older scripts in your project access:
+    // playerAnxiety.currentAnxiety
     public float currentAnxiety;
+
+    public float CurrentAnxiety => currentAnxiety;
+    public float NormalizedAnxiety => maxAnxiety <= 0f ? 0f : currentAnxiety / maxAnxiety;
 
     [Header("Natural Recovery")]
     public bool anxietyFallsOverTime = true;
-    public float anxietyFallPerSecond = 4f;
+
+    [Tooltip("How much anxiety is removed per second.")]
+    public float anxietyFallPerSecond = 5f;
 
     [Header("Overflow Anxiety Damage")]
-    [Tooltip("If ON, anxiety gained beyond Max Anxiety becomes health damage.")]
+    [Tooltip("If true, anxiety gain beyond Max Anxiety damages the player.")]
     public bool overflowAnxietyDamagesHealth = true;
 
-    [Tooltip("How much queued health damage each 1 overflow anxiety creates.")]
+    [Tooltip("How much overflow anxiety equals 1 damage.")]
     public float overflowDamagePerAnxietyPoint = 1f;
 
-    [Tooltip("If ON, fractional overflow damage is saved until it reaches 1 full damage.")]
+    [Tooltip("If true, fractional overflow damage is saved until it reaches 1.")]
     public bool accumulateFractionalOverflowDamage = true;
 
     [Header("Overflow Damage Safety")]
-    [Tooltip("Important: ON stops anxiety overflow from damaging every frame.")]
-    public bool useOverflowDamageTicks = true;
-
-    [Tooltip("How often overflow anxiety damage is allowed to hit health / play VFX.")]
+    public bool useOverflowDamageTicks = false;
     public float overflowDamageTickInterval = 1f;
-
-    [Tooltip("Maximum anxiety overflow damage allowed per tick. This prevents HP nuking.")]
     public int maxOverflowDamagePerTick = 1;
-
-    [Tooltip("If ON, queued overflow damage is cleared once anxiety drops below max.")]
     public bool clearQueuedOverflowDamageWhenBelowMax = true;
-
-    [Tooltip("If ON, logs overflow damage queue/ticks.")]
     public bool logOverflowDamage = false;
 
     [Header("Old High Anxiety Tick Damage")]
-    [Tooltip("Usually OFF when using overflow damage. If ON, anxiety also damages over time while above Damage Threshold.")]
     public bool damageAtHighAnxiety = false;
 
-    [Tooltip("Health damage starts when anxiety reaches this percentage.")]
     [Range(0f, 1f)]
-    public float damageThreshold = 0.8f;
+    public float damageThreshold = 0.5f;
 
-    public int anxietyDamagePerTick = 1;
-    public float anxietyDamageTickInterval = 0.5f;
+    public int anxietyDamagePerTick = 5;
+    public float anxietyDamageTickInterval = 1f;
 
     [Header("Animator Anxiety State")]
     public Animator animator;
     public string anxietyBoolParam = "Anxiety";
 
     [Range(0f, 1f)]
-    public float anxietyAnimationEnterThreshold = 0.8f;
+    public float anxietyAnimationEnterThreshold = 0.5f;
 
     public bool useAnxietyExitThreshold = true;
 
     [Range(0f, 1f)]
-    public float anxietyAnimationExitThreshold = 0.65f;
+    public float anxietyAnimationExitThreshold = 0.35f;
 
     [Header("UI")]
     public Slider anxietySlider;
-
-    [Tooltip("Normal purple fill image.")]
     public Image normalFillImage;
-
-    [Tooltip("High anxiety fill image.")]
     public Image highFillImage;
 
     [Header("UI Threshold")]
     [Range(0f, 1f)]
-    public float highAnxietyThreshold = 0.8f;
+    public float highAnxietyThreshold = 0.5f;
 
-    public Color normalAnxietyColor = new Color(0.55f, 0f, 1f, 1f);
+    public Color normalAnxietyColor = new Color(0.6f, 0f, 1f, 1f);
     public Color highAnxietyColor = Color.red;
 
     [Header("High Anxiety Flash")]
     public bool flashHighAnxietyFill = true;
 
-    [Tooltip("If ON, high anxiety bar uses PlayerHealth's synced anxiety damage flash phase.")]
+    [Tooltip("Kept for compatibility. This script now flashes directly when anxiety is high.")]
     public bool syncFlashWithAnxietyDamageFlash = true;
 
-    [Tooltip("If ON, the anxiety bar only flashes while anxiety damage flash is active. Recommended ON.")]
-    public bool onlyFlashDuringAnxietyDamageFlash = true;
+    [Tooltip("If true, the anxiety bar only flashes during old damage flash events. Usually keep OFF.")]
+    public bool onlyFlashDuringAnxietyDamageFlash = false;
 
-    [Tooltip("Only used when Sync Flash With Anxiety Damage Flash is OFF.")]
-    public Color highAnxietyFlashColor = Color.white;
+    public Color highAnxietyFlashColor = new Color(1f, 0.35f, 0.35f, 1f);
+    public float flashSpeed = 8f;
 
-    [Tooltip("Only used when Sync Flash With Anxiety Damage Flash is OFF.")]
-    public float flashSpeed = 6f;
+    [Header("Player High Anxiety Visual Flash")]
+    public bool flashPlayerAtHighAnxiety = true;
+
+    [Tooltip("Renderers that flash when anxiety is high. If empty, they are auto-found in children.")]
+    public Renderer[] playerFlashRenderers;
+
+    public Color playerHighAnxietyFlashColor = new Color(0.65f, 0f, 1f, 1f);
+    public float playerFlashEmissionBoost = 1.5f;
+
+    [Tooltip("Usually _EmissionColor for URP/Lit. If that does nothing, try _BaseColor or _Color.")]
+    public string playerFlashColorProperty = "_EmissionColor";
+
+    [Header("Anxiety Gain VFX")]
+    [Tooltip("Particle VFX spawned when anxiety increases enough.")]
+    public GameObject anxietyVfxPrefab;
+
+    [Tooltip("Optional spawn point. If empty, this object is used.")]
+    public Transform anxietyVfxSpawnPoint;
+
+    public Vector3 anxietyVfxOffset = new Vector3(0f, 0.7f, 0f);
+    public Vector3 anxietyVfxRotationEuler = Vector3.zero;
+    public Vector3 anxietyVfxScale = Vector3.one;
+
+    [Tooltip("Only play one-shot anxiety VFX if instant anxiety gain is at least this amount.")]
+    public float minAnxietyGainForVfx = 1f;
+
+    [Tooltip("How long instant anxiety VFX emits before fading naturally.")]
+    public float anxietyVfxEmitTime = 0.2f;
+
+    [Tooltip("Extra time after instant particles stop emitting before destroying the VFX object.")]
+    public float anxietyVfxExtraFadeTime = 1f;
+
+    [Tooltip("If true, the spawned VFX follows the player/spawn point.")]
+    public bool parentAnxietyVfxToSpawnPoint = true;
+
+    [Tooltip("Optional layer name for spawned VFX. Leave empty to ignore.")]
+    public string forceAnxietyVfxLayer = "VFX";
+
+    [Header("Continuous Anxiety VFX")]
+    [Tooltip("Use one persistent VFX for AddAnxietyOverTime sources, such as touching chickens.")]
+    public bool useContinuousAnxietyVfxForOverTimeSources = false;
+
+    [Tooltip("How long the continuous VFX stays alive after contact anxiety stops.")]
+    public float continuousAnxietyVfxGraceTime = 0.25f;
+
+    [Tooltip("How long to let particles fade after stopping emission.")]
+    public float continuousAnxietyVfxFadeTime = 1f;
+
+    [Tooltip("If true, contact anxiety also plays the anxiety gain SFX when the continuous VFX starts.")]
+    public bool playSfxWhenContinuousVfxStarts = false;
+
+    [Header("Anxiety Gain SFX")]
+    public AudioClip anxietyGainSfx;
+
+    [Range(0f, 10f)]
+    public float anxietyGainSfxVolume = 1f;
+
+    public AudioSource anxietyAudioSource;
+
+    [Header("Debug")]
+    public bool logAnxietyChanges = false;
 
     private PlayerHealth playerHealth;
-    private float nextDamageTickTime;
+    private Coroutine highAnxietyDamageRoutine;
+
+    private bool isInAnxietyAnimation;
+    private float accumulatedOverflowDamage;
+    private float queuedOverflowDamage;
+    private float overflowTickTimer;
+
+    private GameObject activeContinuousAnxietyVfx;
+    private ParticleSystem[] activeContinuousAnxietyParticles;
+    private Coroutine continuousAnxietyStopRoutine;
 
     private RectTransform normalFillRect;
     private RectTransform highFillRect;
 
-    private bool isOverHighThreshold;
-    private bool anxietyAnimatorActive;
-
-    private float queuedOverflowDamage;
-    private float nextOverflowDamageTickTime;
+    private MaterialPropertyBlock playerFlashBlock;
+    private Color[] originalRendererBaseColors;
+    private Color[] originalRendererEmissionColors;
 
     private void Awake()
     {
         playerHealth = GetComponent<PlayerHealth>();
+
+        if (playerHealth == null)
+            playerHealth = GetComponentInChildren<PlayerHealth>();
 
         if (animator == null)
             animator = GetComponentInChildren<Animator>();
 
         currentAnxiety = Mathf.Clamp(startingAnxiety, 0f, maxAnxiety);
 
-        TryAutoFindFillImages();
-
-        if (normalFillImage != null)
-            normalFillRect = normalFillImage.rectTransform;
-
-        if (highFillImage != null)
-            highFillRect = highFillImage.rectTransform;
-
+        SetupUI();
+        SetupPlayerFlashRenderers();
         UpdateUI();
-        UpdateAnimatorAnxietyState();
+        UpdatePlayerHighAnxietyFlash();
+        UpdateAnimatorState();
+    }
+
+    private void OnEnable()
+    {
+        SetupUI();
+        SetupPlayerFlashRenderers();
+        UpdateUI();
+        UpdatePlayerHighAnxietyFlash();
+        UpdateAnimatorState();
+    }
+
+    private void OnDisable()
+    {
+        CleanupContinuousAnxietyVFX();
+        ResetPlayerFlash();
     }
 
     private void Update()
     {
-        if (anxietyFallsOverTime && currentAnxiety > 0f)
-            ReduceAnxiety(anxietyFallPerSecond * Time.deltaTime);
-
-        if (clearQueuedOverflowDamageWhenBelowMax && currentAnxiety < maxAnxiety)
-            queuedOverflowDamage = 0f;
-
+        HandleNaturalRecovery();
+        HandleOldHighAnxietyTickDamage();
         HandleQueuedOverflowDamage();
-        HandleHighAnxietyTickDamage();
-        UpdateHighAnxietyFlash();
-        UpdateAnimatorAnxietyState();
+
+        UpdateUI();
+        UpdatePlayerHighAnxietyFlash();
+        UpdateAnimatorState();
     }
 
+    // ------------------------------------------------------------
+    // COMPATIBILITY METHODS FOR YOUR EXISTING SCRIPTS
+    // ------------------------------------------------------------
+
+    public void AddAnxietyOverTime(float amountPerSecond)
+    {
+        AddAnxietyOverTime(amountPerSecond, 1f);
+    }
+
+    public void AddAnxietyOverTime(float amountPerSecond, float multiplier)
+    {
+        float amount = amountPerSecond * multiplier * Time.deltaTime;
+
+        AddAnxietyInternal(amount, false);
+
+        if (amount > 0f)
+            RefreshContinuousAnxietyVFX();
+    }
+
+    public bool IsAnimatorAnxietyActive()
+    {
+        return isInAnxietyAnimation;
+    }
+
+    public float GetAnxietyPercent()
+    {
+        return NormalizedAnxiety;
+    }
+
+    public float GetAnxiety01()
+    {
+        return NormalizedAnxiety;
+    }
+
+    public bool IsHighAnxiety()
+    {
+        return NormalizedAnxiety >= highAnxietyThreshold;
+    }
+
+    // ------------------------------------------------------------
+    // MAIN ANXIETY API
+    // ------------------------------------------------------------
+
     public void AddAnxiety(float amount)
+    {
+        AddAnxietyInternal(amount, true);
+    }
+
+    private void AddAnxietyInternal(float amount, bool allowOneShotVfx)
     {
         if (amount <= 0f)
             return;
 
-        float desiredAnxiety = currentAnxiety + amount;
-        float overflow = Mathf.Max(0f, desiredAnxiety - maxAnxiety);
+        float previousAnxiety = currentAnxiety;
+        float intendedAnxiety = currentAnxiety + amount;
+        float overflowAmount = Mathf.Max(0f, intendedAnxiety - maxAnxiety);
 
-        currentAnxiety = Mathf.Clamp(
-            desiredAnxiety,
-            0f,
-            maxAnxiety
-        );
+        currentAnxiety = Mathf.Clamp(intendedAnxiety, 0f, maxAnxiety);
 
-        if (overflow > 0f)
-            QueueOverflowAnxietyDamage(overflow);
+        float actualGain = Mathf.Max(0f, currentAnxiety - previousAnxiety);
+
+        if (logAnxietyChanges)
+        {
+            Debug.Log(
+                $"[PlayerAnxiety] AddAnxiety {amount}. Actual gain: {actualGain}. Current: {currentAnxiety}/{maxAnxiety}. Overflow: {overflowAmount}",
+                this
+            );
+        }
+
+        if (allowOneShotVfx && actualGain >= minAnxietyGainForVfx)
+        {
+            SpawnAnxietyVFX();
+            PlayAnxietyGainSFX();
+        }
+
+        if (overflowAmount > 0f)
+            ApplyOverflowAnxietyDamage(overflowAmount);
 
         UpdateUI();
-        UpdateAnimatorAnxietyState();
-    }
-
-    public void AddAnxietyOverTime(float amountPerSecond)
-    {
-        if (amountPerSecond <= 0f)
-            return;
-
-        AddAnxiety(amountPerSecond * Time.deltaTime);
+        UpdatePlayerHighAnxietyFlash();
+        UpdateAnimatorState();
     }
 
     public void ReduceAnxiety(float amount)
@@ -173,78 +297,117 @@ public class PlayerAnxiety : MonoBehaviour
         if (amount <= 0f)
             return;
 
-        currentAnxiety = Mathf.Clamp(
-            currentAnxiety - amount,
-            0f,
-            maxAnxiety
-        );
+        currentAnxiety = Mathf.Clamp(currentAnxiety - amount, 0f, maxAnxiety);
+
+        if (clearQueuedOverflowDamageWhenBelowMax && currentAnxiety < maxAnxiety)
+        {
+            queuedOverflowDamage = 0f;
+            accumulatedOverflowDamage = 0f;
+        }
+
+        if (logAnxietyChanges)
+            Debug.Log($"[PlayerAnxiety] ReduceAnxiety {amount}. Current: {currentAnxiety}/{maxAnxiety}", this);
 
         UpdateUI();
-        UpdateAnimatorAnxietyState();
+        UpdatePlayerHighAnxietyFlash();
+        UpdateAnimatorState();
     }
 
-    public void SetAnxiety(float amount)
+    public void SetAnxiety(float value)
     {
+        currentAnxiety = Mathf.Clamp(value, 0f, maxAnxiety);
+
+        if (clearQueuedOverflowDamageWhenBelowMax && currentAnxiety < maxAnxiety)
+        {
+            queuedOverflowDamage = 0f;
+            accumulatedOverflowDamage = 0f;
+        }
+
+        UpdateUI();
+        UpdatePlayerHighAnxietyFlash();
+        UpdateAnimatorState();
+    }
+
+    public void ClearAnxiety()
+    {
+        currentAnxiety = 0f;
+        queuedOverflowDamage = 0f;
+        accumulatedOverflowDamage = 0f;
+
+        CleanupContinuousAnxietyVFX();
+
+        UpdateUI();
+        UpdatePlayerHighAnxietyFlash();
+        UpdateAnimatorState();
+    }
+
+    private void HandleNaturalRecovery()
+    {
+        if (!anxietyFallsOverTime)
+            return;
+
+        if (currentAnxiety <= 0f)
+            return;
+
+        if (anxietyFallPerSecond <= 0f)
+            return;
+
         currentAnxiety = Mathf.Clamp(
-            amount,
+            currentAnxiety - anxietyFallPerSecond * Time.deltaTime,
             0f,
             maxAnxiety
         );
 
         if (clearQueuedOverflowDamageWhenBelowMax && currentAnxiety < maxAnxiety)
+        {
             queuedOverflowDamage = 0f;
-
-        UpdateUI();
-        UpdateAnimatorAnxietyState();
+            accumulatedOverflowDamage = 0f;
+        }
     }
 
-    public float GetAnxietyPercent()
-    {
-        if (maxAnxiety <= 0f)
-            return 0f;
-
-        return currentAnxiety / maxAnxiety;
-    }
-
-    public bool IsHighAnxiety()
-    {
-        return GetAnxietyPercent() >= damageThreshold;
-    }
-
-    public bool IsMaxAnxiety()
-    {
-        return currentAnxiety >= maxAnxiety;
-    }
-
-    public bool IsAnimatorAnxietyActive()
-    {
-        return anxietyAnimatorActive;
-    }
-
-    private void QueueOverflowAnxietyDamage(float overflowAmount)
+    private void ApplyOverflowAnxietyDamage(float overflowAmount)
     {
         if (!overflowAnxietyDamagesHealth)
             return;
 
-        float rawDamage = overflowAmount * Mathf.Max(0f, overflowDamagePerAnxietyPoint);
-
-        if (rawDamage <= 0f)
+        if (playerHealth == null)
             return;
 
-        if (!useOverflowDamageTicks)
+        if (overflowDamagePerAnxietyPoint <= 0f)
+            return;
+
+        float rawDamage = overflowAmount * overflowDamagePerAnxietyPoint;
+
+        if (useOverflowDamageTicks)
         {
-            ApplyOverflowDamageNow(rawDamage);
+            queuedOverflowDamage += rawDamage;
+
+            if (logOverflowDamage)
+                Debug.Log($"[PlayerAnxiety] Queued overflow anxiety damage: {queuedOverflowDamage}", this);
+
             return;
         }
 
-        queuedOverflowDamage += rawDamage;
-
-        if (logOverflowDamage)
+        if (accumulateFractionalOverflowDamage)
         {
-            Debug.Log(
-                $"[PlayerAnxiety] Queued overflow damage: {rawDamage:0.00}. Total queued: {queuedOverflowDamage:0.00}",
-                this
-            );
+            accumulatedOverflowDamage += rawDamage;
+
+            int wholeDamage = Mathf.FloorToInt(accumulatedOverflowDamage);
+
+            if (wholeDamage <= 0)
+                return;
+
+            accumulatedOverflowDamage -= wholeDamage;
+            DamagePlayerWithAnxietyDamage(wholeDamage);
+        }
+        else
+        {
+            int damage = Mathf.RoundToInt(rawDamage);
+
+            if (damage <= 0)
+                return;
+
+            DamagePlayerWithAnxietyDamage(damage);
         }
     }
 
@@ -259,259 +422,656 @@ public class PlayerAnxiety : MonoBehaviour
         if (queuedOverflowDamage <= 0f)
             return;
 
-        if (Time.time < nextOverflowDamageTickTime)
+        if (playerHealth == null)
             return;
 
-        nextOverflowDamageTickTime =
-            Time.time + Mathf.Max(0.01f, overflowDamageTickInterval);
+        overflowTickTimer += Time.deltaTime;
 
-        int damageToApply;
+        if (overflowTickTimer < overflowDamageTickInterval)
+            return;
 
-        if (accumulateFractionalOverflowDamage)
-            damageToApply = Mathf.FloorToInt(queuedOverflowDamage);
-        else
-            damageToApply = Mathf.CeilToInt(queuedOverflowDamage);
+        overflowTickTimer = 0f;
 
-        if (damageToApply <= 0)
+        int damage = Mathf.FloorToInt(queuedOverflowDamage);
+
+        if (damage <= 0)
             return;
 
         if (maxOverflowDamagePerTick > 0)
-            damageToApply = Mathf.Min(damageToApply, maxOverflowDamagePerTick);
+            damage = Mathf.Min(damage, maxOverflowDamagePerTick);
 
-        queuedOverflowDamage = Mathf.Max(0f, queuedOverflowDamage - damageToApply);
+        queuedOverflowDamage -= damage;
 
-        ApplyAnxietyDamageToHealth(damageToApply);
+        DamagePlayerWithAnxietyDamage(damage);
 
         if (logOverflowDamage)
+            Debug.Log($"[PlayerAnxiety] Applied queued overflow anxiety damage tick: {damage}", this);
+    }
+
+    private void HandleOldHighAnxietyTickDamage()
+    {
+        if (!damageAtHighAnxiety)
         {
-            Debug.Log(
-                $"[PlayerAnxiety] Applied overflow tick damage: {damageToApply}. Remaining queued: {queuedOverflowDamage:0.00}",
-                this
-            );
+            if (highAnxietyDamageRoutine != null)
+            {
+                StopCoroutine(highAnxietyDamageRoutine);
+                highAnxietyDamageRoutine = null;
+            }
+
+            return;
+        }
+
+        bool shouldDamage =
+            NormalizedAnxiety >= damageThreshold &&
+            anxietyDamagePerTick > 0 &&
+            anxietyDamageTickInterval > 0f;
+
+        if (shouldDamage)
+        {
+            if (highAnxietyDamageRoutine == null)
+                highAnxietyDamageRoutine = StartCoroutine(HighAnxietyDamageRoutine());
+        }
+        else
+        {
+            if (highAnxietyDamageRoutine != null)
+            {
+                StopCoroutine(highAnxietyDamageRoutine);
+                highAnxietyDamageRoutine = null;
+            }
         }
     }
 
-    private void ApplyOverflowDamageNow(float rawDamage)
+    private IEnumerator HighAnxietyDamageRoutine()
     {
-        int damageToApply;
+        while (damageAtHighAnxiety && NormalizedAnxiety >= damageThreshold)
+        {
+            DamagePlayerWithAnxietyDamage(anxietyDamagePerTick);
+            yield return new WaitForSeconds(anxietyDamageTickInterval);
+        }
 
-        if (accumulateFractionalOverflowDamage)
-            damageToApply = Mathf.FloorToInt(rawDamage);
-        else
-            damageToApply = Mathf.CeilToInt(rawDamage);
-
-        if (damageToApply <= 0)
-            return;
-
-        ApplyAnxietyDamageToHealth(damageToApply);
+        highAnxietyDamageRoutine = null;
     }
 
-    private void ApplyAnxietyDamageToHealth(int damage)
+    private void DamagePlayerWithAnxietyDamage(int damage)
     {
         if (damage <= 0)
             return;
 
         if (playerHealth == null)
-            playerHealth = GetComponent<PlayerHealth>();
-
-        if (playerHealth == null)
             return;
 
-        playerHealth.TakeAnxietyDamage(
-            damage,
-            gameObject
-        );
+        // Important:
+        // This makes the HP loss register as AnxietyLockedHealthLoss
+        // inside PlayerHealth.cs.
+        playerHealth.TakeAnxietyDamage(damage, gameObject);
     }
 
-    private void HandleHighAnxietyTickDamage()
+    // ------------------------------------------------------------
+    // ANXIETY UI
+    // ------------------------------------------------------------
+
+    private void SetupUI()
     {
-        if (!damageAtHighAnxiety)
-            return;
-
-        if (!IsHighAnxiety())
-            return;
-
-        if (Time.time < nextDamageTickTime)
-            return;
-
-        nextDamageTickTime = Time.time + Mathf.Max(0.01f, anxietyDamageTickInterval);
-
-        if (playerHealth == null)
-            playerHealth = GetComponent<PlayerHealth>();
-
-        if (playerHealth == null)
-            return;
-
-        playerHealth.TakeAnxietyDamage(
-            anxietyDamagePerTick,
-            gameObject
-        );
-    }
-
-    private void UpdateAnimatorAnxietyState()
-    {
-        float percent = GetAnxietyPercent();
-
-        bool shouldBeAnxious;
-
-        if (anxietyAnimatorActive && useAnxietyExitThreshold)
-            shouldBeAnxious = percent >= anxietyAnimationExitThreshold;
-        else
-            shouldBeAnxious = percent >= anxietyAnimationEnterThreshold;
-
-        anxietyAnimatorActive = shouldBeAnxious;
-
-        if (animator == null)
-            return;
-
-        if (!string.IsNullOrEmpty(anxietyBoolParam))
-            animator.SetBool(anxietyBoolParam, shouldBeAnxious);
-    }
-
-    private void UpdateUI()
-    {
-        float percent = GetAnxietyPercent();
-
         if (anxietySlider != null)
         {
+            anxietySlider.minValue = 0f;
             anxietySlider.maxValue = maxAnxiety;
-            anxietySlider.value = currentAnxiety;
+            anxietySlider.wholeNumbers = false;
+            anxietySlider.interactable = false;
+
+            // We manually control the fill segments.
+            // This avoids Unity Slider fighting our split purple/red fill setup.
+            anxietySlider.fillRect = null;
         }
 
-        UpdateSplitFill(percent);
-    }
-
-    private void UpdateSplitFill(float percent)
-    {
         if (normalFillImage != null)
+        {
+            normalFillRect = normalFillImage.rectTransform;
             normalFillImage.color = normalAnxietyColor;
-
-        float normalPercent = Mathf.Min(
-            percent,
-            highAnxietyThreshold
-        );
-
-        float highPercent = Mathf.Max(
-            0f,
-            percent - highAnxietyThreshold
-        );
-
-        isOverHighThreshold = highPercent > 0.001f;
-
-        if (normalFillRect != null)
-        {
-            normalFillRect.anchorMin = new Vector2(0f, 0f);
-            normalFillRect.anchorMax = new Vector2(normalPercent, 1f);
-            normalFillRect.offsetMin = Vector2.zero;
-            normalFillRect.offsetMax = Vector2.zero;
-        }
-
-        if (highFillRect != null)
-        {
-            highFillRect.anchorMin =
-                new Vector2(highAnxietyThreshold, 0f);
-
-            highFillRect.anchorMax =
-                new Vector2(highAnxietyThreshold + highPercent, 1f);
-
-            highFillRect.offsetMin = Vector2.zero;
-            highFillRect.offsetMax = Vector2.zero;
         }
 
         if (highFillImage != null)
         {
-            highFillImage.enabled = isOverHighThreshold;
-
-            if (!isOverHighThreshold)
-                highFillImage.color = highAnxietyColor;
+            highFillRect = highFillImage.rectTransform;
+            highFillImage.color = highAnxietyColor;
         }
     }
 
-    private void UpdateHighAnxietyFlash()
+    private void UpdateUI()
     {
-        if (highFillImage == null)
-            return;
+        float anxietyPercent = Mathf.Clamp01(NormalizedAnxiety);
+        float threshold = Mathf.Clamp01(highAnxietyThreshold);
 
-        if (!isOverHighThreshold)
-            return;
+        bool hasAnyAnxiety = anxietyPercent > 0f;
+        bool highAnxiety = anxietyPercent >= threshold;
 
-        if (!flashHighAnxietyFill)
+        if (anxietySlider != null)
         {
-            highFillImage.color = highAnxietyColor;
+            anxietySlider.minValue = 0f;
+            anxietySlider.maxValue = maxAnxiety;
+            anxietySlider.value = currentAnxiety;
+
+            // Keep this null so the Slider does not override our custom fill rects.
+            anxietySlider.fillRect = null;
+        }
+
+        // Normal purple section:
+        // 0% to current anxiety when under threshold.
+        // 0% to threshold when above threshold.
+        if (normalFillImage != null)
+        {
+            float normalStart = 0f;
+            float normalEnd = anxietyPercent;
+
+            if (threshold > 0f)
+                normalEnd = Mathf.Min(anxietyPercent, threshold);
+
+            normalFillImage.enabled = hasAnyAnxiety && normalEnd > normalStart;
+            normalFillImage.color = normalAnxietyColor;
+
+            SetUIImageFillSegment(
+                normalFillImage,
+                normalFillRect,
+                normalStart,
+                normalEnd
+            );
+        }
+
+        // High red section:
+        // threshold to current anxiety.
+        if (highFillImage != null)
+        {
+            float highStart = threshold;
+            float highEnd = anxietyPercent;
+
+            bool showHighFill =
+                highAnxiety &&
+                hasAnyAnxiety &&
+                highEnd > highStart;
+
+            highFillImage.enabled = showHighFill;
+
+            if (showHighFill)
+            {
+                if (flashHighAnxietyFill && !onlyFlashDuringAnxietyDamageFlash)
+                {
+                    float pulse = Mathf.PingPong(Time.time * flashSpeed, 1f);
+
+                    highFillImage.color = Color.Lerp(
+                        highAnxietyColor,
+                        highAnxietyFlashColor,
+                        pulse
+                    );
+                }
+                else
+                {
+                    highFillImage.color = highAnxietyColor;
+                }
+
+                SetUIImageFillSegment(
+                    highFillImage,
+                    highFillRect,
+                    highStart,
+                    highEnd
+                );
+            }
+        }
+    }
+
+    private void SetUIImageFillSegment(
+        Image image,
+        RectTransform rect,
+        float startPercent,
+        float endPercent
+    )
+    {
+        if (image == null)
+            return;
+
+        startPercent = Mathf.Clamp01(startPercent);
+        endPercent = Mathf.Clamp01(endPercent);
+
+        if (endPercent < startPercent)
+            endPercent = startPercent;
+
+        if (rect == null)
+            rect = image.rectTransform;
+
+        if (rect == null)
+            return;
+
+        rect.anchorMin = new Vector2(startPercent, 0f);
+        rect.anchorMax = new Vector2(endPercent, 1f);
+        rect.offsetMin = Vector2.zero;
+        rect.offsetMax = Vector2.zero;
+    }
+
+    // ------------------------------------------------------------
+    // PLAYER HIGH ANXIETY FLASH
+    // ------------------------------------------------------------
+
+    private void SetupPlayerFlashRenderers()
+    {
+        if (playerFlashBlock == null)
+            playerFlashBlock = new MaterialPropertyBlock();
+
+        if (playerFlashRenderers == null || playerFlashRenderers.Length == 0)
+            playerFlashRenderers = GetComponentsInChildren<Renderer>(true);
+
+        if (playerFlashRenderers == null)
+            return;
+
+        originalRendererBaseColors = new Color[playerFlashRenderers.Length];
+        originalRendererEmissionColors = new Color[playerFlashRenderers.Length];
+
+        for (int i = 0; i < playerFlashRenderers.Length; i++)
+        {
+            Renderer rend = playerFlashRenderers[i];
+
+            originalRendererBaseColors[i] = Color.white;
+            originalRendererEmissionColors[i] = Color.black;
+
+            if (rend == null || rend.sharedMaterial == null)
+                continue;
+
+            if (rend.sharedMaterial.HasProperty("_BaseColor"))
+                originalRendererBaseColors[i] = rend.sharedMaterial.GetColor("_BaseColor");
+            else if (rend.sharedMaterial.HasProperty("_Color"))
+                originalRendererBaseColors[i] = rend.sharedMaterial.GetColor("_Color");
+
+            if (rend.sharedMaterial.HasProperty(playerFlashColorProperty))
+                originalRendererEmissionColors[i] = rend.sharedMaterial.GetColor(playerFlashColorProperty);
+            else if (rend.sharedMaterial.HasProperty("_EmissionColor"))
+                originalRendererEmissionColors[i] = rend.sharedMaterial.GetColor("_EmissionColor");
+        }
+    }
+
+    private void UpdatePlayerHighAnxietyFlash()
+    {
+        if (!flashPlayerAtHighAnxiety)
+        {
+            ResetPlayerFlash();
             return;
         }
 
-        if (syncFlashWithAnxietyDamageFlash)
-            UpdateHighAnxietyFlashSynced();
+        bool highAnxiety = NormalizedAnxiety >= highAnxietyThreshold;
+
+        if (!highAnxiety)
+        {
+            ResetPlayerFlash();
+            return;
+        }
+
+        if (playerFlashRenderers == null || playerFlashRenderers.Length == 0)
+            return;
+
+        float pulse = Mathf.PingPong(Time.time * flashSpeed, 1f);
+
+        for (int i = 0; i < playerFlashRenderers.Length; i++)
+        {
+            Renderer rend = playerFlashRenderers[i];
+
+            if (rend == null || rend.sharedMaterial == null)
+                continue;
+
+            rend.GetPropertyBlock(playerFlashBlock);
+
+            Color baseColor = i < originalRendererBaseColors.Length
+                ? originalRendererBaseColors[i]
+                : Color.white;
+
+            Color baseEmission = i < originalRendererEmissionColors.Length
+                ? originalRendererEmissionColors[i]
+                : Color.black;
+
+            Color flashedBaseColor = Color.Lerp(
+                baseColor,
+                playerHighAnxietyFlashColor,
+                pulse
+            );
+
+            Color flashedEmission = Color.Lerp(
+                baseEmission,
+                playerHighAnxietyFlashColor * playerFlashEmissionBoost,
+                pulse
+            );
+
+            if (rend.sharedMaterial.HasProperty(playerFlashColorProperty))
+                playerFlashBlock.SetColor(playerFlashColorProperty, flashedEmission);
+
+            if (rend.sharedMaterial.HasProperty("_EmissionColor"))
+                playerFlashBlock.SetColor("_EmissionColor", flashedEmission);
+
+            if (rend.sharedMaterial.HasProperty("_BaseColor"))
+                playerFlashBlock.SetColor("_BaseColor", flashedBaseColor);
+
+            if (rend.sharedMaterial.HasProperty("_Color"))
+                playerFlashBlock.SetColor("_Color", flashedBaseColor);
+
+            rend.SetPropertyBlock(playerFlashBlock);
+        }
+    }
+
+    private void ResetPlayerFlash()
+    {
+        if (playerFlashRenderers == null || originalRendererBaseColors == null)
+            return;
+
+        if (playerFlashBlock == null)
+            playerFlashBlock = new MaterialPropertyBlock();
+
+        for (int i = 0; i < playerFlashRenderers.Length; i++)
+        {
+            Renderer rend = playerFlashRenderers[i];
+
+            if (rend == null || rend.sharedMaterial == null)
+                continue;
+
+            rend.GetPropertyBlock(playerFlashBlock);
+
+            Color baseColor = i < originalRendererBaseColors.Length
+                ? originalRendererBaseColors[i]
+                : Color.white;
+
+            Color emissionColor = i < originalRendererEmissionColors.Length
+                ? originalRendererEmissionColors[i]
+                : Color.black;
+
+            if (rend.sharedMaterial.HasProperty(playerFlashColorProperty))
+                playerFlashBlock.SetColor(playerFlashColorProperty, emissionColor);
+
+            if (rend.sharedMaterial.HasProperty("_EmissionColor"))
+                playerFlashBlock.SetColor("_EmissionColor", emissionColor);
+
+            if (rend.sharedMaterial.HasProperty("_BaseColor"))
+                playerFlashBlock.SetColor("_BaseColor", baseColor);
+
+            if (rend.sharedMaterial.HasProperty("_Color"))
+                playerFlashBlock.SetColor("_Color", baseColor);
+
+            rend.SetPropertyBlock(playerFlashBlock);
+        }
+    }
+
+    // ------------------------------------------------------------
+    // ANIMATOR
+    // ------------------------------------------------------------
+
+    private void UpdateAnimatorState()
+    {
+        if (animator == null)
+            return;
+
+        if (string.IsNullOrEmpty(anxietyBoolParam))
+            return;
+
+        float normalized = NormalizedAnxiety;
+
+        if (!isInAnxietyAnimation)
+        {
+            if (normalized >= anxietyAnimationEnterThreshold)
+                isInAnxietyAnimation = true;
+        }
         else
-            UpdateHighAnxietyFlashLocal();
-    }
-
-    private void UpdateHighAnxietyFlashSynced()
-    {
-        if (playerHealth == null)
-            playerHealth = GetComponent<PlayerHealth>();
-
-        if (playerHealth == null)
         {
-            UpdateHighAnxietyFlashLocal();
-            return;
+            float exitThreshold = useAnxietyExitThreshold
+                ? anxietyAnimationExitThreshold
+                : anxietyAnimationEnterThreshold;
+
+            if (normalized <= exitThreshold)
+                isInAnxietyAnimation = false;
         }
 
-        if (onlyFlashDuringAnxietyDamageFlash &&
-            !playerHealth.IsAnxietyDamageFlashActive)
-        {
-            highFillImage.color = highAnxietyColor;
-            return;
-        }
-
-        float phase = playerHealth.GetSyncedAnxietyFlashPhase();
-
-        Color boostedFlashColor =
-            playerHealth.GetBoostedAnxietyFlashColor();
-
-        highFillImage.color = Color.Lerp(
-            highAnxietyColor,
-            boostedFlashColor,
-            phase
-        );
+        if (HasAnimatorParameter(anxietyBoolParam, AnimatorControllerParameterType.Bool))
+            animator.SetBool(anxietyBoolParam, isInAnxietyAnimation);
     }
 
-    private void UpdateHighAnxietyFlashLocal()
+    private bool HasAnimatorParameter(string parameterName, AnimatorControllerParameterType type)
     {
-        float flash = Mathf.PingPong(
-            Time.time * flashSpeed,
-            1f
-        );
+        if (animator == null)
+            return false;
 
-        highFillImage.color = Color.Lerp(
-            highAnxietyColor,
-            highAnxietyFlashColor,
-            flash
-        );
-    }
-
-    private void TryAutoFindFillImages()
-    {
-        if (anxietySlider == null)
-            return;
-
-        if (normalFillImage == null)
+        foreach (AnimatorControllerParameter parameter in animator.parameters)
         {
-            Transform fill =
-                anxietySlider.transform.Find("Fill Area/Fill");
-
-            if (fill != null)
-                normalFillImage = fill.GetComponent<Image>();
+            if (parameter.name == parameterName && parameter.type == type)
+                return true;
         }
 
-        if (highFillImage == null)
-        {
-            Transform highFill =
-                anxietySlider.transform.Find("Fill Area/HighFill");
+        return false;
+    }
 
-            if (highFill != null)
-                highFillImage = highFill.GetComponent<Image>();
+    // ------------------------------------------------------------
+    // ONE-SHOT ANXIETY VFX
+    // ------------------------------------------------------------
+
+    private void SpawnAnxietyVFX()
+    {
+        if (anxietyVfxPrefab == null)
+            return;
+
+        GameObject vfx = CreateAnxietyVFXInstance();
+
+        ParticleSystem[] particleSystems =
+            vfx.GetComponentsInChildren<ParticleSystem>(true);
+
+        foreach (ParticleSystem ps in particleSystems)
+        {
+            if (ps == null)
+                continue;
+
+            ps.Clear(true);
+            ps.Play(true);
+        }
+
+        StartCoroutine(SmoothStopAndDestroyAnxietyVFX(vfx, particleSystems));
+    }
+
+    private IEnumerator SmoothStopAndDestroyAnxietyVFX(
+        GameObject vfx,
+        ParticleSystem[] particleSystems
+    )
+    {
+        if (vfx == null)
+            yield break;
+
+        float emitTime = Mathf.Max(0.01f, anxietyVfxEmitTime);
+
+        yield return new WaitForSeconds(emitTime);
+
+        if (vfx == null)
+            yield break;
+
+        foreach (ParticleSystem ps in particleSystems)
+        {
+            if (ps == null)
+                continue;
+
+            ps.Stop(true, ParticleSystemStopBehavior.StopEmitting);
+        }
+
+        float maxRemainingLifetime = 0.25f;
+
+        foreach (ParticleSystem ps in particleSystems)
+        {
+            if (ps == null)
+                continue;
+
+            ParticleSystem.MainModule main = ps.main;
+
+            maxRemainingLifetime = Mathf.Max(
+                maxRemainingLifetime,
+                main.startLifetime.constantMax
+            );
+        }
+
+        yield return new WaitForSeconds(maxRemainingLifetime + anxietyVfxExtraFadeTime);
+
+        if (vfx != null)
+            Destroy(vfx);
+    }
+
+    // ------------------------------------------------------------
+    // CONTINUOUS ANXIETY VFX
+    // ------------------------------------------------------------
+
+    private void RefreshContinuousAnxietyVFX()
+    {
+        if (!useContinuousAnxietyVfxForOverTimeSources)
+            return;
+
+        if (anxietyVfxPrefab == null)
+            return;
+
+        if (continuousAnxietyStopRoutine != null)
+        {
+            StopCoroutine(continuousAnxietyStopRoutine);
+            continuousAnxietyStopRoutine = null;
+        }
+
+        bool createdNew = false;
+
+        if (activeContinuousAnxietyVfx == null)
+        {
+            activeContinuousAnxietyVfx = CreateAnxietyVFXInstance();
+
+            activeContinuousAnxietyParticles =
+                activeContinuousAnxietyVfx.GetComponentsInChildren<ParticleSystem>(true);
+
+            createdNew = true;
+        }
+
+        if (activeContinuousAnxietyParticles != null)
+        {
+            foreach (ParticleSystem ps in activeContinuousAnxietyParticles)
+            {
+                if (ps == null)
+                    continue;
+
+                if (!ps.isPlaying)
+                    ps.Play(true);
+            }
+        }
+
+        if (createdNew && playSfxWhenContinuousVfxStarts)
+            PlayAnxietyGainSFX();
+
+        continuousAnxietyStopRoutine =
+            StartCoroutine(StopContinuousAnxietyVFXAfterDelay());
+    }
+
+    private IEnumerator StopContinuousAnxietyVFXAfterDelay()
+    {
+        yield return new WaitForSeconds(continuousAnxietyVfxGraceTime);
+
+        if (activeContinuousAnxietyParticles != null)
+        {
+            foreach (ParticleSystem ps in activeContinuousAnxietyParticles)
+            {
+                if (ps == null)
+                    continue;
+
+                ps.Stop(true, ParticleSystemStopBehavior.StopEmitting);
+            }
+        }
+
+        yield return new WaitForSeconds(continuousAnxietyVfxFadeTime);
+
+        if (activeContinuousAnxietyVfx != null)
+            Destroy(activeContinuousAnxietyVfx);
+
+        activeContinuousAnxietyVfx = null;
+        activeContinuousAnxietyParticles = null;
+        continuousAnxietyStopRoutine = null;
+    }
+
+    private void CleanupContinuousAnxietyVFX()
+    {
+        if (continuousAnxietyStopRoutine != null)
+        {
+            StopCoroutine(continuousAnxietyStopRoutine);
+            continuousAnxietyStopRoutine = null;
+        }
+
+        if (activeContinuousAnxietyVfx != null)
+            Destroy(activeContinuousAnxietyVfx);
+
+        activeContinuousAnxietyVfx = null;
+        activeContinuousAnxietyParticles = null;
+    }
+
+    private GameObject CreateAnxietyVFXInstance()
+    {
+        Transform spawnPoint = anxietyVfxSpawnPoint != null
+            ? anxietyVfxSpawnPoint
+            : transform;
+
+        Vector3 spawnPos =
+            spawnPoint.position + spawnPoint.TransformDirection(anxietyVfxOffset);
+
+        Quaternion spawnRot =
+            spawnPoint.rotation * Quaternion.Euler(anxietyVfxRotationEuler);
+
+        GameObject vfx = Instantiate(anxietyVfxPrefab, spawnPos, spawnRot);
+
+        vfx.transform.localScale = anxietyVfxScale;
+
+        if (parentAnxietyVfxToSpawnPoint)
+            vfx.transform.SetParent(spawnPoint, true);
+
+        ForceLayerIfNeeded(vfx, forceAnxietyVfxLayer);
+
+        return vfx;
+    }
+
+    private void PlayAnxietyGainSFX()
+    {
+        if (anxietyGainSfx == null)
+            return;
+
+        if (anxietyGainSfxVolume <= 0f)
+            return;
+
+        if (anxietyAudioSource != null)
+        {
+            anxietyAudioSource.PlayOneShot(anxietyGainSfx, anxietyGainSfxVolume);
+        }
+        else
+        {
+            AudioSource.PlayClipAtPoint(
+                anxietyGainSfx,
+                transform.position,
+                anxietyGainSfxVolume
+            );
+        }
+    }
+
+    private void ForceLayerIfNeeded(GameObject obj, string layerName)
+    {
+        if (obj == null)
+            return;
+
+        if (string.IsNullOrWhiteSpace(layerName))
+            return;
+
+        int layer = LayerMask.NameToLayer(layerName);
+
+        if (layer < 0)
+            return;
+
+        SetLayerRecursively(obj, layer);
+    }
+
+    private void SetLayerRecursively(GameObject obj, int layer)
+    {
+        if (obj == null)
+            return;
+
+        obj.layer = layer;
+
+        foreach (Transform child in obj.transform)
+        {
+            if (child != null)
+                SetLayerRecursively(child.gameObject, layer);
         }
     }
 }

@@ -1,73 +1,134 @@
-using System.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using UnityEngine.EventSystems;
+using UnityEngine.Video;
 
 public class GameUIManager : MonoBehaviour
 {
     public static GameUIManager Instance { get; private set; }
 
     [Header("Overlay Canvas")]
+    public GameObject overlayCanvas;
+
+    [Header("Video UI Cleanup")]
+    [Tooltip("The whole menu/video canvas, usually MenuVideoCanvas. This should stay ON for pause/death/win screens.")]
     public GameObject menuVideoCanvas;
+
+    [Tooltip("The black background object used during videos.")]
     public GameObject blackBackground;
+
+    [Tooltip("The actual VideoFrame object that can block your UI.")]
+    public GameObject videoFrame;
+
+    [Tooltip("Optional panel used during videos.")]
+    public GameObject menuVideoPanel;
+
+    [Tooltip("Optional VideoPlayer used by your cutscenes.")]
+    public VideoPlayer videoPlayer;
 
     [Header("UI Panels")]
     public GameObject pausePanel;
     public GameObject gameOverPanel;
     public GameObject gameFinishedPanel;
 
+    [Tooltip("Panel used when the hatch sequence gives a male chick.")]
+    public GameObject maleChickPanel;
+
     [Header("Scenes")]
     public string mainMenuSceneName = "MainMenu";
-    public string gameplaySceneName = "GameScene";
+    public string gameSceneName = "GameScene";
 
-    private bool _isPaused = false;
-    private bool _gameEnded = false;
+    [Header("Input")]
+    public bool allowPauseInput = true;
+    public KeyCode pauseKey = KeyCode.Escape;
+    public KeyCode alternatePauseKey = KeyCode.Return;
+
+    [Header("Pause Settings")]
+    public bool pauseUsesTimeScale = true;
+
+    [Header("Re-Hatch")]
+    [Tooltip("If ON, Re-Hatch goes to MainMenu and auto-starts the Hatch video sequence instead of loading GameScene directly.")]
+    public bool reHatchPlaysHatchVideos = true;
+
+    [Header("Debug")]
+    public bool logButtonPresses = true;
+
+    private bool isPaused;
+    private bool isGameOver;
+    private bool isGameFinished;
 
     private void Awake()
     {
         if (Instance != null && Instance != this)
         {
+            Debug.LogWarning("[GameUIManager] Duplicate GameUIManager found. Destroying duplicate.", this);
             Destroy(gameObject);
             return;
         }
 
         Instance = this;
+        HideAllEndPanels();
+    }
+
+    private void OnDestroy()
+    {
+        if (Instance == this)
+            Instance = null;
+    }
+
+    private void Start()
+    {
+        HideAllEndPanels();
+
+        if (overlayCanvas != null)
+            overlayCanvas.SetActive(true);
 
         Time.timeScale = 1f;
-        _isPaused = false;
-        _gameEnded = false;
-
-        HideAllOverlayUI();
-        ClearSelectionNextFrame();
     }
 
     private void Update()
     {
-        if (_gameEnded)
+        if (!allowPauseInput)
             return;
 
-        if (Input.GetKeyDown(KeyCode.Escape) || Input.GetKeyDown(KeyCode.Return))
-        {
-            if (_isPaused)
-                ResumeGame();
-            else
-                PauseGame();
-        }
+        if (isGameOver || isGameFinished)
+            return;
+
+        if (Input.GetKeyDown(pauseKey) || Input.GetKeyDown(alternatePauseKey))
+            TogglePause();
+    }
+
+    // ------------------------------------------------------------
+    // PAUSE
+    // ------------------------------------------------------------
+
+    public void TogglePause()
+    {
+        if (isPaused)
+            ResumeGame();
+        else
+            PauseGame();
     }
 
     public void PauseGame()
     {
-        if (_gameEnded)
+        if (isGameOver || isGameFinished)
             return;
 
-        _isPaused = true;
-        Time.timeScale = 0f;
+        if (logButtonPresses)
+            Debug.Log("[GameUIManager] PauseGame", this);
+
+        isPaused = true;
+
+        HideOnlyVideoObjects();
+
+        if (overlayCanvas != null)
+            overlayCanvas.SetActive(true);
 
         if (menuVideoCanvas != null)
             menuVideoCanvas.SetActive(true);
 
-        if (blackBackground != null)
-            blackBackground.SetActive(true);
+        if (pausePanel != null)
+            pausePanel.SetActive(true);
 
         if (gameOverPanel != null)
             gameOverPanel.SetActive(false);
@@ -75,60 +136,124 @@ public class GameUIManager : MonoBehaviour
         if (gameFinishedPanel != null)
             gameFinishedPanel.SetActive(false);
 
-        if (pausePanel != null)
-            pausePanel.SetActive(true);
+        if (maleChickPanel != null)
+            maleChickPanel.SetActive(false);
 
-        ClearSelectionNextFrame();
+        if (pauseUsesTimeScale)
+            Time.timeScale = 0f;
     }
 
     public void ResumeGame()
     {
-        _isPaused = false;
-        Time.timeScale = 1f;
+        if (logButtonPresses)
+            Debug.Log("[GameUIManager] ResumeGame", this);
 
-        HideAllOverlayUI();
-        ClearSelectionNextFrame();
-    }
-
-    public void ShowGameOver()
-    {
-        _gameEnded = true;
-        _isPaused = false;
-
-        Time.timeScale = 0f;
-
-        if (menuVideoCanvas != null)
-            menuVideoCanvas.SetActive(true);
-
-        if (blackBackground != null)
-            blackBackground.SetActive(true);
+        isPaused = false;
 
         if (pausePanel != null)
             pausePanel.SetActive(false);
 
-        if (gameFinishedPanel != null)
-            gameFinishedPanel.SetActive(false);
-
-        if (gameOverPanel != null)
-            gameOverPanel.SetActive(true);
-        else
-            Debug.LogError("[GameUIManager] Game Over Panel is not assigned.");
-
-        ClearSelectionNextFrame();
+        if (pauseUsesTimeScale)
+            Time.timeScale = 1f;
     }
 
-    public void ShowGameFinished()
-    {
-        _gameEnded = true;
-        _isPaused = false;
+    // ------------------------------------------------------------
+    // GAME OVER / WIN / MALE CHICK
+    // ------------------------------------------------------------
 
-        Time.timeScale = 0f;
+    public void ShowGameOver()
+    {
+        if (logButtonPresses)
+            Debug.Log("[GameUIManager] ShowGameOver", this);
+
+        isGameOver = true;
+        isGameFinished = false;
+        isPaused = false;
+
+        HideOnlyVideoObjects();
+
+        if (overlayCanvas != null)
+            overlayCanvas.SetActive(true);
 
         if (menuVideoCanvas != null)
             menuVideoCanvas.SetActive(true);
 
-        if (blackBackground != null)
-            blackBackground.SetActive(true);
+        if (pausePanel != null)
+            pausePanel.SetActive(false);
+
+        if (gameOverPanel != null)
+            gameOverPanel.SetActive(true);
+
+        if (gameFinishedPanel != null)
+            gameFinishedPanel.SetActive(false);
+
+        if (maleChickPanel != null)
+            maleChickPanel.SetActive(false);
+
+        if (pauseUsesTimeScale)
+            Time.timeScale = 0f;
+    }
+
+    public void ShowMaleChickGameOver()
+    {
+        if (logButtonPresses)
+            Debug.Log("[GameUIManager] ShowMaleChickGameOver", this);
+
+        isGameOver = true;
+        isGameFinished = false;
+        isPaused = false;
+
+        HideOnlyVideoObjects();
+
+        if (overlayCanvas != null)
+            overlayCanvas.SetActive(true);
+
+        if (menuVideoCanvas != null)
+            menuVideoCanvas.SetActive(true);
+
+        if (pausePanel != null)
+            pausePanel.SetActive(false);
+
+        if (gameOverPanel != null)
+            gameOverPanel.SetActive(false);
+
+        if (gameFinishedPanel != null)
+            gameFinishedPanel.SetActive(false);
+
+        if (maleChickPanel != null)
+        {
+            maleChickPanel.SetActive(true);
+        }
+        else if (gameOverPanel != null)
+        {
+            Debug.LogWarning("[GameUIManager] Male Chick Panel missing. Falling back to Game Over Panel.", this);
+            gameOverPanel.SetActive(true);
+        }
+        else
+        {
+            Debug.LogError("[GameUIManager] Male Chick Panel and Game Over Panel are both missing.", this);
+        }
+
+        if (pauseUsesTimeScale)
+            Time.timeScale = 0f;
+    }
+
+    public void ShowGameFinished()
+    {
+        if (logButtonPresses)
+            Debug.Log("[GameUIManager] ShowGameFinished", this);
+
+        isGameOver = false;
+        isGameFinished = true;
+        isPaused = false;
+
+        HideOnlyVideoObjects();
+
+        if (overlayCanvas != null)
+            overlayCanvas.SetActive(true);
+
+        if (menuVideoCanvas != null)
+            menuVideoCanvas.SetActive(true);
 
         if (pausePanel != null)
             pausePanel.SetActive(false);
@@ -138,72 +263,15 @@ public class GameUIManager : MonoBehaviour
 
         if (gameFinishedPanel != null)
             gameFinishedPanel.SetActive(true);
-        else
-            Debug.LogError("[GameUIManager] Game Finished Panel is not assigned.");
 
-        ClearSelectionNextFrame();
+        if (maleChickPanel != null)
+            maleChickPanel.SetActive(false);
+
+        if (pauseUsesTimeScale)
+            Time.timeScale = 0f;
     }
 
-    public void OnButtonResume()
-    {
-        ResumeGame();
-    }
-
-    public void OnButtonRestart()
-    {
-        Time.timeScale = 1f;
-        _gameEnded = false;
-        _isPaused = false;
-
-        HideAllOverlayUI();
-        ClearSelectionNow();
-
-        if (!string.IsNullOrEmpty(gameplaySceneName))
-            SceneManager.LoadScene(gameplaySceneName);
-        else
-            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
-    }
-
-    public void OnButtonMainMenu()
-    {
-        Time.timeScale = 1f;
-        _gameEnded = false;
-        _isPaused = false;
-
-        HideAllOverlayUI();
-        ClearSelectionNow();
-
-        if (!string.IsNullOrEmpty(mainMenuSceneName))
-            SceneManager.LoadScene(mainMenuSceneName);
-        else
-            Debug.LogError("[GameUIManager] Main Menu Scene Name is empty.");
-    }
-
-    public void OnButtonRehatch()
-    {
-        Time.timeScale = 1f;
-        _gameEnded = false;
-        _isPaused = false;
-
-        HideAllOverlayUI();
-        ClearSelectionNow();
-
-        if (CutsceneManager.Instance != null)
-        {
-            CutsceneManager.Instance.PlayRehatchSequence();
-        }
-        else
-        {
-            Debug.LogWarning("[GameUIManager] No CutsceneManager found. Reloading gameplay scene as fallback.");
-
-            if (!string.IsNullOrEmpty(gameplaySceneName))
-                SceneManager.LoadScene(gameplaySceneName);
-            else
-                SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
-        }
-    }
-
-    private void HideAllOverlayUI()
+    public void HideAllEndPanels()
     {
         if (pausePanel != null)
             pausePanel.SetActive(false);
@@ -214,29 +282,190 @@ public class GameUIManager : MonoBehaviour
         if (gameFinishedPanel != null)
             gameFinishedPanel.SetActive(false);
 
+        if (maleChickPanel != null)
+            maleChickPanel.SetActive(false);
+    }
+
+    // ------------------------------------------------------------
+    // VIDEO UI
+    // ------------------------------------------------------------
+
+    public void HideOnlyVideoObjects()
+    {
+        if (logButtonPresses)
+            Debug.Log("[GameUIManager] HideOnlyVideoObjects", this);
+
+        if (videoPlayer != null)
+        {
+            videoPlayer.Stop();
+            videoPlayer.targetTexture = null;
+        }
+
+        if (videoFrame != null)
+            videoFrame.SetActive(false);
+
+        if (menuVideoPanel != null)
+            menuVideoPanel.SetActive(false);
+
         if (blackBackground != null)
             blackBackground.SetActive(false);
 
+        // Do NOT disable menuVideoCanvas here.
+        // Your pause/death/win/male chick panels live inside it.
+    }
+
+    public void HideVideoUI()
+    {
+        HideOnlyVideoObjects();
+    }
+
+    public void ShowVideoUI()
+    {
         if (menuVideoCanvas != null)
-            menuVideoCanvas.SetActive(false);
+            menuVideoCanvas.SetActive(true);
+
+        if (blackBackground != null)
+            blackBackground.SetActive(true);
+
+        if (videoFrame != null)
+            videoFrame.SetActive(true);
+
+        if (menuVideoPanel != null)
+            menuVideoPanel.SetActive(true);
     }
 
-    private void ClearSelectionNow()
+    // ------------------------------------------------------------
+    // BUTTONS
+    // ------------------------------------------------------------
+
+    public void OnReHatchClicked()
     {
-        if (EventSystem.current != null)
-            EventSystem.current.SetSelectedGameObject(null);
+        if (logButtonPresses)
+            Debug.Log("[GameUIManager] Re-Hatch clicked", this);
+
+        Time.timeScale = 1f;
+
+        if (reHatchPlaysHatchVideos)
+        {
+            ReHatchRequest.autoStartHatchVideos = true;
+
+            if (logButtonPresses)
+                Debug.Log("[GameUIManager] Re-Hatch will load MainMenu and auto-start Hatch videos.", this);
+
+            SceneManager.LoadScene(mainMenuSceneName);
+            return;
+        }
+
+        SceneManager.LoadScene(gameSceneName);
     }
 
-    private void ClearSelectionNextFrame()
+    public void OnMainMenuClicked()
     {
-        StartCoroutine(ClearSelectionRoutine());
+        if (logButtonPresses)
+            Debug.Log("[GameUIManager] Main Menu clicked", this);
+
+        Time.timeScale = 1f;
+
+        ReHatchRequest.autoStartHatchVideos = false;
+
+        SceneManager.LoadScene(mainMenuSceneName);
     }
 
-    private IEnumerator ClearSelectionRoutine()
+    public void OnQuitClicked()
     {
-        yield return null;
+        if (logButtonPresses)
+            Debug.Log("[GameUIManager] Quit clicked", this);
 
-        if (EventSystem.current != null)
-            EventSystem.current.SetSelectedGameObject(null);
+        Time.timeScale = 1f;
+
+#if UNITY_EDITOR
+        UnityEditor.EditorApplication.isPlaying = false;
+#else
+        Application.Quit();
+#endif
+    }
+
+    public void OnResumeClicked()
+    {
+        ResumeGame();
+    }
+
+    // ------------------------------------------------------------
+    // OLD METHOD NAME COMPATIBILITY
+    // ------------------------------------------------------------
+
+    public void Restart()
+    {
+        OnReHatchClicked();
+    }
+
+    public void ReHatch()
+    {
+        OnReHatchClicked();
+    }
+
+    public void Rehatch()
+    {
+        OnReHatchClicked();
+    }
+
+    public void MainMenu()
+    {
+        OnMainMenuClicked();
+    }
+
+    public void Quit()
+    {
+        OnQuitClicked();
+    }
+
+    public void Resume()
+    {
+        OnResumeClicked();
+    }
+
+    public void GameOver()
+    {
+        ShowGameOver();
+    }
+
+    public void MaleChick()
+    {
+        ShowMaleChickGameOver();
+    }
+
+    public void GameFinished()
+    {
+        ShowGameFinished();
+    }
+
+    public void OnButtonRehatch()
+    {
+        OnReHatchClicked();
+    }
+
+    public void OnButtonReHatch()
+    {
+        OnReHatchClicked();
+    }
+
+    public void OnButtonRestart()
+    {
+        OnReHatchClicked();
+    }
+
+    public void OnButtonMainMenu()
+    {
+        OnMainMenuClicked();
+    }
+
+    public void OnButtonQuit()
+    {
+        OnQuitClicked();
+    }
+
+    public void OnButtonResume()
+    {
+        OnResumeClicked();
     }
 }
