@@ -303,17 +303,13 @@ public class CutsceneManager : MonoBehaviour
 
         RestoreAudio(allAudio, previousMute);
 
-        // Keep the video cover visible until scene loading starts.
         PrepareImmediateGameplayLoad();
 
         Time.timeScale = 1f;
 
         if (!string.IsNullOrEmpty(gameplaySceneName))
         {
-            // This is the important new-run reset.
-            // It clears run-only state before GameScene loads.
             RunReset.StartNewRun();
-
             SceneManager.LoadScene(gameplaySceneName);
         }
         else
@@ -519,8 +515,7 @@ public class CutsceneManager : MonoBehaviour
         if (gameHudCanvas != null)
             gameHudCanvas.SetActive(false);
 
-        // Keep videoCanvas / blackBackground / videoFrame visible until LoadScene starts.
-        // This prevents the player from seeing one empty frame before GameScene appears.
+        // Keep video cover visible until scene load begins.
         if (videoCanvas != null)
             videoCanvas.SetActive(true);
 
